@@ -43,7 +43,7 @@
 }
 
 
-\author{Jan Hauser$^{1}$ and Daniel Pachner$^{2}$ and Vladimír Havlena$^{1}$% <-this % stops a space
+\author{Jan Hauser,$^{1}$ Daniel Pachner$^{2}$ and Vladimír Havlena$^{1}$% <-this % stops a space
 \thanks{*This work was supported by ...?}% <-this % stops a space
 \thanks{$^{1}$Jan Hauser and Vladimír Havlena are with Department of Control Engineering, 
 Faculty of Electrical Engineering of Czech Technical University in Prague, Technicka 2, 166 27 Praha 6, Czech Republic.
@@ -209,10 +209,8 @@ The aim of this paper is to demonstrate how Machine Learning (ML) based
  An optimized control law for a nonlinear process is found directly by training
  the algorithm on noisy data collected from the process when controlled
  by a sub-optimal controller.
- Furthermore, sparse form of GPR is suggested and applied to reduce computationa
-l effort.
- Simplified nonlinear Fan Coil Unit (FCU) model is used as an example for
- which the fan speed control is designed using the off-policy Q-Learning
+ A simplified nonlinear Fan Coil Unit (FCU) model is used as an example
+ for which the fan speed control is designed using the off-policy Q-Learning
  algorithm.
  Additionally, the algorithm properties are discussed, i.e.
  effect of the sparse GPR, learning process robustness, GP kernel functions
@@ -238,13 +236,13 @@ d process is available and the controller is designed from the measurement
  data were collected and can be used to optimize, or improve, that controller.
  Many existing control design techniques first create a model from data
  to use it for a control design method afterwards, which makes sense if
- some modeling information, e.g.
+ some reliable modeling information, e.g.
  model structure, is available.
  A different approach, used in this paper, is the controller designed directly
  from the data, without any process model.
  This approach can have some advantages especially if little or nothing
- is known about the process or if the process is nonlinear and no simple
- analytical control design method is available.
+ is known about the process or if the process is nonlinear and no analytical
+ control design method is available.
 \end_layout
 
 \begin_layout Standard
@@ -259,12 +257,15 @@ literal "true"
 
 , which approximates certain function satisfying the Bellman equation.
  This Q function then defines a controller.
- To solve problems in continuous state spaces, Q function can be represented
- by a universal function approximating method such as Neural Network or
- Gaussian Process Regression (GPR).
- This approach is very closely related to Markov Decision Process (MDP)
- and Approximate Dynamic Programming (ADP) approaches.
- 
+ Q-Learning was developed for Markov Decision Process (MDP) with finite
+ number of states and later generalized to continuous state spaces [
+\emph on
+doplnit van Hasselt
+\emph default
+].
+ If the analytical form of the Q function is unknown in continuous state
+ spaces, it may be represented by a universal function approximating method
+ such as Neural Network or Gaussian Process Regression (GPR).
 \end_layout
 
 \begin_layout Standard
@@ -276,8 +277,7 @@ literal "true"
 
 \end_inset
 
- which is able to approximate any function using noisy data.
- It can be applied even if the analytical form of the function is unknown.
+ which is able to approximate any continuous target function uniformly.
  Unfortunately, the runtime computational requirement is 
 \begin_inset Formula $\mathcal{O}(n^{3})$
 \end_inset
@@ -307,9 +307,9 @@ literal "false"
 
 \end_inset
 
-,[
+, 
 \shape italic
-cite: Guber?
+[Huber
 \shape default
 ] techniques were developed to overcome this computational complexity.
  One of the conventional GPR sparse method is to use a set of size 
@@ -338,29 +338,37 @@ literal "false"
 
  to define the data covariance matrices.
  The choice of the kernel can have significant impact on the accuracy of
- the regression result.
+ the regression model.
 \end_layout
 
 \begin_layout Standard
-The contribution of this paper is the practical combination of Q-Learning
- and GPR resulting in unbiased estimate of Q function and control policy
- improvement.
- ML algorithms normally needs a large historical dataset (of size 
+The contribution of this paper is the practical and efficient combination
+ of Q-Learning and GPR resulting in unbiased estimate of the Q function.
+ ML algorithms are normally supposed to process a large dataset (of size
+ 
 \begin_inset Formula $\sim10^{5}$
 \end_inset
 
- and more) to find sufficient result, here a way smaller dataset is necessary
- (of a size 
+ and more) to yield sufficiently accurate results.
+ Often the training data are simulated by a model and the statistical properties
+ of the algorithm are thus less important.
+ Here a smaller dataset from a process affected by unmeasured disturbances
+ is targeted (of a size 
 \begin_inset Formula $\sim10^{3}$
 \end_inset
 
 ).
- A simple Fan Coil Unit (FCU) model approximation is used to demonstrate
+ This requires the information in the data to be used efficiently.
+ 
+\end_layout
+
+\begin_layout Standard
+A simple Fan Coil Unit (FCU) model approximation is used to demonstrate
  the approach.
  FCU is a nonlinear system widely used for both air heating and cooling
  in buildings.
- A linear control design cannot achieve optimal control in terms of energy
- consumption and user comfort 
+ A linear control design cannot achieve optimal FCU control in terms of
+ energy consumption and user comfort 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "ecc19ref:Arguello_Serrano_Nonlinear_HVAC"
@@ -370,6 +378,8 @@ literal "true"
 
 .
  FCU model used here is highly simplified to make the result easier to interpret.
+ It is supposed that ML will be able to optimize a real FCU control based
+ on several days data.
 \end_layout
 
 \begin_layout Standard
@@ -382,7 +392,6 @@ reference "sec:gp"
 \end_inset
 
 , the GPR algorithm is explained.
- Moreover, its sparse approximation is suggested later in text.
  Section 
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -456,7 +465,7 @@ literal "true"
 \end_inset
 
  considering any dataset 
-\begin_inset Formula $(\mathbf{x},\mathbf{y})$
+\begin_inset Formula $(\mathbf{X},\mathbf{y})$
 \end_inset
 
 , which can be written as 
@@ -501,7 +510,7 @@ noindent
 \begin_inset Formula 
 \begin{eqnarray*}
 m(\mathbf{x)} & = & \mathbb{E}\left[f(\mathbf{x})\right],\\
-k(\mathbf{x},\mathbf{x'}) & = & \mathbb{E}\left[\left(f(\mathbf{x})-m(\mathbf{x})\right)\left(f(\mathbf{x}')-m(\mathbf{x}')\right)\right],
+k(\mathbf{x},\mathbf{x}') & = & \mathbb{E}\left[\left(f(\mathbf{x})-m(\mathbf{x})\right)\left(f(\mathbf{x}')-m(\mathbf{x}')\right)^{\top}\right],
 \end{eqnarray*}
 
 \end_inset
@@ -523,14 +532,54 @@ noindent
 \end_inset
 
  where 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $\mathbb{E}$
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+ is the expectation, 
 \begin_inset Formula $\mathbf{x}$
 \end_inset
 
- is a vector representing the dataset 
+ and 
+\begin_inset Formula $\mathbf{x}'$
+\end_inset
+
+ are a pair of vectors in the data space.
+ A dataset is a number of such vectors 
 \begin_inset Formula $\mathbf{X}=\left[\mathbf{x}_{1},\mathbf{x}_{2},\ldots,\mathbf{x}_{n}\right]$
 \end_inset
 
 .
+ In this article 
+\begin_inset Formula $f(\mathbf{x})\in\mathbb{R}.$
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -565,7 +614,7 @@ Assume the finite training set
 
  themselves do not need to be accessible but rather their noisy measurements
  
-\begin_inset Formula $\mathbf{y}_{i}=f(\mathbf{X})+\boldsymbol{\varepsilon}_{i}$
+\begin_inset Formula $y_{i}=f(\mathbf{x}_{i})+\boldsymbol{\varepsilon}_{i}$
 \end_inset
 
 , where 
@@ -647,8 +696,7 @@ noindent
 \end_inset
 
  matrix of the covariances of all pairs of training and testing datasets,
- i.e.
- 
+ and 
 \begin_inset Formula $\mathbf{K}_{ff}$
 \end_inset
 
@@ -814,7 +862,7 @@ noprefix "false"
 
 \end_inset
 
-), this relationship will be used later.
+) which will be used later.
  Specifically, we remind that the term 
 \family roman
 \series medium
@@ -846,7 +894,7 @@ noprefix "false"
 \noun default
 \color inherit
  is the Kalman gain matrix.
- Assuming the unknown function 
+ Assuming the unknown continuous function 
 \begin_inset Formula $f$
 \end_inset
 
@@ -929,24 +977,28 @@ literal "true"
 \begin_layout Standard
 For purpose of this section, let's highlight the analogies and slight difference
 s between two closely related fields: Control Theory (CT), and MDP respectively.
- The states 
-\begin_inset Formula $x_{k}$
+ At a discrete time 
+\begin_inset Formula $k$
+\end_inset
+
+, the vectors of states 
+\begin_inset Formula $\mathbf{x}_{k}\in\mathcal{X}$
 \end_inset
 
  and inputs 
-\begin_inset Formula $u_{k}$
+\begin_inset Formula $\mathbf{u}_{k}\in\mathcal{U}$
 \end_inset
 
  are usually considered in CT for a process model, whereas MDP uses the
  Markov process states 
-\begin_inset Formula $s_{k}\in\mathbf{S}$
+\begin_inset Formula $\mathbf{s}_{k}\in\mathcal{S}$
 \end_inset
 
  and the agent's actions 
-\begin_inset Formula $a_{k}\in\mathbf{A}$
+\begin_inset Formula $\mathbf{a}_{k}\in\mathcal{A}$
 \end_inset
 
-.
+ analogously.
  Note that the sets 
 \family roman
 \series medium
@@ -961,7 +1013,7 @@ s between two closely related fields: Control Theory (CT), and MDP respectively.
 \noun off
 \color none
 
-\begin_inset Formula $\mathbf{S}$
+\begin_inset Formula $\mathcal{X}$
 \end_inset
 
 
@@ -978,27 +1030,34 @@ s between two closely related fields: Control Theory (CT), and MDP respectively.
 \noun default
 \color inherit
  and 
-\begin_inset Formula $\mathbf{A}$
+\begin_inset Formula $\mathcal{U}$
 \end_inset
 
- are usually some real vector spaces in control problems whereas they may
- often be finite sets in MDP.
+ are usually real vector spaces in control problems whereas 
+\begin_inset Formula $\mathcal{S}$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathcal{A}$
+\end_inset
+
+ may often be finite sets in MDP.
  The process model itself is an analogy of probability transition matrix
  
-\begin_inset Formula $p(s_{k+1}|a_{k},s_{k})$
+\begin_inset Formula $p(\mathbf{s}_{k+1}|\mathbf{a}_{k},\mathbf{s}_{k})$
 \end_inset
 
  of MDP.
- Control law, or the state feedback 
-\begin_inset Formula $u_{k}=C(x_{k})$
+ Control law, or a state feedback 
+\begin_inset Formula $\mathbf{u}_{k}=C(\mathbf{x}_{k})$
 \end_inset
 
  in CT is an analogy of a deterministic policy 
-\begin_inset Formula $u_{k}=\pi(s_{k})$
+\begin_inset Formula $\mathbf{a}_{k}=\pi(\mathbf{s}_{k})$
 \end_inset
 
 .
- A stochastic policy defines the joint p.d.f.
+ A stochastic policy, usually not used in CT, defines the joint p.d.f.
  
 \family roman
 \series medium
@@ -1013,7 +1072,7 @@ s between two closely related fields: Control Theory (CT), and MDP respectively.
 \noun off
 \color none
 
-\begin_inset Formula $\pi(a_{k},s_{k})$
+\begin_inset Formula $\pi(\mathbf{a}_{k},\mathbf{s}_{k})$
 \end_inset
 
 
@@ -1031,20 +1090,20 @@ s between two closely related fields: Control Theory (CT), and MDP respectively.
 \color inherit
  instead of an explicit function.
  An important difference exists between the reward 
-\begin_inset Formula $r_{k}(a_{k},s_{k},s_{k+1})$
+\begin_inset Formula $r(\mathbf{a}_{k},\mathbf{s}_{k},\mathbf{s}_{k+1})$
 \end_inset
 
  used in MDP (bounded, to be maximized) and loss function 
-\begin_inset Formula $\ell_{k}(x_{k},u_{k})$
+\begin_inset Formula $\ell(\mathbf{x}_{k},\mathbf{u}_{k})$
 \end_inset
 
- used in CT (often not bounded, to be minimized, almost never depending
+ used in CT (not bounded in general, to be minimized, almost never depending
  on 
-\begin_inset Formula $x_{k+1}$
+\begin_inset Formula $\mathbf{x}_{k+1}$
 \end_inset
 
 ).
- The ML theory will be discussed below with CT notation.
+ The ML theory will be discussed below mostly with CT notations and assumptions.
 \end_layout
 
 \begin_layout Subsection
@@ -1069,18 +1128,22 @@ Q:\mathbf{\mathbf{u\times}x}\rightarrow\mathbb{R}.
 
 \begin_layout Standard
 It is possible to talk either about Q function 
-\begin_inset Formula $Q^{\pi}(u_{k},x_{k})$
+\begin_inset Formula $Q^{\pi}(\mathbf{u},\mathbf{x})$
 \end_inset
 
  pertaining to a given policy 
 \begin_inset Formula $\pi$
 \end_inset
 
- or the Q function 
-\begin_inset Formula $Q^{*}(x_{k},u_{k})$
+ or the function 
+\begin_inset Formula $Q^{*}(\mathbf{x},\mathbf{u})$
 \end_inset
 
- achieved after convergence.
+ which pertains to the optimal policy 
+\begin_inset Formula $\pi^{*}$
+\end_inset
+
+.
  
 \begin_inset Formula $Q$
 \end_inset
@@ -1089,23 +1152,20 @@ It is possible to talk either about Q function
 \begin_inset Formula $Q^{*}$
 \end_inset
 
-) describes the expected total discounted loss 
-\begin_inset Formula $\ell(u_{k,}x_{k})$
-\end_inset
-
- received by the controller starting from 
-\begin_inset Formula $x_{k}$
+) describes the expected total discounted loss received by the controller
+ starting from 
+\begin_inset Formula $\mathbf{x}$
 \end_inset
 
  with a control action 
-\begin_inset Formula $u_{k}$
+\begin_inset Formula $\mathbf{u}$
 \end_inset
 
  and following with the policy 
 \begin_inset Formula $\pi$
 \end_inset
 
- (and optimal 
+ (optimal 
 \begin_inset Formula $\pi^{*}$
 \end_inset
 
@@ -1115,15 +1175,15 @@ It is possible to talk either about Q function
 \end_inset
 
 , as function of 
-\begin_inset Formula $u_{k}$
+\begin_inset Formula $\mathbf{u}$
 \end_inset
 
 , is thus a measure of quality of selecting the control action 
-\begin_inset Formula $u_{k}$
+\begin_inset Formula $\mathbf{u}$
 \end_inset
 
  in a given state 
-\begin_inset Formula $x_{k}$
+\begin_inset Formula $\mathbf{x}$
 \end_inset
 
 .
@@ -1141,7 +1201,7 @@ It is possible to talk either about Q function
 \begin_inset Formula $V$
 \end_inset
 
- used in DP.
+ used in Dynamic Programming.
  It is also related to Lyapunov function and stability theory.
  
 \begin_inset Formula $V$
@@ -1165,14 +1225,22 @@ It is possible to talk either about Q function
 \begin_inset Formula $\pi$
 \end_inset
 
-, not necessarily optimal, the Q is defined
+, not necessarily optimal, and an instantaneous loss 
+\begin_inset Formula $\ell(\mathbf{u}_{k},\mathbf{x}_{k})$
+\end_inset
+
+ at time 
+\begin_inset Formula $k\in\mathbb{N}$
+\end_inset
+
+, the Q is defined
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \begin{multline}
-Q^{\pi}(u_{k},x_{k})=\\
-l(u_{k},x_{k})+\mathbb{E}\left[\left.\sum_{i=1}^{\infty}\gamma^{i}\ell(u_{k+i}^{\pi},x_{k+i})\right|u_{k},x_{k}\right],\label{eq:q-split-sum}
+Q^{\pi}(\mathbf{u}_{k},\mathbf{x}_{k})=\\
+l(\mathbf{u}_{k},\mathbf{x}_{k})+\mathbb{E}\left[\left.\sum_{i=1}^{\infty}\gamma^{i}\ell(\mathbf{u}_{k+i}^{\pi},\mathbf{x}_{k+i})\right|\mathbf{u}_{k},\mathbf{x}_{k}\right],\label{eq:q-split-sum}
 \end{multline}
 
 \end_inset
@@ -1198,7 +1266,7 @@ noindent
 \end_inset
 
  is a discount factor.
- Q function 
+ 
 \begin_inset Formula $Q^{*}$
 \end_inset
 
@@ -1208,8 +1276,8 @@ noindent
 \begin_layout Standard
 \begin_inset Formula 
 \begin{multline}
-Q^{*}(u_{k},x_{k})=\\
-l(u_{k},x_{k})+\mathbb{E}\left[\left.\min_{u_{k+i}}\sum_{i=1}^{\infty}\gamma^{i}\ell(u_{k+i},x_{k+i})\right|u_{k},x_{k}\right].\label{eq:q-function-star}
+Q^{*}(\mathbf{u}_{k},\mathbf{x}_{k})=\\
+l(\mathbf{u}_{k},\mathbf{x}_{k})+\mathbb{E}\left[\left.\min_{\mathbf{u}_{k+i}}\sum_{i=1}^{\infty}\gamma^{i}\ell(\mathbf{u}_{k+i},\mathbf{x}_{k+i})\right|\mathbf{u}_{k},\mathbf{x}_{k}\right].\label{eq:q-function-star}
 \end{multline}
 
 \end_inset
@@ -1218,7 +1286,7 @@ l(u_{k},x_{k})+\mathbb{E}\left[\left.\min_{u_{k+i}}\sum_{i=1}^{\infty}\gamma^{i}
 \end_layout
 
 \begin_layout Standard
-The relationship between the Q function 
+The relationship between the function 
 \begin_inset Formula $Q^{*}$
 \end_inset
 
@@ -1232,7 +1300,7 @@ The relationship between the Q function
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-\pi^{*}(x_{k})=\arg\min_{u_{k}}Q^{*}(u_{k},x_{k}).\label{eq:q-function-policy}
+\pi^{*}(\mathbf{x})=\arg\min_{\mathbf{u}}Q^{*}(\mathbf{u},\mathbf{x}).\label{eq:q-function-policy}
 \end{equation}
 
 \end_inset
@@ -1241,12 +1309,41 @@ The relationship between the Q function
 \end_layout
 
 \begin_layout Standard
-The Bellman optimality principle equation (more usually expressed in terms
- of 
+The Bellman equation (more usually expressed in terms of 
 \begin_inset Formula $V$
 \end_inset
 
-) provides the recursive approach for finding the Q function 
+) provides the recursive approach for finding the functions 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $Q^{\pi}$
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+ and 
 \begin_inset Formula $Q^{*}$
 \end_inset
 
@@ -1261,18 +1358,8 @@ noprefix "false"
 
 \end_inset
 
-, 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "eq:q-function-star"
-plural "false"
-caps "false"
-noprefix "false"
-
-\end_inset
-
 ).
- For some policy 
+ For a policy 
 \begin_inset Formula $\pi$
 \end_inset
 
@@ -1286,8 +1373,8 @@ noprefix "false"
 \begin_layout Standard
 \begin_inset Formula 
 \begin{multline}
-Q^{\pi}(u_{k},x_{k})=\\
-\ell(u_{k},x_{k})+\gamma\mathbb{E}\left[\left.Q^{\pi}(u_{k+1}^{\pi},x_{k+1})\right|u_{k},x_{k}\right],\label{eq:q-value-iteration}
+Q^{\pi}(\mathbf{u}_{k},\mathbf{x}_{k})=\\
+\ell(\mathbf{u}_{k},\mathbf{x}_{k})+\gamma\mathbb{E}\left[\left.Q^{\pi}(\mathbf{u}_{k+1}^{\pi},\mathbf{x}_{k+1})\right|\mathbf{u}_{k},\mathbf{x}_{k}\right],\label{eq:q-value-iteration}
 \end{multline}
 
 \end_inset
@@ -1325,23 +1412,32 @@ name "subsec:Policy-Iteration"
 \end_layout
 
 \begin_layout Standard
-Policy iteration algorithm calculates Q function from Bellman equation for
- a current policy and then improves the current policy by seeking for minimum
- values of 
-\begin_inset Formula $Q_{k}^{\pi}$
+Policy iteration algorithm calculates Q function from Bellman equation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:q-value-iteration"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+) for a current policy and then improves the current policy by seeking for
+ minimum values of 
+\begin_inset Formula $Q^{\pi}$
 \end_inset
 
  with respect to 
-\begin_inset Formula $u_{k}$
+\begin_inset Formula $\mathbf{u}$
 \end_inset
 
  for each 
-\begin_inset Formula $x_{k}$
+\begin_inset Formula $\mathbf{x}$
 \end_inset
 
 .
  Such minimizing 
-\begin_inset Formula $u_{k}$
+\begin_inset Formula $\mathbf{u}$
 \end_inset
 
  defines the new policy.
@@ -1350,19 +1446,12 @@ Policy iteration algorithm calculates Q function from Bellman equation for
 \begin_inset Formula $Q^{*}$
 \end_inset
 
- and provides expected cumulative loss, which is finite for the initial
+ provided the starting policy is stabilizing in order to ensure the initial
  
-\begin_inset Formula $\pi$
-\end_inset
-
-.
- It means the starting policy can be selected randomly but must be stabilizing
- in order to ensure the initial 
 \begin_inset Formula $Q^{\pi}$
 \end_inset
 
  is finite.
- 
 \end_layout
 
 \begin_layout Subsection
@@ -1371,13 +1460,17 @@ Q-Learning with Gaussian Process Regression
 
 \begin_layout Standard
 Last step in this section is to introduce Q-Learning algorithm with GPR.
- For finite (in number of states and actions) MDP, the Q-Learning algorithms
- approximate the Q function using the observed samples 
-\begin_inset Formula $x_{k},u_{k}$
+ For a finite (number of states and actions) MDP, the Q-Learning algorithms
+ may approximate the Q function at every element of the state-action space
+ using the observed samples 
+\begin_inset Formula $\mathbf{x}_{k},\mathbf{u}_{k}$
 \end_inset
 
 , which were encountered during interaction with a system.
- Nice example of commonly used Q-Learning is state action reward state action
+ An example of such approach is the commonly used 
+\emph on
+state action reward state action
+\emph default
  or SARSA 
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -1390,8 +1483,12 @@ literal "false"
 \end_layout
 
 \begin_layout Standard
-This paper considers GPR as Q function approximation and then optimize the
- control action using (
+This paper considers GPR as a continuous 
+\begin_inset Formula $Q^{\pi}$
+\end_inset
+
+ function approximation method and then optimizes the control action using
+ (
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "subsec:Policy-Iteration"
@@ -1401,25 +1498,22 @@ noprefix "false"
 
 \end_inset
 
-).
- Method based on GPR is proposed to calculate Q, because the action-state
- space is a vector space where f.e.
- SARSA cannot be used directly.
+) via numerical minimization.
  Let us define the set of training and prediction points for the GPR as
- concatenations of points in the action-state space
+ concatenations of points in the state-action space
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \begin{gather}
-\mathbf{X}_{*}=\left[\begin{array}{c}
-u_{1}^{\pi},x_{1}\\
+\mathbf{X}_{*}^{\pi}=\left[\begin{array}{c}
+\mathbf{u}_{2}^{\pi},\mathbf{x}_{2}\\
 \vdots\\
-u_{k}^{\pi},x_{k}^{\pi}
+\mathbf{u}_{k}^{\pi},\mathbf{x}_{k}^{\pi}
 \end{array}\right],\;\mathbf{X}=\left[\begin{array}{c}
-u_{0},x_{0}\\
+\mathbf{u}_{1},\mathbf{x}_{1}\\
 \vdots\\
-u_{k-1},x_{k-1}
+\mathbf{u}_{k-1},\mathbf{x}_{k-1}
 \end{array}\right].
 \end{gather}
 
@@ -1429,16 +1523,70 @@ u_{k-1},x_{k-1}
 \end_layout
 
 \begin_layout Standard
-Also, the concatenation of the losses will be used
+Here 
+\begin_inset Formula $\mathbf{X}$
+\end_inset
+
+ is a collection of state-action pairs visited by the process whereas 
+\begin_inset Formula $\mathbf{X}_{*}^{\pi}$
+\end_inset
+
+ is a collection of states observed as results of the actions accompanied
+ with the actions the evaluated strategy 
+\begin_inset Formula $\pi$
+\end_inset
+
+ would presumably apply there.
+ Note 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $\mathbf{X}_{*}^{\pi}$
+\end_inset
+
+ is known without actually applying the strategy 
+\begin_inset Formula $\pi$
+\end_inset
+
+.
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+ That is why the approach may use a historical dataset to optimize 
+\begin_inset Formula $\pi$
+\end_inset
+
+.
+ Also, the concatenation of the losses will be used
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-\mathbf{\ell}=\left[\begin{array}{c}
-\ell_{0}\\
+\mathbf{\boldsymbol{\ell}}=\left[\begin{array}{c}
+\ell(\mathbf{u}_{1},\mathbf{x}_{1})\\
 \vdots\\
-\ell_{k-1}
+\ell(\mathbf{u}_{k-1},\mathbf{x}_{k-1})
 \end{array}\right],
 \end{equation}
 
@@ -1465,13 +1613,13 @@ noindent
 \begin_inset Formula $\mathbf{f}$
 \end_inset
 
- for the unknown function used in GPR context will be preserved
+ for the vector unknown function values used in GPR context will be preserved
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-\mathbf{f}_{*}=Q^{\pi}(\mathbf{X}_{*}),\quad\mathbf{f}=Q^{\pi}(\mathbf{X}).
+\mathbf{f}_{*}^{\pi}=Q^{\pi}(\mathbf{X}_{*}^{\pi}),\quad\mathbf{f}^{\pi}=Q^{\pi}(\mathbf{X}).
 \end{equation}
 
 \end_inset
@@ -1481,11 +1629,11 @@ noindent
 
 \begin_layout Standard
 The noisy realization of 
-\begin_inset Formula $\mathbf{f}=\mathbb{\ell+\gamma E}[Q^{\pi}(\mathbf{X}_{*})]$
+\begin_inset Formula $\mathbf{f}^{\pi}=\mathbb{\boldsymbol{\ell}+\gamma E}[Q^{\pi}(\mathbf{X}_{*}^{\pi})]$
 \end_inset
 
  is 
-\begin_inset Formula $\mathbf{y}=\mathbf{\ell}+\gamma\mathbf{f}_{*}$
+\begin_inset Formula $\mathbf{y}^{\pi}=\mathbf{\boldsymbol{\ell}}+\gamma\mathbf{f}_{*}^{\pi}$
 \end_inset
 
 .
@@ -1516,16 +1664,16 @@ noprefix "false"
 \begin_inset Formula 
 \begin{multline}
 \mathbb{E\left[\mathit{\left.\begin{array}{c}
-\mathbf{f}\\
-\mathbf{f}_{*}
-\end{array}\right|\mathbf{\mathit{\mathbf{y}}}}\right]}=\\
+\mathbf{f}^{\pi}\\
+\mathbf{f}_{*}^{\pi}
+\end{array}\right|\mathbf{\mathit{\mathbf{y}}}^{\pi}}\right]}=\\
 \left[\begin{array}{c}
 \mathbf{m}\\
 \mathbf{m}_{*}
 \end{array}\right]+\left[\begin{array}{c}
 \mathbf{K}_{ff}\\
-\mathbf{K}_{*f}
-\end{array}\right]\overline{\mathbf{K}}_{ff}^{-1}\left(\mathbf{\ell}+\gamma\mathbf{f}_{*}-\mathbf{m}\right).\label{eq:Q-data-update}
+\mathbf{K}_{*f}^{\pi}
+\end{array}\right]\overline{\mathbf{K}}_{ff}^{-1}\left(\mathbf{\boldsymbol{\ell}}+\gamma\mathbf{f}_{*}^{\pi}-\mathbf{m}\right).\label{eq:Q-data-update}
 \end{multline}
 
 \end_inset
@@ -1545,40 +1693,121 @@ noprefix "false"
 \end_inset
 
 ) may seem useless because the Q estimates depend on 
-\begin_inset Formula $\mathbf{f}_{*}$
+\begin_inset Formula $\mathbf{f}_{*}^{\pi}$
 \end_inset
 
- true value which we do not know.
+ value which we do not know.
  Recall that Q function is neither measured nor observed.
  However, consider the left hand side equals the true values 
 \series bold
 
-\begin_inset Formula $\mathbf{f}$
+\begin_inset Formula $\mathbf{f}^{\pi}$
 \end_inset
 
 
 \series default
  and 
-\begin_inset Formula $\mathbf{f}_{*}$
+\begin_inset Formula $\mathbf{f}_{*}^{\pi}$
 \end_inset
 
  for 
 \begin_inset Formula $k\rightarrow\infty$
 \end_inset
 
- and sufficient excitation in the action-state space, and when 
-\begin_inset Formula $\mathbf{m}=\mathbf{f}$
+ and sufficient excitation in the state-action space, and when 
+\begin_inset Formula $\mathbf{m}=\mathbf{f}^{\pi}$
 \end_inset
 
  and 
-\begin_inset Formula $\mathbf{m}_{*}=\mathbf{f}_{*}$
+\begin_inset Formula $\mathbf{m}_{*}=\mathbf{f}_{*}^{\pi}$
 \end_inset
 
 .
- From this one gets a system of linear equations the true values satisfy.
- This system of linear equations may have one or infinitely many solutions.
+ The 
+\series bold
+
+\begin_inset Formula $\mathbf{f}^{\pi}$
+\end_inset
+
+
+\series default
+ and 
+\begin_inset Formula $\mathbf{f}_{*}^{\pi}$
+\end_inset
+
+ thus represent a fixed point of the following iterations (index 
+\begin_inset Formula $\pi$
+\end_inset
+
+ dropped)
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{multline}
+\left[\begin{array}{c}
+\mathbf{f}^{(i+1)}\\
+\mathbf{f}_{*}^{(i+1)}
+\end{array}\right]=\\
+\left[\begin{array}{c}
+\mathbf{f}^{(i)}\\
+\mathbf{f}_{*}^{(i)}
+\end{array}\right]+\left[\begin{array}{c}
+\mathbf{K}_{ff}\\
+\mathbf{K}_{*f}
+\end{array}\right]\overline{\mathbf{K}}_{ff}^{-1}\left(\boldsymbol{\ell}+\gamma\mathbf{f}_{*}^{(i)}-\mathbf{f}^{(i)}\right).\label{eq:GPR-iterations}
+\end{multline}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+noindent
+\end_layout
+
+\end_inset
+
+ An estimate may be calculated starting the iterations from 
+\begin_inset Formula $\mathbf{m},\mathbf{m}_{*}$
+\end_inset
+
+.
+ Instead of actually iterating (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:GPR-iterations"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+), a system of linear equations the fixed point values satisfy can be solved.
+ However, this system of linear equations will typically be ill-conditioned.
+ In general, the update (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:Q-data-update"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+) does not uniformly reduce the uncertainty and the respective mapping is
+ not a contraction.
  One may now use the Kalman filter and GPR analogy to understand that the
- latter happens when some of the function values are not observalbe 
+ latter happens because some linear combinations of the Q function values
+ are not observalbe 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "ecc19ref:Kwakernaak_linear_optimal_control_systems"
@@ -1586,16 +1815,74 @@ literal "false"
 
 \end_inset
 
-.
- Although they may be observable in theory, the Kalman gain may be so small
- that the system would get ill-conditioned.
+ and some information from the starting values 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $\mathbf{m},\mathbf{m}_{*}$
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+ does not not vanish.
  We propose to regularize this situation shifting the unobservable poles
- of the filter from 1 to some stable real pole 
-\begin_inset Formula $(1-\xi)>\gamma$
+ from 1 to some stable real pole 
+\begin_inset Formula $1-\xi$
 \end_inset
 
 , i.e.
- slightly to the left.
+ slightly to the left by 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $\xi\geq0$
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+.
  Practically, this means that the unobservable 
 \family roman
 \series medium
@@ -1609,18 +1896,38 @@ literal "false"
 \uwave off
 \noun off
 \color none
-Q function values will be estimated as zeros.
- With this regularization, we have the following estimates
+Q function values will be estimated as zeros (
+\begin_inset Formula $\mathbf{m}$
+\end_inset
+
+ could also be used).
+ This regularization adds a fictitious time update step to the Kalman filter
+ shrinking the right hand side of (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:GPR-iterations"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+) by the factor of 
+\begin_inset Formula $1-\xi$
+\end_inset
+
+.
+ It results in the following estimates
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
 \left[\begin{array}{c}
-\hat{\mathbf{f}}\\
-\hat{\mathbf{f}}_{*}
+\hat{\mathbf{f}}^{\pi}\\
+\mathbf{\hat{f}}_{*}^{\pi}
 \end{array}\right]=\left(\left(1-\xi\right)\left[\begin{array}{cc}
-\mathbf{G} & -\gamma\mathbf{G}\end{array}\right]-\xi\mathbf{I}\right)^{-1}\mathbf{G}\mathbf{\ell},\label{eq:Q-unbiased-estimate}
+\mathbf{G}^{\pi}, & -\gamma\mathbf{G}^{\pi}\end{array}\right]-\xi\mathbf{I}\right)^{-1}\mathbf{G}^{\pi}\mathbf{\ell},\label{eq:Q-unbiased-estimate}
 \end{equation}
 
 \end_inset
@@ -1642,7 +1949,7 @@ noindent
 \end_inset
 
  with the Kalman gain matrix 
-\begin_inset Formula $\mathbf{G}$
+\begin_inset Formula $\mathbf{G^{\pi}}$
 \end_inset
 
  defined as 
@@ -1651,9 +1958,9 @@ noindent
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\mathbf{G}=\left[\begin{array}{c}
+\mathbf{G}^{\pi}=\left[\begin{array}{c}
 \mathbf{K}_{ff}\\
-\mathbf{K}_{*f}
+\mathbf{K}_{*f}^{\pi}
 \end{array}\right]\overline{\mathbf{K}}_{ff}^{-1}.
 \]
 
@@ -1663,6 +1970,140 @@ noindent
 \end_layout
 
 \begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+noindent 
+\end_layout
+
+\end_inset
+
+ Now imagine that also the Q function value at a general query point 
+\begin_inset Formula $\mathbf{\mathit{f}}_{q}^{\pi}=Q^{\pi}(\mathbf{u}_{k}^{q},\mathbf{x}_{k})$
+\end_inset
+
+ is also updated in (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:Q-data-update"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+).
+ Such value may be queried by a numerical method trying to improve the current
+ policy.
+ This estimate may now be obtained reusing the above estimates 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $\hat{\mathbf{f}}^{\pi},\mathbf{\hat{f}_{*}^{\pi}}$
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+ as well as
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+ 
+\begin_inset Formula $\overline{\mathbf{K}}_{ff}^{-1}$
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+ and recalculating only a row kernel matrix 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $\mathbf{K}_{qf}^{\pi}$
+\end_inset
+
+ which is the only datum changed by the query point.
+ The result is
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\mathbf{\hat{\mathit{f}}}_{q}^{\pi}=\mathbf{K}_{qf}^{\pi}\overline{\mathbf{K}}_{ff}^{-1}\left(\frac{1-\xi}{\xi}\left(\hat{\mathbf{f}^{\pi}}-\gamma\hat{\mathbf{f}_{*}^{\pi}}\right)-\frac{1}{\xi}\boldsymbol{\ell}\right).\label{eq:Q-fast-update}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+noindent 
+\end_layout
+
+\end_inset
+
 Without proofs we state several statistical properties of the estimates
  (
 \begin_inset CommandInset ref
@@ -1675,13 +2116,13 @@ noprefix "false"
 \end_inset
 
 ).
- They are unbiased (under GPR assumptions) except of the small bias towards
- zero caused by 
+ They are unbiased (under GPR assumptions) except of the bias towards zero
+ caused by 
 \begin_inset Formula $\xi>0$
 \end_inset
 
 .
- However, they are not efficient unless 
+ However, they are not optimal because 
 \family roman
 \series medium
 \shape up
@@ -1698,7 +2139,7 @@ noprefix "false"
 \begin_inset Formula $\mathbf{y}-\mathbf{f}$
 \end_inset
 
- would be independent and homeoskedastic.
+ are in general not normal, independent and homeoskedastic.
  Also, it should be noted that the uncertainty of this estimate cannot be
  calculated by (
 \begin_inset CommandInset ref
@@ -1714,52 +2155,58 @@ noprefix "false"
 \end_layout
 
 \begin_layout Standard
-Not only 
-\begin_inset Formula $\hat{\mathbf{f}},\hat{\mathbf{f}}_{*}$
-\end_inset
-
- estimates should be considered for optimization purpose.
- Also some general points 
-\begin_inset Formula $\hat{\mathbf{f}}_{**}$
-\end_inset
-
- are used during seeking for minimum of 
-\begin_inset Formula $Q$
-\end_inset
-
- function in order to find 
-\begin_inset Formula $\pi^{*}$
-\end_inset
-
-.
- These points are not part of the dataset.
- 
-\end_layout
-
-\begin_layout Standard
-The final algorithm is described in (
+The flow of calculations is in Algorithm 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "alg:Q-learning-with-GP"
 
 \end_inset
 
-).
- The first step (
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "enu:a-GP-estimate-"
-plural "false"
-caps "false"
-noprefix "false"
+.
+ In the first step, it calculates the matrix inversion 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
 
+\begin_inset Formula $\overline{\mathbf{K}}_{ff}^{-1}$
 \end_inset
 
-) is to find GPR estimate of 
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+ for later uses as it depends only on the data, not the optimized policy.
+ 
 \begin_inset Formula $Q^{\pi^{(i)}}$
 \end_inset
 
- by using (
+ estimate is calculated for each policy 
+\begin_inset Formula $\pi^{(i)}$
+\end_inset
+
+ starting with some known stabilizing policy 
+\begin_inset Formula $\pi^{(1)}$
+\end_inset
+
+ solving a linear system of equations (
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:Q-unbiased-estimate"
@@ -1770,45 +2217,90 @@ noprefix "false"
 \end_inset
 
 ).
- Next step (
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "enu:b-policy-iteration"
-plural "false"
-caps "false"
-noprefix "false"
-
-\end_inset
-
-) is to apply (
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "subsec:Policy-Iteration"
-plural "false"
-caps "false"
-noprefix "false"
-
-\end_inset
-
-) to minimize found 
+ All available data can be used in this step.
+ This 
 \begin_inset Formula $Q^{\pi^{(i)}}$
 \end_inset
 
- and find new policy 
+ is then minimized at each state from 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $\mathbf{X}_{*}^{\pi}$
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+ at 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "enu:update-pi"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ to define a new improved policy 
 \begin_inset Formula $\pi^{(i+1)}$
 \end_inset
 
 .
- The stop condition is either a number of iterations or a difference between
- control policies 
+ The minimization is iterative evaluating the Q function using (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:Q-fast-update"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+) which is an inner product.
+ The stop condition is based on either a number of iterations limit or vanishing
+ difference between the Q function values evaluated at last two policies
+ 
 \begin_inset Formula $\pi^{(i)}$
 \end_inset
 
  and 
-\begin_inset Formula $\pi^{(i+1)}$
+\begin_inset Formula $\pi^{(i-1)}$
 \end_inset
 
 .
+ Finally, the GP defines the optimal control action at any process state
+ implicitly by (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:q-function-policy"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+).
 \end_layout
 
 \begin_layout Standard
@@ -1841,18 +2333,69 @@ status open
 
 \series bold
 Require: 
-\begin_inset Formula $\mathbf{X},\mathbf{X_{*}},\pi^{(1)}$
+\begin_inset Formula $k([\mathbf{u},\mathbf{x}],[\mathbf{u}',\mathbf{x}']),\epsilon,\gamma,\xi,\mathbf{x}_{j},\mathbf{u}_{j},\boldsymbol{\ell}_{j},\pi^{(1)}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\begin_inset Formula $1\leq j\leq k$
 \end_inset
 
 
 \end_layout
 
 \begin_layout Enumerate
+calculate kernel and its inversion 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
 
+\begin_inset Formula $\overline{\mathbf{K}}_{ff}^{-1}$
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "enu:calculate-kernel-inv"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $i=1$
+\end_inset
+
+,
 \series bold
-while 
+ repeat
 \series default
-stop condition
+
 \begin_inset Separator latexpar
 \end_inset
 
@@ -1861,13 +2404,44 @@ stop condition
 
 \begin_deeper
 \begin_layout Enumerate
-\begin_inset Formula $\pi^{(i)}\rightarrow Q^{\pi^{(i)}}(\mathbf{X},\mathbf{X}_{*})$
+update 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $\mathbf{X}_{*}^{\pi^{(i)}}$
 \end_inset
 
- 
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+ and kernel 
+\begin_inset Formula $\mathbf{K}_{*f}^{(i)}$
+\end_inset
+
+
 \begin_inset CommandInset label
 LatexCommand label
-name "enu:a-GP-estimate-"
+name "enu:update-kalman-gain"
 
 \end_inset
 
@@ -1875,13 +2449,51 @@ name "enu:a-GP-estimate-"
 \end_layout
 
 \begin_layout Enumerate
-\begin_inset Formula $\pi^{(i+1)}\leftarrow\arg\min_{\mathbf{u}}Q^{\pi^{(i)}}$
+calculate 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $\hat{\mathbf{f}}^{(i)},\mathbf{\hat{f}}_{*}^{(i)}$
 \end_inset
 
- 
+ using (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:Q-unbiased-estimate"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+)
 \begin_inset CommandInset label
 LatexCommand label
-name "enu:b-policy-iteration"
+name "enu:calculate-Q-estimate"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $\pi^{(i+1)}(\mathbf{x}_{j})\leftarrow\arg\min_{\mathbf{u}_{j}}Q^{\pi^{(i)}}(\mathbf{u}_{j},\mathbf{x}_{j})$
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "enu:update-pi"
 
 \end_inset
 
@@ -1899,7 +2511,26 @@ name "enu:b-policy-iteration"
 \begin_layout Enumerate
 
 \series bold
-end
+until
+\series default
+ 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $\max\left|\hat{\mathbf{f}}^{(i-1)}-\hat{\mathbf{f}}^{(i)}\right|<\epsilon$
+\end_inset
+
+
 \end_layout
 
 \end_inset
@@ -1973,11 +2604,10 @@ literal "true"
  condensation in the unit.
  It thus makes a difference whether a FCU changes temperature of more air
  by less or vice versa.
- This control problem is significantly complex and non-linear.
  A model based optimal controller cannot be supplied by the unit manufacturer
  because the process model involves model of the interior, including its
- volume, thermal capacities, thermal insulation, solar and thermal load,
- 
+ volume, thermal capacities, thermal insulation, solar and thermal load
+ predictions, 
 \family roman
 \series medium
 \shape up
@@ -1990,7 +2620,7 @@ literal "true"
 \uwave off
 \noun off
 \color none
-
+typical 
 \begin_inset Formula $\mathrm{CO_{2}}$
 \end_inset
 
@@ -2010,7 +2640,7 @@ literal "true"
  and humidity loads.
  That is why model-less control or ML techniques may come into consideration.
  If such controllers could periodically re-optimize their behavior using
- ML techniques, a significant amounts of energy could be saved world wide.
+ ML techniques, significant amounts of energy could be saved world wide.
 \end_layout
 
 \begin_layout Subsection
@@ -2165,8 +2795,7 @@ noindent
 \end_inset
 
  is the maximum supply air temperature.
- The nonlinearity models how the maximum supply air temperature asymptotically
- decrease from
+ The maximum supply air temperature decreases from
 \family roman
 \series medium
 \shape up
@@ -2230,7 +2859,7 @@ noindent
 \uwave default
 \noun default
 \color inherit
- when the air flow increases.
+ asymptotically when the air flow increases.
  For simplicity, we neglected the primary air.
  The heat losses were considered as 
 \family roman
@@ -2265,7 +2894,6 @@ noindent
 , i.e.
  the room temperature would drop by this amount per unit time if the air-conditi
 oning would be stopped.
- 
 \end_layout
 
 \begin_layout Section
@@ -2288,8 +2916,8 @@ reference "sec:Fan-Coil-Unit"
 
 \end_inset
 
- was considered in discrete difference equation form using the Euler method
- with the sampling rate 
+ was considered in discrete time form obtained by the Euler method with
+ the sampling rate 
 \family roman
 \series medium
 \shape up
@@ -2323,7 +2951,7 @@ reference "sec:Fan-Coil-Unit"
  The policy iteration algorithm was applied in order to find the optimal
  control policy.
  Loss function 
-\begin_inset Formula $l$
+\begin_inset Formula $\ell$
 \end_inset
 
  was defined as
@@ -2332,7 +2960,7 @@ reference "sec:Fan-Coil-Unit"
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-l(x_{k},u_{k})=(T_{k}-T_{sp})^{2}+u_{k}^{4},\label{eq:loss-calculation}
+\ell(u_{k},x_{k})=(T_{k}-T_{sp})^{2}+u_{k}^{4},\label{eq:loss-calculation}
 \end{equation}
 
 \end_inset
@@ -2445,7 +3073,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename figures/training_data.eps
+	filename training_data.eps
 	width 95col%
 
 \end_inset
@@ -2509,17 +3137,22 @@ Q function was calculated by the proposed method and optimal control policy
 \end_inset
 
  was found after several policy iterations (around five suffice).
- Value 
-\begin_inset Formula $\gamma=1-1e^{-3}$
+ Values 
+\begin_inset Formula $\gamma=0.999$
 \end_inset
 
- was used in Q-Leatning algorithm.
- Also note here, that it is very important to let 
+ and 
+\begin_inset Formula $\xi=10^{-5}$
+\end_inset
+
+ were used in the algorithm.
+ It is important that 
 \begin_inset Formula $u_{k}^{\pi}$
 \end_inset
 
- excite in order to let the algorithm explore more input-state space.
- This is well known problem of exploration-exploitation trade-off.
+ must excite the process to cover the state-action space.
+ The control actions must be partly randomized to get valid a training dataset.
+ This is related to the well known problem of exploration-exploitation trade-off.
  Fig.
  (
 \begin_inset CommandInset ref
@@ -2545,7 +3178,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename figures/q_learning_improved.eps
+	filename q_learning_improved.eps
 	width 95col%
 
 \end_inset
@@ -2561,22 +3194,26 @@ name "fig:Q-Learning-with-Gaussian"
 \end_inset
 
 Q-Learning with GPR and Policy Iteration.
- Q function 
+ 
 \begin_inset Formula $Q^{*}$
 \end_inset
 
- is presented and optimal control policy 
+ contours and policies 
+\begin_inset Formula $\pi^{(2)}$
+\end_inset
+
+ and 
 \begin_inset Formula $\pi^{*}$
 \end_inset
 
- was calculated from (
+ (highlighted) calculated from (
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:q-function-policy"
 
 \end_inset
 
-) and its curve highlighted here.
+).
 \end_layout
 
 \end_inset
@@ -2604,13 +3241,18 @@ This Q learning result makes good sense intuitively.
  Instead, the electrical fan noise and the air flow would would just annoy
  the occupants.
  Also, the fan would use more electricity.
+ All this is modeled by the second term in 
+\begin_inset Formula $\ell$
+\end_inset
+
+.
  As such, the policy resembles a proportional feedback controller with variable
  gain.
  It does not have any integral action whereas a proportional derivative
  integral (PID) controller would be normally used for similar purpose.
- However, it can be shown that the intergal action can be added to Q learned
- policy augmenting the state space with temperature time difference and
- considering the time difference 
+ However, it can be shown that the integral action can be added augmenting
+ the state space with temperature time difference and considering the time
+ difference 
 \begin_inset Formula $u_{k}-u_{k-1}$
 \end_inset
 
@@ -2625,17 +3267,18 @@ Q-Learning Evaluation
 
 \begin_layout Standard
 The results from Q-Learning were compared to multiple PI controllers in
- terms of their cumulative loss function 
+ terms of the cumulative loss function 
 \begin_inset Formula $L$
 \end_inset
 
  values.
- This function represents the sum of all losses during all episodes, i.e.
+ This function represents the sum of all losses during an episode, i.e.
  
 \begin_inset Formula $L=\sum_{k}\ell_{k}$
 \end_inset
 
- and the assuredly optimal value of cumulative loss 
+.
+ An assuredly optimal value of cumulative loss 
 \begin_inset Formula $L^{*}$
 \end_inset
 
@@ -2646,12 +3289,11 @@ The results from Q-Learning were compared to multiple PI controllers in
  from Q learning.
  A grid of proportional and integral PI constants was considered so that
  it obviously contained the optimal PI values (local minimum).
- The cumulative loss was calculated for each in the same way as 
-\begin_inset Formula $L^{*}$
+ All 
+\begin_inset Formula $L$
 \end_inset
 
- was calculated, i.e.
- using (
+ values were calculated using (
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:loss-calculation"
@@ -2661,17 +3303,68 @@ noprefix "false"
 
 \end_inset
 
-), so the cumulative losses are made comparable.
- The initial room temperature was 
+) starting at the same initial condition 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
 \begin_inset Formula $\mathrm{10^{o}C}$
 \end_inset
 
- and the cumulative loss was calculated for 1,000 sampling periods.
- These cumulative loss values were then compared to 
-\begin_inset Formula $L^{*}$
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+ over next 1,000 sampling periods considering 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $T_{sp}=22\unit{\textdegree C}$
 \end_inset
 
- in Fig.
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+, so the results are comparable.
+ These values were compared in Fig.
  (
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -2679,8 +3372,8 @@ reference "fig:Comparison-of-PI-Q-Learning"
 
 \end_inset
 
-) and the best PI controller parameters from the grid were selected for
- Fig.
+).
+ The best PI controller parameters from the grid were selected for Fig.
  (
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -2695,7 +3388,7 @@ reference "fig:Q-Learning-PI-PI"
 
  is also visualized.
  It can be observed that the best PI almost matches the result of the Q
- learning.
+ learning whereas the model linearization based result is different.
 \end_layout
 
 \begin_layout Standard
@@ -2707,7 +3400,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename figures/q_learning_vs_pi_contr.eps
+	filename q_learning_vs_pi_contr.eps
 	width 95col%
 
 \end_inset
@@ -2747,12 +3440,12 @@ Comparison of PI controllers cumulative losses
 \begin_inset Float figure
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename figures/optimal_policy.eps
+	filename optimal_policy.eps
 	width 95col%
 
 \end_inset
@@ -2790,7 +3483,7 @@ Next, the controllers and the Q learning were tested considering the net
 \end_inset
 
  not constant but uniformly distributed over 
-\begin_inset Formula $\left[-7,0\right]$
+\begin_inset Formula $-7\pm\varDelta$
 \end_inset
 
 .
@@ -2817,7 +3510,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename figures/optimal_policy_noisy.eps
+	filename optimal_policy_noisy.eps
 	width 95col%
 
 \end_inset
@@ -2853,12 +3546,6 @@ Comparison of Q-Learning optimal control policy, PI controller designed
 
 \end_layout
 
-\begin_layout Standard
-Note, that the dataset size is very important and if only a small dataset
- is available, the Q-Learning result degrades significantly.
- 
-\end_layout
-
 \begin_layout Section
 CONCLUSIONS
 \begin_inset CommandInset label
@@ -2873,32 +3560,21 @@ name "sec:CONCLUSIONS"
 \begin_layout Standard
 This paper described a practical approach of using GPR based Q-Learning
  algorithm to find a control law for a completely unknown nonlinear process
- based on a historical dataset of size 
+ based on a historical dataset of a medium size 
 \begin_inset Formula $\sim10^{3}$
 \end_inset
 
 .
  Engineers face such problem often and a solution is of practical interest.
- GPR approach was used to estimate Q function value in any point in the
- action value space.
- The policy iterations were used to optimize the controller as this method
- converges rapidly.
- It requires the initial control to be stabilizing.
- This does not seem to be a serious constraint in many practical applications
- such as building control.
- The optimal control law was then fully defined by the minima of Q function
- 
-\begin_inset Formula $Q^{*}$
-\end_inset
-
-.
- Although not explained in this paper, GPR can be globally minimized even
- if the function 
-\begin_inset Formula $f$
-\end_inset
-
- is not convex provided the kernel is either convex after a transformation
- 
+ An efficient GPR approach was used to calculate an unbiased Q function
+ value estimate in any point in the state-action space.
+ The policy iterations were used to optimize the controller.
+ This method typically converges rapidly.
+ The optimal control law was then fully defined by the minima of a GP.
+ This represents a numerical optimization in a low dimensional space of
+ controller outputs and is thus numerically tractable.
+ Although not explained in this paper, GP can be globally minimized even
+ if it is not convex, see 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "ecc19ref:Franey_Branch_and_Bound_Algo"
@@ -2907,11 +3583,11 @@ literal "false"
 \end_inset
 
 .
- It was shown how GPR can be used to get an unbiased Q estimate which is
- not sensitive to noise affecting the process.
- Note that the proposed method is more accurate than just solving the temporal
- difference equation in the least squares sense which results in a bias
- 
+ An unbiased Q estimate makes the method insensitive to noise affecting
+ the process.
+ It is more accurate than just solving the so-called temporal difference
+ equation in the least squares sense which results in a biased estimate
+ in the presence of process noise 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "ecc19ref:Bratke_Linear_Least_Squares_Algo"
@@ -2935,20 +3611,22 @@ literal "false"
 \begin_inset Formula $L$
 \end_inset
 
- with the assuredly optimal cumulative loss 
+ towards 
 \begin_inset Formula $L^{*}$
 \end_inset
 
-, which was found by the Q-learning.
- The best controller from the grid is slightly worse than 
+ found by the Q-learning.
+ The best PI controller from the grid was slightly worse than 
 \begin_inset Formula $L^{*}$
 \end_inset
 
 .
- Such direct controller optimization may be impractical in reality because
- it is very time consuming.
- Also, another PI controller was designed based on a linearized FCU model.
- This traditional approach could be actually used in practice together with,
+ However, such direct controller search is impractical without a simulation
+ model because it requires evaluating many controllers from defined initial
+ conditions and affected by defined disturbances.
+ Also, a PI controller was designed based on a linearized FCU model and
+ PI tuning rules.
+ This traditional approach could actually be used in practice together with,
  for example, Ziegler Nichols PID calibration method.
  The controllers were compared in Section 
 \begin_inset CommandInset ref
@@ -2957,33 +3635,45 @@ reference "sec:RESULTS"
 
 \end_inset
 
- and the performance of both PI found by direct search and PI designed using
- linearized FCU were shown to be worse than Q-Learning policy 
-\begin_inset Formula $\pi^{*}$
-\end_inset
-
-.
+ and the performance of PI designed using linearized FCU was shown to be
+ worse than both Q-Learning and the PI found by direct search.
+ Here the problem may be the choice of the linearization point.
+ Although the example was a single input single output control problem,
+ the method applies to multidimensional problems without modifications.
  The whole process was described for reader's understanding on the high
  level.
  Many technical details were mentioned just briefly.
- However, the method is quite simple and straightforward.
+ However, the method is simple and straightforward.
 \end_layout
 
 \begin_layout Standard
 The main pitfalls of the process may be also pointed out.
- Firstly, it is necessary to choose several parameters, i.
- e.
- the hyperparameters for GP and the training dataset.
- Their optimization and diagnostics is possible and it is current research
- topic.
+ It is necessary to choose a kernel function and several hyperparameters.
+ However these choices affect the accuracy, the method should still converges
+ to the same Q function asymptotically with growing dataset.
+ The optimization of hyperparameters in connection with the proposed approach
+ is our current research topic.
  Although result with only one kernel (SE times quadratic) was presented,
- we also tried different kernels with similar results provided the hyperparamete
-rs were chosen reasonably and the kernels were smooth.
- Tuning of hyperparameters is not discussed in this paper.
- Next interesting problem is the tuning of sparse GPR parameters.
- Overall, the method gives reasonably consistent results not overly sensitive
- to the data or parameters.
+ different kernels were also tried with similar results provided the hyperparame
+ters were chosen reasonably and the kernels were smooth.
+ The method assumes the process state is measured without error.
+ This is not realistic in most control applications.
+ The state may be often approximated by measurements and lagged measurements
+ and control actions.
+ Although the Q-learning seems to work well if the approximation is reasonable,
+ an optimal state approximation is currently investigated in terms of dimension
+ versus accuracy trade-off.
+ The training dataset must provide exploration and cannot be obtained by
+ running a fixed controller.
+ A control action randomization is necessary.
+ A stabilizing initial controller is required.
+ This does not seem to be a serious constraint in many practical applications
+ such as building control.
  
+\end_layout
+
+\begin_layout Standard
+Overall, the method gives reasonably consistent results.
 \end_layout
 
 \begin_layout Standard
