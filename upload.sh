@@ -9,6 +9,9 @@
 if $1; then
 	# export to pdf
 	pdflatex ecc19.tex
+	bibtex ecc19
+	pdflatex ecc19.tex
+	pdflatex ecc19.tex	
 fi
 
 # push to github 

@@ -1,4 +1,10 @@
+# pdflatex compile files
 ecc19.aux
 ecc19.log
 ecc19.out
 figures/*.pdf
+
+# bibtex compile files
+ecc19.bbl
+ecc19.blg
+

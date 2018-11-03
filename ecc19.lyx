@@ -3073,7 +3073,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename training_data.eps
+	filename figures/training_data.eps
 	width 95col%
 
 \end_inset
@@ -3178,7 +3178,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename q_learning_improved.eps
+	filename figures/q_learning_improved.eps
 	width 95col%
 
 \end_inset
@@ -3400,7 +3400,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename q_learning_vs_pi_contr.eps
+	filename figures/q_learning_vs_pi_contr.eps
 	width 95col%
 
 \end_inset
@@ -3440,12 +3440,12 @@ Comparison of PI controllers cumulative losses
 \begin_inset Float figure
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename optimal_policy.eps
+	filename figures/optimal_policy.eps
 	width 95col%
 
 \end_inset
@@ -3510,7 +3510,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename optimal_policy_noisy.eps
+	filename figures/optimal_policy_noisy.eps
 	width 95col%
 
 \end_inset
