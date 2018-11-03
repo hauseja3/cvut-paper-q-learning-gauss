@@ -1,0 +1,3002 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass ieeeconf
+\begin_preamble
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%2345678901234567890123456789012345678901234567890123456789012345678901234567890
+%        1         2         3         4         5         6         7         8
+
+% Comment this line out if you need a4paper
+
+%\documentclass[a4paper, 10pt, conference]{ieeeconf}      % Use this line for a4 paper
+
+\IEEEoverridecommandlockouts                              % This command is only needed if 
+                                                          % you want to use the \thanks command
+
+\overrideIEEEmargins                                      % Needed to meet printer requirements.
+
+%In case you encounter the following error:
+%Error 1010 The PDF file may be corrupt (unable to open PDF file) OR
+%Error 1000 An error occurred while parsing a contents stream. Unable to analyze the PDF file.
+%This is a known problem with pdfLaTeX conversion filter. The file cannot be opened with acrobat reader
+%Please use one of the alternatives below to circumvent this error by uncommenting one or the other
+%\pdfobjcompresslevel=0
+%\pdfminorversion=4
+
+% See the \addtolength command later in the file to balance the column lengths
+% on the last page of the document
+
+% The following packages can be found on http:\\www.ctan.org
+%\usepackage{graphics} % for pdf, bitmapped graphics files
+%\usepackage{epsfig} % for postscript graphics files
+%\usepackage{mathptmx} % assumes new font selection scheme installed
+%\usepackage{times} % assumes new font selection scheme installed
+%\usepackage{amsmath} % assumes amsmath package installed
+\usepackage{amssymb}  % assumes amsmath package installed
+
+\title{\LARGE \bf
+ Gaussian Process Based Model-less Control with Q-Learning*
+}
+
+
+\author{Jan Hauser$^{1}$ and Daniel Pachner$^{2}$ and Vladimír Havlena$^{1}$% <-this % stops a space
+\thanks{*This work was supported by ...?}% <-this % stops a space
+\thanks{$^{1}$Jan Hauser and Vladimír Havlena are with Department of Control Engineering, 
+Faculty of Electrical Engineering of Czech Technical University in Prague, Technicka 2, 166 27 Praha 6, Czech Republic.
+Email: {\tt\small \{hauseja3,havlena\}@fel.cvut.cz}}%
+\thanks{$^{2}$Daniel Pachner is with Honeywell ACS Global Laboratory Prague, 
+V Parku 2326/18, 148 00 Prague, Czech Republic 
+Email: {\tt\small daniel.pachner@honeywell.com}}%
+}
+\end_preamble
+\options conference
+\use_default_options false
+\maintain_unincluded_children false
+\language english
+\language_package none
+\inputencoding auto
+\fontencoding default
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures false
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize 10
+\spacing single
+\use_hyperref true
+\pdf_title "Gaussian Process Based Model-less Control with Q-Learning"
+\pdf_author "Jan Hauser and Daniel Pachner and Vladimír Havlena"
+\pdf_keywords "Gaussian process, Q-Learning, Model-less Controll, Machine Learning"
+\pdf_bookmarks true
+\pdf_bookmarksnumbered false
+\pdf_bookmarksopen false
+\pdf_bookmarksopenlevel 1
+\pdf_breaklinks false
+\pdf_pdfborder true
+\pdf_colorlinks true
+\pdf_backref false
+\pdf_pdfusetitle true
+\papersize letterpaper
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 0
+\use_package cancel 0
+\use_package esint 1
+\use_package mathdots 0
+\use_package mathtools 0
+\use_package mhchem 0
+\use_package stackrel 0
+\use_package stmaryrd 0
+\use_package undertilde 0
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+maketitle
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+thispagestyle{empty}
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+pagestyle
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+empty
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Abstract
+The aim of this paper is to demonstrate how Machine Learning (ML) based
+ on Gaussian Process Regression (GPR) can be used as a practical control
+ design technique.
+ An optimized control law for a nonlinear process is found directly by training
+ the algorithm on noisy data collected from the process when controlled
+ by a sub-optimal controller.
+ Furthermore, sparse form of GPR is suggested and applied to reduce computationa
+l effort.
+ Simplified nonlinear Fan Coil Unit (FCU) model is used as an example for
+ which the fan speed control is designed using the off-policy Q-Learning
+ algorithm.
+ Additionally, the algorithm properties are discussed, i.e.
+ effect of the sparse GPR, learning process robustness, GP kernel functions
+ choice.
+ The simulation results are compared to a simple PI designed based on a
+ linearized model.
+\end_layout
+
+\begin_layout Section
+INTRODUCTION
+\end_layout
+
+\begin_layout Standard
+Model-less control techniques assume that no mathematical model of the controlle
+d process is available and the controller is designed from the measurement
+ data.
+ One such approach would collect the data in advance during some time window
+ to use it offline for a controller design.
+ A different approach would attempt to use the data in the real time to
+ improve the control continuously.
+ In this article the former offline approach is considered, i.e.
+ the situation when some sub-optimal controller was already in use and the
+ data were collected and can be used to optimize, or improve, that controller.
+ Many existing control design techniques first create a model from data
+ to use it for a control design method afterwards, which makes sense if
+ some modeling information, e.g.
+ model structure, is available.
+ A different approach, used in this paper, is the controller designed directly
+ from the data, without any process model.
+ This approach can have some advantages especially if little or nothing
+ is known about the process or if the process is nonlinear and no simple
+ analytical control design method is available.
+\end_layout
+
+\begin_layout Standard
+The Q-Learning is an off-policy machine learning (ML) iterative algorithm
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "ecc19ref:Sutton_Reinforcement_Learning"
+literal "true"
+
+\end_inset
+
+, which approximates certain function satisfying the Bellman equation.
+ This Q function then defines a controller.
+ To solve problems in continuous state spaces, Q function can be represented
+ by a universal function approximating method such as Neural Network or
+ Gaussian Process Regression (GPR).
+ This approach is very closely related to Markov Decision Process (MDP)
+ and Approximate Dynamic Programming (ADP) approaches.
+ 
+\end_layout
+
+\begin_layout Standard
+GPR is a non-parametric regression technique 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "ecc19ref:Rasmussen_Gaussian_Processes"
+literal "true"
+
+\end_inset
+
+ which is able to approximate any function using noisy data.
+ It can be applied even if the analytical form of the function is unknown.
+ Unfortunately, the runtime computational requirement is 
+\begin_inset Formula $\mathcal{O}(n^{3})$
+\end_inset
+
+ and the memory requirement is 
+\begin_inset Formula $\mathcal{O}(n^{2})$
+\end_inset
+
+ for 
+\begin_inset Formula $n$
+\end_inset
+
+ data points.
+ Various sparse GPR 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "ecc19ref:Bijl_Online_Sparse_Gaussian"
+literal "true"
+
+\end_inset
+
+,
+\begin_inset CommandInset citation
+LatexCommand cite
+key "ecc19ref:Candela_A_unifying_view"
+literal "false"
+
+\end_inset
+
+,[
+\shape italic
+cite: Guber?
+\shape default
+] techniques were developed to overcome this computational complexity.
+ One of the conventional GPR sparse method is to use a set of size 
+\begin_inset Formula $m$
+\end_inset
+
+ induction input points which reduces the computational complexity to 
+\begin_inset Formula $\mathcal{O}(nm^{2})$
+\end_inset
+
+ (runtime) and 
+\begin_inset Formula $\mathcal{O}(nm)$
+\end_inset
+
+ (memory).
+ These induction points reduce the whole dataset into a smaller number of
+ representing data points which are distributed across the data space to
+ preserve as much information as possible.
+ GP uses various covariance (kernel) functions 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "ecc19ref:Williams_Prediction_with_Gaussian_processes"
+literal "false"
+
+\end_inset
+
+ to define the data covariance matrices.
+ The choice of the kernel can have significant impact on the accuracy of
+ the regression result.
+\end_layout
+
+\begin_layout Standard
+The contribution of this paper is the practical combination of Q-Learning
+ and GPR resulting in unbiased estimate of Q function and control policy
+ improvement.
+ ML algorithms normally needs a large historical dataset (of size 
+\begin_inset Formula $\sim10^{5}$
+\end_inset
+
+ and more) to find sufficient result, here a way smaller dataset is necessary
+ (of a size 
+\begin_inset Formula $\sim10^{3}$
+\end_inset
+
+).
+ A simple Fan Coil Unit (FCU) model approximation is used to demonstrate
+ the approach.
+ FCU is a nonlinear system widely used for both air heating and cooling
+ in buildings.
+ A linear control design cannot achieve optimal control in terms of energy
+ consumption and user comfort 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "ecc19ref:Arguello_Serrano_Nonlinear_HVAC"
+literal "true"
+
+\end_inset
+
+.
+ FCU model used here is highly simplified to make the result easier to interpret.
+\end_layout
+
+\begin_layout Standard
+For reader's understanding, some essential theory is briefly introduced.
+ In Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:gp"
+
+\end_inset
+
+, the GPR algorithm is explained.
+ Moreover, its sparse approximation is suggested later in text.
+ Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Q-Learning"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ describes the Q-Learning mechanism and how it connects to GPR.
+ In Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Fan-Coil-Unit"
+
+\end_inset
+
+, a reduced FCU model is explained.
+ Next Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:RESULTS"
+
+\end_inset
+
+ presents the results of these techniques and Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:CONCLUSIONS"
+
+\end_inset
+
+ concludes and proposes a future work.
+ 
+\end_layout
+
+\begin_layout Section
+GAUSSIAN PROCESS
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:gp"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In this section, GPR method is briefly described.
+ The GPR technique is then used with Q-Learning algorithm in next section.
+\end_layout
+
+\begin_layout Subsection
+Gaussian Process Regression
+\end_layout
+
+\begin_layout Standard
+GPR is a supervised learning regression model, which can be also described
+ as a distribution over functions 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "ecc19ref:Rasmussen_Gaussian_Processes"
+literal "true"
+
+\end_inset
+
+.
+ It is the function value estimator for an unknown function 
+\begin_inset Formula $f(\mathbf{x})$
+\end_inset
+
+ considering any dataset 
+\begin_inset Formula $(\mathbf{x},\mathbf{y})$
+\end_inset
+
+, which can be written as 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+f(\mathbf{x})\sim\mathcal{GP}\left(m(\mathbf{x}),k(\mathbf{x},\mathbf{x}')\right),
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+noindent
+\end_layout
+
+\end_inset
+
+ where mean 
+\begin_inset Formula $m(\mathbf{x})$
+\end_inset
+
+ and covariance function 
+\begin_inset Formula $k(\mathbf{x},\mathbf{x}'$
+\end_inset
+
+) are given a priori up to some hyperparameters and are defined as
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{eqnarray*}
+m(\mathbf{x)} & = & \mathbb{E}\left[f(\mathbf{x})\right],\\
+k(\mathbf{x},\mathbf{x'}) & = & \mathbb{E}\left[\left(f(\mathbf{x})-m(\mathbf{x})\right)\left(f(\mathbf{x}')-m(\mathbf{x}')\right)\right],
+\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+noindent
+\end_layout
+
+\end_inset
+
+ where 
+\begin_inset Formula $\mathbf{x}$
+\end_inset
+
+ is a vector representing the dataset 
+\begin_inset Formula $\mathbf{X}=\left[\mathbf{x}_{1},\mathbf{x}_{2},\ldots,\mathbf{x}_{n}\right]$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Assume the finite training set 
+\begin_inset Formula $\mathbf{X}$
+\end_inset
+
+ and the finite testing set 
+\begin_inset Formula $\mathbf{X}_{*}$
+\end_inset
+
+, then GPR can predict 
+\begin_inset Formula $f(\mathbf{x}_{j*})$
+\end_inset
+
+, where 
+\begin_inset Formula $\mathbf{x}_{j*}\in\mathbf{X}_{*}$
+\end_inset
+
+, by using data 
+\begin_inset Formula $\mathbf{x}_{i}\in\mathbf{X}$
+\end_inset
+
+ and their function values 
+\begin_inset Formula $f(\mathbf{x}_{i})$
+\end_inset
+
+.
+ The function values 
+\begin_inset Formula $f(\mathbf{X})$
+\end_inset
+
+ themselves do not need to be accessible but rather their noisy measurements
+ 
+\begin_inset Formula $\mathbf{y}_{i}=f(\mathbf{X})+\boldsymbol{\varepsilon}_{i}$
+\end_inset
+
+, where 
+\begin_inset Formula $\boldsymbol{\varepsilon}$
+\end_inset
+
+ is a vector of independent identically distributed (i.i.d) Gaussian noise
+ with variance 
+\begin_inset Formula $\sigma_{n}^{2}$
+\end_inset
+
+.
+ The prior covariance of the noisy values is defined as 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\mathrm{cov}(\mathbf{y})=k(\mathbf{X},\mathbf{X})+\sigma_{n}^{2}\mathbf{I}.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Then the prior joint probability distribution function (p.d.f) can be defined
+ for training and testing sets values as 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{multline*}
+\left[\begin{array}{c}
+\mathbf{y}\\
+f(\mathbf{X}_{*})
+\end{array}\right]\sim\\
+\mathcal{N}\left(\left[\begin{array}{c}
+m(\mathbf{X})\\
+m(\mathbf{X}_{*})
+\end{array}\right],\left[\begin{array}{cc}
+k(\mathbf{X},\mathbf{X})+\sigma_{n}^{2}\mathbf{I} & k(\mathbf{X},\mathbf{X}_{*})\\
+k(\mathbf{X}_{*},\mathbf{X}) & k(\mathbf{X}_{*},\mathbf{X}_{*})
+\end{array}\right]\right)=\\
+\mathcal{N}\left(\left[\begin{array}{c}
+\mathbf{m}\\
+\mathbf{m}_{*}
+\end{array}\right],\left[\begin{array}{cc}
+\mathbf{K}_{ff}+\sigma_{n}^{2}\mathbf{I} & \mathbf{K}_{f*}\\
+\mathbf{K}_{*f} & \mathbf{K}_{**}
+\end{array}\right]\right),
+\end{multline*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+noindent
+\end_layout
+
+\end_inset
+
+ where 
+\begin_inset Formula $\mathbf{K}_{f*}$
+\end_inset
+
+ is a 
+\begin_inset Formula $n\times n_{*}$
+\end_inset
+
+ matrix of the covariances of all pairs of training and testing datasets,
+ i.e.
+ 
+\begin_inset Formula $\mathbf{K}_{ff}$
+\end_inset
+
+, 
+\begin_inset Formula $\mathbf{K}_{**}$
+\end_inset
+
+, 
+\begin_inset Formula $\mathbf{K}_{*f}$
+\end_inset
+
+ analogously.
+ Let's also use a notation 
+\begin_inset Formula $\mathbf{\overline{K}}_{aa}=\mathbf{K}_{aa}+\sigma_{n}^{2}\mathbf{I}$
+\end_inset
+
+ for any 
+\begin_inset Formula $a$
+\end_inset
+
+.
+ There are many useful covariance functions 
+\begin_inset Formula $k(\mathbf{x},\mathbf{x}')$
+\end_inset
+
+ called kernels, e.g.
+ squared exponential (SE)
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+k(\mathbf{x},\mathbf{x}')=\sigma_{f}^{2}\exp\left(-\frac{1}{2l^{2}}\left|\mathbf{x}-\mathbf{x}'\right|^{2}\right)+\sigma_{n}^{2}\delta(\mathbf{x},\mathbf{x}'),
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+noindent
+\end_layout
+
+\end_inset
+
+ or polynomial kernel of 
+\begin_inset Formula $d$
+\end_inset
+
+-degree
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+k(\mathbf{x},\mathbf{x}')=\left(\mathbf{x}^{\top}\mathbf{x}'+c\right)^{d},
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+noindent
+\end_layout
+
+\end_inset
+
+ where 
+\begin_inset Formula $c\geq0$
+\end_inset
+
+.
+ These kernel functions are also scalable by their hyperparameters, i.e.
+ these are signal variance 
+\begin_inset Formula $\sigma_{f}^{2}$
+\end_inset
+
+, length-scale 
+\begin_inset Formula $l^{2}$
+\end_inset
+
+ and noise variance 
+\begin_inset Formula $\sigma_{n}^{2}$
+\end_inset
+
+ for SE kernel or degree 
+\begin_inset Formula $d$
+\end_inset
+
+ and soft-margin 
+\begin_inset Formula $c$
+\end_inset
+
+ for polynomial kernel.
+\end_layout
+
+\begin_layout Standard
+If 
+\begin_inset Formula $\mathbf{y}$
+\end_inset
+
+ is known, then the posterior conditional normal distribution of 
+\begin_inset Formula $\mathbf{f_{*}}$
+\end_inset
+
+ (shortened expression of 
+\begin_inset Formula $f(\mathbf{X}_{*})$
+\end_inset
+
+) can be defined.
+ The predictive GPR relationships are following
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{eqnarray}
+p(\mathbf{f}_{*}|\mathbf{y}) & = & \mathcal{N}(\boldsymbol{\mu}_{*},\mathbf{\Sigma}_{*}),\label{eq:gp-posterior}\\
+\boldsymbol{\mu}_{*} & = & \mathbb{E}\left[\mathbf{f_{*}}|\mathbf{y}\right]=\mathbf{m}_{*}+\mathbf{K}_{*f}\overline{\mathbf{K}}_{ff}^{-1}(\mathbf{y}-\mathbf{m}),\label{eq:gp-posterior-mean}\\
+\mathbf{\Sigma}_{*} & = & \mathbf{K}_{**}-\mathbf{K}_{*f}\overline{\mathbf{K}}_{ff}^{-1}\mathbf{K}_{f*}.\label{eq:gp-posterior-cov}
+\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+There is an important relationship between the Kalman filter equations and
+ (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:gp-posterior-mean"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:gp-posterior-cov"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+), this relationship will be used later.
+ Specifically, we remind that the term 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $\mathbf{G}=\mathbf{K}_{*f}\overline{\mathbf{K}}_{ff}^{-1}$
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+ is the Kalman gain matrix.
+ Assuming the unknown function 
+\begin_inset Formula $f$
+\end_inset
+
+ is a GP, then training points from dataset 
+\begin_inset Formula $\mathbf{X}$
+\end_inset
+
+ and the observed function values 
+\begin_inset Formula $\mathbf{y}$
+\end_inset
+
+ define the posterior expectations (predictions) 
+\begin_inset Formula $\mathbf{f}_{*}$
+\end_inset
+
+ for any test points over a dataset 
+\begin_inset Formula $\mathbf{X}_{*}$
+\end_inset
+
+.
+ Unfortunately, these simple calculations can get very expensive due to
+ the inverse of matrix 
+\series bold
+
+\begin_inset Formula $\overline{\mathbf{K}}_{ff}$
+\end_inset
+
+
+\series default
+, which is of size 
+\begin_inset Formula $n\times n$
+\end_inset
+
+ where 
+\begin_inset Formula $n$
+\end_inset
+
+ is the number of training data points.
+ This is the operation which costs 
+\begin_inset Formula $\mathcal{O}(n^{3})$
+\end_inset
+
+.
+ This is the moment when sparse GPR is taken into account 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "ecc19ref:Bijl_Online_Sparse_Gaussian"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section
+Q-LEARNING
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Q-Learning"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This section describes the basic principles of Q-Learning algorithm 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "ecc19ref:Sutton_Reinforcement_Learning"
+literal "true"
+
+\end_inset
+
+ which is a model-less reinforcement learning approach.
+ Then the policy iteration algorithm based on Bellman equation is introduced.
+ 
+\end_layout
+
+\begin_layout Standard
+For purpose of this section, let's highlight the analogies and slight difference
+s between two closely related fields: Control Theory (CT), and MDP respectively.
+ The states 
+\begin_inset Formula $x_{k}$
+\end_inset
+
+ and inputs 
+\begin_inset Formula $u_{k}$
+\end_inset
+
+ are usually considered in CT for a process model, whereas MDP uses the
+ Markov process states 
+\begin_inset Formula $s_{k}\in\mathbf{S}$
+\end_inset
+
+ and the agent's actions 
+\begin_inset Formula $a_{k}\in\mathbf{A}$
+\end_inset
+
+.
+ Note that the sets 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $\mathbf{S}$
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+ and 
+\begin_inset Formula $\mathbf{A}$
+\end_inset
+
+ are usually some real vector spaces in control problems whereas they may
+ often be finite sets in MDP.
+ The process model itself is an analogy of probability transition matrix
+ 
+\begin_inset Formula $p(s_{k+1}|a_{k},s_{k})$
+\end_inset
+
+ of MDP.
+ Control law, or the state feedback 
+\begin_inset Formula $u_{k}=C(x_{k})$
+\end_inset
+
+ in CT is an analogy of a deterministic policy 
+\begin_inset Formula $u_{k}=\pi(s_{k})$
+\end_inset
+
+.
+ A stochastic policy defines the joint p.d.f.
+ 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $\pi(a_{k},s_{k})$
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+ instead of an explicit function.
+ An important difference exists between the reward 
+\begin_inset Formula $r_{k}(a_{k},s_{k},s_{k+1})$
+\end_inset
+
+ used in MDP (bounded, to be maximized) and loss function 
+\begin_inset Formula $\ell_{k}(x_{k},u_{k})$
+\end_inset
+
+ used in CT (often not bounded, to be minimized, almost never depending
+ on 
+\begin_inset Formula $x_{k+1}$
+\end_inset
+
+).
+ The ML theory will be discussed below with CT notation.
+\end_layout
+
+\begin_layout Subsection
+Q Function
+\end_layout
+
+\begin_layout Standard
+Generally, Q function is a scalar function of a state-input (state-action)
+ pair which maps to real values 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+Q:\mathbf{\mathbf{u\times}x}\rightarrow\mathbb{R}.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+It is possible to talk either about Q function 
+\begin_inset Formula $Q^{\pi}(u_{k},x_{k})$
+\end_inset
+
+ pertaining to a given policy 
+\begin_inset Formula $\pi$
+\end_inset
+
+ or the Q function 
+\begin_inset Formula $Q^{*}(x_{k},u_{k})$
+\end_inset
+
+ achieved after convergence.
+ 
+\begin_inset Formula $Q$
+\end_inset
+
+ (and 
+\begin_inset Formula $Q^{*}$
+\end_inset
+
+) describes the expected total discounted loss 
+\begin_inset Formula $\ell(u_{k,}x_{k})$
+\end_inset
+
+ received by the controller starting from 
+\begin_inset Formula $x_{k}$
+\end_inset
+
+ with a control action 
+\begin_inset Formula $u_{k}$
+\end_inset
+
+ and following with the policy 
+\begin_inset Formula $\pi$
+\end_inset
+
+ (and optimal 
+\begin_inset Formula $\pi^{*}$
+\end_inset
+
+) thereafter.
+ 
+\begin_inset Formula $Q^{*}$
+\end_inset
+
+, as function of 
+\begin_inset Formula $u_{k}$
+\end_inset
+
+, is thus a measure of quality of selecting the control action 
+\begin_inset Formula $u_{k}$
+\end_inset
+
+ in a given state 
+\begin_inset Formula $x_{k}$
+\end_inset
+
+.
+ 
+\begin_inset Formula $Q^{*}$
+\end_inset
+
+ is minimized by the optimal control action(s) because, it can only be made
+ worse.
+ There is also an important parallel between 
+\begin_inset Formula $Q$
+\end_inset
+
+ function and the value (cost-to-go) function 
+\begin_inset Formula $V$
+\end_inset
+
+ used in DP.
+ It is also related to Lyapunov function and stability theory.
+ 
+\begin_inset Formula $V$
+\end_inset
+
+ is not used for purpose of this paper.
+ For a policy 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $\pi$
+\end_inset
+
+, not necessarily optimal, the Q is defined
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{multline}
+Q^{\pi}(u_{k},x_{k})=\\
+l(u_{k},x_{k})+\mathbb{E}\left[\left.\sum_{i=1}^{\infty}\gamma^{i}\ell(u_{k+i}^{\pi},x_{k+i})\right|u_{k},x_{k}\right],\label{eq:q-split-sum}
+\end{multline}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+noindent
+\end_layout
+
+\end_inset
+
+ where 
+\begin_inset Formula $\gamma\in\left(0,1\right]$
+\end_inset
+
+ is a discount factor.
+ Q function 
+\begin_inset Formula $Q^{*}$
+\end_inset
+
+ is defined as follows
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{multline}
+Q^{*}(u_{k},x_{k})=\\
+l(u_{k},x_{k})+\mathbb{E}\left[\left.\min_{u_{k+i}}\sum_{i=1}^{\infty}\gamma^{i}\ell(u_{k+i},x_{k+i})\right|u_{k},x_{k}\right].\label{eq:q-function-star}
+\end{multline}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The relationship between the Q function 
+\begin_inset Formula $Q^{*}$
+\end_inset
+
+ and the optimal policy 
+\begin_inset Formula $\pi^{*}$
+\end_inset
+
+ is
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\pi^{*}(x_{k})=\arg\min_{u_{k}}Q^{*}(u_{k},x_{k}).\label{eq:q-function-policy}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The Bellman optimality principle equation (more usually expressed in terms
+ of 
+\begin_inset Formula $V$
+\end_inset
+
+) provides the recursive approach for finding the Q function 
+\begin_inset Formula $Q^{*}$
+\end_inset
+
+.
+ It follows directly from (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:q-split-sum"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:q-function-star"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+).
+ For some policy 
+\begin_inset Formula $\pi$
+\end_inset
+
+, function 
+\begin_inset Formula $Q^{\pi}(x_{k},u_{k})$
+\end_inset
+
+ must satisfy
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{multline}
+Q^{\pi}(u_{k},x_{k})=\\
+\ell(u_{k},x_{k})+\gamma\mathbb{E}\left[\left.Q^{\pi}(u_{k+1}^{\pi},x_{k+1})\right|u_{k},x_{k}\right],\label{eq:q-value-iteration}
+\end{multline}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+and for optimal policy 
+\begin_inset Formula $\pi^{*}$
+\end_inset
+
+ analogously by using (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:q-function-star"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Subsection
+Policy Iteration
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:Policy-Iteration"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Policy iteration algorithm calculates Q function from Bellman equation for
+ a current policy and then improves the current policy by seeking for minimum
+ values of 
+\begin_inset Formula $Q_{k}^{\pi}$
+\end_inset
+
+ with respect to 
+\begin_inset Formula $u_{k}$
+\end_inset
+
+ for each 
+\begin_inset Formula $x_{k}$
+\end_inset
+
+.
+ Such minimizing 
+\begin_inset Formula $u_{k}$
+\end_inset
+
+ defines the new policy.
+ This process is repeated until convergence.
+ It converges to the 
+\begin_inset Formula $Q^{*}$
+\end_inset
+
+ and provides expected cumulative loss, which is finite for the initial
+ 
+\begin_inset Formula $\pi$
+\end_inset
+
+.
+ It means the starting policy can be selected randomly but must be stabilizing
+ in order to ensure the initial 
+\begin_inset Formula $Q^{\pi}$
+\end_inset
+
+ is finite.
+ 
+\end_layout
+
+\begin_layout Subsection
+Q-Learning with Gaussian Process Regression
+\end_layout
+
+\begin_layout Standard
+Last step in this section is to introduce Q-Learning algorithm with GPR.
+ For finite (in number of states and actions) MDP, the Q-Learning algorithms
+ approximate the Q function using the observed samples 
+\begin_inset Formula $x_{k},u_{k}$
+\end_inset
+
+, which were encountered during interaction with a system.
+ Nice example of commonly used Q-Learning is state action reward state action
+ or SARSA 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "ecc19ref:Sutton_Reinforcement_Learning"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+This paper considers GPR as Q function approximation and then optimize the
+ control action using (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "subsec:Policy-Iteration"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+).
+ Method based on GPR is proposed to calculate Q, because the action-state
+ space is a vector space where f.e.
+ SARSA cannot be used directly.
+ Let us define the set of training and prediction points for the GPR as
+ concatenations of points in the action-state space
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{gather}
+\mathbf{X}_{*}=\left[\begin{array}{c}
+u_{1}^{\pi},x_{1}\\
+\vdots\\
+u_{k}^{\pi},x_{k}^{\pi}
+\end{array}\right],\;\mathbf{X}=\left[\begin{array}{c}
+u_{0},x_{0}\\
+\vdots\\
+u_{k-1},x_{k-1}
+\end{array}\right].
+\end{gather}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Also, the concatenation of the losses will be used
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\mathbf{\ell}=\left[\begin{array}{c}
+\ell_{0}\\
+\vdots\\
+\ell_{k-1}
+\end{array}\right],
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+noindent
+\end_layout
+
+\end_inset
+
+ and let the Q function be a GP with known kernel.
+ The notation 
+\begin_inset Formula $\mathbf{f}$
+\end_inset
+
+ for the unknown function used in GPR context will be preserved
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\mathbf{f}_{*}=Q^{\pi}(\mathbf{X}_{*}),\quad\mathbf{f}=Q^{\pi}(\mathbf{X}).
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The noisy realization of 
+\begin_inset Formula $\mathbf{f}=\mathbb{\ell+\gamma E}[Q^{\pi}(\mathbf{X}_{*})]$
+\end_inset
+
+ is 
+\begin_inset Formula $\mathbf{y}=\mathbf{\ell}+\gamma\mathbf{f}_{*}$
+\end_inset
+
+.
+ Then based on (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:gp-posterior-mean"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+) and (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:q-value-iteration"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+), the conditional means are
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{multline}
+\mathbb{E\left[\mathit{\left.\begin{array}{c}
+\mathbf{f}\\
+\mathbf{f}_{*}
+\end{array}\right|\mathbf{\mathit{\mathbf{y}}}}\right]}=\\
+\left[\begin{array}{c}
+\mathbf{m}\\
+\mathbf{m}_{*}
+\end{array}\right]+\left[\begin{array}{c}
+\mathbf{K}_{ff}\\
+\mathbf{K}_{*f}
+\end{array}\right]\overline{\mathbf{K}}_{ff}^{-1}\left(\mathbf{\ell}+\gamma\mathbf{f}_{*}-\mathbf{m}\right).\label{eq:Q-data-update}
+\end{multline}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The expression (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:Q-data-update"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+) may seem useless because the Q estimates depend on 
+\begin_inset Formula $\mathbf{f}_{*}$
+\end_inset
+
+ true value which we do not know.
+ Recall that Q function is neither measured nor observed.
+ However, consider the left hand side equals the true values 
+\series bold
+
+\begin_inset Formula $\mathbf{f}$
+\end_inset
+
+
+\series default
+ and 
+\begin_inset Formula $\mathbf{f}_{*}$
+\end_inset
+
+ for 
+\begin_inset Formula $k\rightarrow\infty$
+\end_inset
+
+ and sufficient excitation in the action-state space, and when 
+\begin_inset Formula $\mathbf{m}=\mathbf{f}$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathbf{m}_{*}=\mathbf{f}_{*}$
+\end_inset
+
+.
+ From this one gets a system of linear equations the true values satisfy.
+ This system of linear equations may have one or infinitely many solutions.
+ One may now use the Kalman filter and GPR analogy to understand that the
+ latter happens when some of the function values are not observalbe 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "ecc19ref:Kwakernaak_linear_optimal_control_systems"
+literal "false"
+
+\end_inset
+
+.
+ Although they may be observable in theory, the Kalman gain may be so small
+ that the system would get ill-conditioned.
+ We propose to regularize this situation shifting the unobservable poles
+ of the filter from 1 to some stable real pole 
+\begin_inset Formula $(1-\xi)>\gamma$
+\end_inset
+
+, i.e.
+ slightly to the left.
+ Practically, this means that the unobservable 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+Q function values will be estimated as zeros.
+ With this regularization, we have the following estimates
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left[\begin{array}{c}
+\hat{\mathbf{f}}\\
+\hat{\mathbf{f}}_{*}
+\end{array}\right]=\left(\left(1-\xi\right)\left[\begin{array}{cc}
+\mathbf{G} & -\gamma\mathbf{G}\end{array}\right]-\xi\mathbf{I}\right)^{-1}\mathbf{G}\mathbf{\ell},\label{eq:Q-unbiased-estimate}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+noindent
+\end_layout
+
+\end_inset
+
+ with the Kalman gain matrix 
+\begin_inset Formula $\mathbf{G}$
+\end_inset
+
+ defined as 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\mathbf{G}=\left[\begin{array}{c}
+\mathbf{K}_{ff}\\
+\mathbf{K}_{*f}
+\end{array}\right]\overline{\mathbf{K}}_{ff}^{-1}.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Without proofs we state several statistical properties of the estimates
+ (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:Q-unbiased-estimate"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+).
+ They are unbiased (under GPR assumptions) except of the small bias towards
+ zero caused by 
+\begin_inset Formula $\xi>0$
+\end_inset
+
+.
+ However, they are not efficient unless 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $\mathbf{y}-\mathbf{f}$
+\end_inset
+
+ would be independent and homeoskedastic.
+ Also, it should be noted that the uncertainty of this estimate cannot be
+ calculated by (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:gp-posterior-cov"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+) but must be estimated in a different way.
+\end_layout
+
+\begin_layout Standard
+Not only 
+\begin_inset Formula $\hat{\mathbf{f}},\hat{\mathbf{f}}_{*}$
+\end_inset
+
+ estimates should be considered for optimization purpose.
+ Also some general points 
+\begin_inset Formula $\hat{\mathbf{f}}_{**}$
+\end_inset
+
+ are used during seeking for minimum of 
+\begin_inset Formula $Q$
+\end_inset
+
+ function in order to find 
+\begin_inset Formula $\pi^{*}$
+\end_inset
+
+.
+ These points are not part of the dataset.
+ 
+\end_layout
+
+\begin_layout Standard
+The final algorithm is described in (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "alg:Q-learning-with-GP"
+
+\end_inset
+
+).
+ The first step (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "enu:a-GP-estimate-"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+) is to find GPR estimate of 
+\begin_inset Formula $Q^{\pi^{(i)}}$
+\end_inset
+
+ by using (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:Q-unbiased-estimate"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+).
+ Next step (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "enu:b-policy-iteration"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+) is to apply (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "subsec:Policy-Iteration"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+) to minimize found 
+\begin_inset Formula $Q^{\pi^{(i)}}$
+\end_inset
+
+ and find new policy 
+\begin_inset Formula $\pi^{(i+1)}$
+\end_inset
+
+.
+ The stop condition is either a number of iterations or a difference between
+ control policies 
+\begin_inset Formula $\pi^{(i)}$
+\end_inset
+
+ and 
+\begin_inset Formula $\pi^{(i+1)}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float algorithm
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Box Boxed
+position "c"
+hor_pos "c"
+has_inner_box 1
+inner_pos "c"
+use_parbox 1
+use_makebox 0
+width "3in"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+
+\series bold
+Require: 
+\begin_inset Formula $\mathbf{X},\mathbf{X_{*}},\pi^{(1)}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+
+\series bold
+while 
+\series default
+stop condition
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+\begin_inset Formula $\pi^{(i)}\rightarrow Q^{\pi^{(i)}}(\mathbf{X},\mathbf{X}_{*})$
+\end_inset
+
+ 
+\begin_inset CommandInset label
+LatexCommand label
+name "enu:a-GP-estimate-"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $\pi^{(i+1)}\leftarrow\arg\min_{\mathbf{u}}Q^{\pi^{(i)}}$
+\end_inset
+
+ 
+\begin_inset CommandInset label
+LatexCommand label
+name "enu:b-policy-iteration"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $i=i+1$
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+
+\series bold
+end
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Q-Learning with GPR 
+\begin_inset CommandInset label
+LatexCommand label
+name "alg:Q-learning-with-GP"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+FAN COIL UNIT 
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Fan-Coil-Unit"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This section introduces the simplified FCU model used for testing the algorithm
+ from previous section.
+ FCU is a common air conditioning system which is inherently non-linear
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "ecc19ref:Arguello_Serrano_Nonlinear_HVAC"
+literal "true"
+
+\end_inset
+
+.
+ Usually installed in building interiors, it consists of a speed controllable
+ electrical fan, a copper coil flown with heating and/or cooling liquid
+ (a heat exchanger), and an air supply.
+ It mixes the recirculated interior air with primary (outdoor) air.
+ This air mixture is then heated/cooled according to the air temperature
+ setpoint error by flowing through the coil.
+ Then such air is supplied into the interior and mixed.
+ The goal is to achieve the temperature set-point maintaining the interior
+ 
+\begin_inset Formula $\mathrm{CO_{2}}$
+\end_inset
+
+ fraction and relative humidity at acceptable limits.
+ Except of the obvious air heating and cooling effect, the heat supplied
+ to or removed from the air can also be related to water evaporation or
+ condensation in the unit.
+ It thus makes a difference whether a FCU changes temperature of more air
+ by less or vice versa.
+ This control problem is significantly complex and non-linear.
+ A model based optimal controller cannot be supplied by the unit manufacturer
+ because the process model involves model of the interior, including its
+ volume, thermal capacities, thermal insulation, solar and thermal load,
+ 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $\mathrm{CO_{2}}$
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+ and humidity loads.
+ That is why model-less control or ML techniques may come into consideration.
+ If such controllers could periodically re-optimize their behavior using
+ ML techniques, a significant amounts of energy could be saved world wide.
+\end_layout
+
+\begin_layout Subsection
+Model 
+\end_layout
+
+\begin_layout Standard
+Only the room air temperature 
+\begin_inset Formula $T_{z}$
+\end_inset
+
+ 
+\begin_inset Formula $\left[\unit{\textdegree C}\right]$
+\end_inset
+
+ state is taken into consideration for purpose of this paper.
+ Considering the perfect air mixing in the interior, it is described by
+ the differential equation 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\dot{T}_{z}(t)=\frac{f(t)}{V}\left(T_{s}(t)-T_{z}(t)\right)+\frac{q_{L}(t)}{c_{p}V\rho},
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+noindent
+\end_layout
+
+\end_inset
+
+ where 
+\begin_inset Formula $T_{s}(t)$
+\end_inset
+
+ 
+\begin_inset Formula $\left[\unit{\textdegree C}\right]$
+\end_inset
+
+ is supply air temperature, 
+\begin_inset Formula $q_{L}(t)$
+\end_inset
+
+ 
+\begin_inset Formula $\left[W\right]$
+\end_inset
+
+ is net heat load/loss, 
+\begin_inset Formula $f(t)$
+\end_inset
+
+ 
+\begin_inset Formula $\left[\unit{m^{3}/\unit{s}}\right]$
+\end_inset
+
+ is air flow, 
+\begin_inset Formula $V$
+\end_inset
+
+ 
+\begin_inset Formula $\left[\unit{m^{3}}\right]$
+\end_inset
+
+ is volume of the interior, 
+\begin_inset Formula $\rho$
+\end_inset
+
+ 
+\begin_inset Formula $[\unit{kg/\unit{m^{3}}}]$
+\end_inset
+
+ is air density and 
+\begin_inset Formula $c_{p}$
+\end_inset
+
+
+\begin_inset Formula $\left[\unit{J/\unit[kg]{K}}\right]$
+\end_inset
+
+ is air spec.
+ thermal capacity.
+ Let us define the volume independent control action as 
+\begin_inset Formula $u(t)=\tau f(t)/V$
+\end_inset
+
+, i.e.
+ the relative fraction of the air replaced per time unit 
+\begin_inset Formula $\tau$
+\end_inset
+
+ (e.g.
+ one hour).
+ The supply air temperature 
+\begin_inset Formula $T_{s}(t)$
+\end_inset
+
+ is a nonlinear function of air flow 
+\begin_inset Formula $u(t)$
+\end_inset
+
+.
+ The nonlinearity of 
+\begin_inset Formula $T_{s}(t)$
+\end_inset
+
+ for purpose of this paper was approximated by the rational function
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+T_{s}(t)=\frac{u(t)T_{z}(t)+eT_{0}}{u(k)+e},\label{eq:supply-air-temperature}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+noindent
+\end_layout
+
+\end_inset
+
+ where 
+\begin_inset Formula $e$
+\end_inset
+
+ is a heat exchanger size factor and 
+\begin_inset Formula $T_{0}\left[\mathrm{\textdegree C}\right]$
+\end_inset
+
+ is the maximum supply air temperature.
+ The nonlinearity models how the maximum supply air temperature asymptotically
+ decrease from
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+ 
+\begin_inset Formula $T_{0}$
+\end_inset
+
+ (considered 
+\begin_inset Formula $\mathrm{40^{o}C}$
+\end_inset
+
+)
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+ to 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $T_{z}$
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+ when the air flow increases.
+ For simplicity, we neglected the primary air.
+ The heat losses were considered as 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $\tau q_{L_{0}}/c_{p}V\rho=-7\mathrm{\textdegree C}$
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+, i.e.
+ the room temperature would drop by this amount per unit time if the air-conditi
+oning would be stopped.
+ 
+\end_layout
+
+\begin_layout Section
+RESULTS
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:RESULTS"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This section presents the results.
+ Model from Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Fan-Coil-Unit"
+
+\end_inset
+
+ was considered in discrete difference equation form using the Euler method
+ with the sampling rate 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $\tau/200$
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+.
+ The policy iteration algorithm was applied in order to find the optimal
+ control policy.
+ Loss function 
+\begin_inset Formula $l$
+\end_inset
+
+ was defined as
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+l(x_{k},u_{k})=(T_{k}-T_{sp})^{2}+u_{k}^{4},\label{eq:loss-calculation}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+noindent
+\end_layout
+
+\end_inset
+
+ where setpoint temperature was 
+\begin_inset Formula $T_{sp}=22\unit{\textdegree C}$
+\end_inset
+
+ .
+ GPR used the product of a polynomial kernel (degree two) and SE kernel
+ as the kernel function.
+ Recall that product of kernels is again a kernel.
+ This choice is based on the fact known from linear control theory 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "ecc19ref:Kwakernaak_linear_optimal_control_systems"
+literal "false"
+
+\end_inset
+
+: a linear model with quadratic loss has quadratic Q.
+ Hence, our choice defines a locally linear control law.
+\end_layout
+
+\begin_layout Standard
+Training dataset consists of 
+\begin_inset Formula $2,000$
+\end_inset
+
+ points 
+\begin_inset Formula $\sim10$
+\end_inset
+
+ hours.
+ 
+\begin_inset Formula $T_{z_{k}}$
+\end_inset
+
+ is the only state 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $x_{k}$
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+ of the process.
+ See Fig.
+ (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Q-Learning-training-data"
+
+\end_inset
+
+).
+ The data used for learning were generated by simulation.
+ The control 
+\begin_inset Formula $u_{k}$
+\end_inset
+
+ was selected as random bounded input.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename training_data.eps
+	width 95col%
+
+\end_inset
+
+ 
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Q-Learning-training-data"
+
+\end_inset
+
+Q-Learning training data consists of 
+\begin_inset Formula $2,000$
+\end_inset
+
+ data points 
+\begin_inset Formula $\sim10$
+\end_inset
+
+ hours.
+ The room temperature 
+\begin_inset Formula $T_{z_{k}}\sim x_{k}$
+\end_inset
+
+, supply air flow rate 
+\begin_inset Formula $u_{k}$
+\end_inset
+
+, and also supply air temperature 
+\begin_inset Formula $T_{s}$
+\end_inset
+
+ calculated from (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:supply-air-temperature"
+
+\end_inset
+
+) shown.
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Q function was calculated by the proposed method and optimal control policy
+ 
+\begin_inset Formula $\pi^{*}$
+\end_inset
+
+ was found after several policy iterations (around five suffice).
+ Value 
+\begin_inset Formula $\gamma=1-1e^{-3}$
+\end_inset
+
+ was used in Q-Leatning algorithm.
+ Also note here, that it is very important to let 
+\begin_inset Formula $u_{k}^{\pi}$
+\end_inset
+
+ excite in order to let the algorithm explore more input-state space.
+ This is well known problem of exploration-exploitation trade-off.
+ Fig.
+ (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Q-Learning-with-Gaussian"
+
+\end_inset
+
+) shows the trajectory of optimal policy as a curve connecting the minima
+ of Q function with respect to 
+\begin_inset Formula $u$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename q_learning_improved.eps
+	width 95col%
+
+\end_inset
+
+ 
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Q-Learning-with-Gaussian"
+
+\end_inset
+
+Q-Learning with GPR and Policy Iteration.
+ Q function 
+\begin_inset Formula $Q^{*}$
+\end_inset
+
+ is presented and optimal control policy 
+\begin_inset Formula $\pi^{*}$
+\end_inset
+
+ was calculated from (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:q-function-policy"
+
+\end_inset
+
+) and its curve highlighted here.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This Q learning result makes good sense intuitively.
+ The air exchange rate 
+\begin_inset Formula $u_{k}$
+\end_inset
+
+ equals the heat losses when the room temperature is at the set point.
+ Then it increases if the temperature is lower in order to heat the interior.
+ Therefore, there is a negative feedback as expected.
+ However, this feedback gain becomes smaller when the control error is greater
+ because the large air flows are less effective for heating due to limited
+ heat exchanger effectiveness and the decreasing supply air temperature.
+ Instead, the electrical fan noise and the air flow would would just annoy
+ the occupants.
+ Also, the fan would use more electricity.
+ As such, the policy resembles a proportional feedback controller with variable
+ gain.
+ It does not have any integral action whereas a proportional derivative
+ integral (PID) controller would be normally used for similar purpose.
+ However, it can be shown that the intergal action can be added to Q learned
+ policy augmenting the state space with temperature time difference and
+ considering the time difference 
+\begin_inset Formula $u_{k}-u_{k-1}$
+\end_inset
+
+ as the control action.
+ Recall that the integral action is important in order to reject unmeasured
+ slow disturbances.
+\end_layout
+
+\begin_layout Subsection
+Q-Learning Evaluation
+\end_layout
+
+\begin_layout Standard
+The results from Q-Learning were compared to multiple PI controllers in
+ terms of their cumulative loss function 
+\begin_inset Formula $L$
+\end_inset
+
+ values.
+ This function represents the sum of all losses during all episodes, i.e.
+ 
+\begin_inset Formula $L=\sum_{k}\ell_{k}$
+\end_inset
+
+ and the assuredly optimal value of cumulative loss 
+\begin_inset Formula $L^{*}$
+\end_inset
+
+ is given by the optimal policy 
+\begin_inset Formula $\pi^{*}$
+\end_inset
+
+ from Q learning.
+ A grid of proportional and integral PI constants was considered so that
+ it obviously contained the optimal PI values (local minimum).
+ The cumulative loss was calculated for each in the same way as 
+\begin_inset Formula $L^{*}$
+\end_inset
+
+ was calculated, i.e.
+ using (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:loss-calculation"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+), so the cumulative losses are made comparable.
+ The initial room temperature was 
+\begin_inset Formula $\mathrm{10^{o}C}$
+\end_inset
+
+ and the cumulative loss was calculated for 1,000 sampling periods.
+ These cumulative loss values were then compared to 
+\begin_inset Formula $L^{*}$
+\end_inset
+
+ in Fig.
+ (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Comparison-of-PI-Q-Learning"
+
+\end_inset
+
+) and the best PI controller parameters from the grid were selected for
+ Fig.
+ (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Q-Learning-PI-PI"
+
+\end_inset
+
+).
+ A PI controller designed for a linearized model of FCU at 
+\begin_inset Formula $u_{0}=1,x_{0}=22\left[\unit{\textdegree C}\right]$
+\end_inset
+
+ is also visualized.
+ It can be observed that the best PI almost matches the result of the Q
+ learning.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename q_learning_vs_pi_contr.eps
+	width 95col%
+
+\end_inset
+
+ 
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Comparison-of-PI-Q-Learning"
+
+\end_inset
+
+Comparison of PI controllers cumulative losses 
+\begin_inset Formula $L$
+\end_inset
+
+ with optimal policy cumulative loss 
+\begin_inset Formula $L*$
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename optimal_policy.eps
+	width 95col%
+
+\end_inset
+
+ 
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Q-Learning-PI-PI"
+
+\end_inset
+
+Comparison of Q-Learning optimal control policy, PI controller designed
+ by cumulative loss comparison and PI controller designed from linearized
+ model of FCU.
+ The results are presented on nonlinear FCU model.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Next, the controllers and the Q learning were tested considering the net
+ heat load/heat loss 
+\begin_inset Formula $q_{L}$
+\end_inset
+
+ not constant but uniformly distributed over 
+\begin_inset Formula $\left[-7,0\right]$
+\end_inset
+
+.
+ The result is shown in Fig.
+ (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Q-Learning-PI-PI-noisy"
+
+\end_inset
+
+).
+ Note that Q-Learning designed controller is robust towards such a noise.
+ It should be noted that the same noise was used to generate the learning
+ data for this test, not only when simulating the controller.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename optimal_policy_noisy.eps
+	width 95col%
+
+\end_inset
+
+ 
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Q-Learning-PI-PI-noisy"
+
+\end_inset
+
+Comparison of Q-Learning optimal control policy, PI controller designed
+ by cumulative loss comparison and PI controller designed from linearized
+ model of FCU.
+ The results are presented on nonlinear FCU model with noisy net heat load/heat
+ loss 
+\begin_inset Formula $q_{L}$
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note, that the dataset size is very important and if only a small dataset
+ is available, the Q-Learning result degrades significantly.
+ 
+\end_layout
+
+\begin_layout Section
+CONCLUSIONS
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:CONCLUSIONS"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This paper described a practical approach of using GPR based Q-Learning
+ algorithm to find a control law for a completely unknown nonlinear process
+ based on a historical dataset of size 
+\begin_inset Formula $\sim10^{3}$
+\end_inset
+
+.
+ Engineers face such problem often and a solution is of practical interest.
+ GPR approach was used to estimate Q function value in any point in the
+ action value space.
+ The policy iterations were used to optimize the controller as this method
+ converges rapidly.
+ It requires the initial control to be stabilizing.
+ This does not seem to be a serious constraint in many practical applications
+ such as building control.
+ The optimal control law was then fully defined by the minima of Q function
+ 
+\begin_inset Formula $Q^{*}$
+\end_inset
+
+.
+ Although not explained in this paper, GPR can be globally minimized even
+ if the function 
+\begin_inset Formula $f$
+\end_inset
+
+ is not convex provided the kernel is either convex after a transformation
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "ecc19ref:Franey_Branch_and_Bound_Algo"
+literal "false"
+
+\end_inset
+
+.
+ It was shown how GPR can be used to get an unbiased Q estimate which is
+ not sensitive to noise affecting the process.
+ Note that the proposed method is more accurate than just solving the temporal
+ difference equation in the least squares sense which results in a bias
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "ecc19ref:Bratke_Linear_Least_Squares_Algo"
+literal "false"
+
+\end_inset
+
+.
+ The approach can be integrated with the GPR sparse form in order to lower
+ the dimensionality.
+ However, details of this reduction is currently a subject of research.
+ The approach was tested on a simplified one-input one-state FCU simulation
+ model and an optimal control policy 
+\begin_inset Formula $\pi^{*}$
+\end_inset
+
+ was calculated.
+ The result makes sense intuitively, the feedback gain is gradually decreasing
+ with the control error.
+ A grid of PI controllers were compared in terms of cumulative loss 
+\begin_inset Formula $L$
+\end_inset
+
+ with the assuredly optimal cumulative loss 
+\begin_inset Formula $L^{*}$
+\end_inset
+
+, which was found by the Q-learning.
+ The best controller from the grid is slightly worse than 
+\begin_inset Formula $L^{*}$
+\end_inset
+
+.
+ Such direct controller optimization may be impractical in reality because
+ it is very time consuming.
+ Also, another PI controller was designed based on a linearized FCU model.
+ This traditional approach could be actually used in practice together with,
+ for example, Ziegler Nichols PID calibration method.
+ The controllers were compared in Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:RESULTS"
+
+\end_inset
+
+ and the performance of both PI found by direct search and PI designed using
+ linearized FCU were shown to be worse than Q-Learning policy 
+\begin_inset Formula $\pi^{*}$
+\end_inset
+
+.
+ The whole process was described for reader's understanding on the high
+ level.
+ Many technical details were mentioned just briefly.
+ However, the method is quite simple and straightforward.
+\end_layout
+
+\begin_layout Standard
+The main pitfalls of the process may be also pointed out.
+ Firstly, it is necessary to choose several parameters, i.
+ e.
+ the hyperparameters for GP and the training dataset.
+ Their optimization and diagnostics is possible and it is current research
+ topic.
+ Although result with only one kernel (SE times quadratic) was presented,
+ we also tried different kernels with similar results provided the hyperparamete
+rs were chosen reasonably and the kernels were smooth.
+ Tuning of hyperparameters is not discussed in this paper.
+ Next interesting problem is the tuning of sparse GPR parameters.
+ Overall, the method gives reasonably consistent results not overly sensitive
+ to the data or parameters.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+btprint "btPrintCited"
+bibfiles "ecc19ref"
+options "plain"
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
