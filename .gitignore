@@ -7,4 +7,4 @@ figures/*.pdf
 # bibtex compile files
 ecc19.bbl
 ecc19.blg
-
+ecc19ref.log

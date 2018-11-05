@@ -213,8 +213,7 @@ The aim of this paper is to demonstrate how Machine Learning (ML) based
  for which the fan speed control is designed using the off-policy Q-Learning
  algorithm.
  Additionally, the algorithm properties are discussed, i.e.
- effect of the sparse GPR, learning process robustness, GP kernel functions
- choice.
+ learning process robustness, GP kernel functions choice.
  The simulation results are compared to a simple PI designed based on a
  linearized model.
 \end_layout
@@ -258,11 +257,15 @@ literal "true"
 , which approximates certain function satisfying the Bellman equation.
  This Q function then defines a controller.
  Q-Learning was developed for Markov Decision Process (MDP) with finite
- number of states and later generalized to continuous state spaces [
-\emph on
-doplnit van Hasselt
-\emph default
-].
+ number of states and later generalized to continuous state spaces 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "ecc19ref:Hasselt_Reinforcement_learning_in_continuous_action_spaces,ecc19ref:Gaskett_Q_Learning_IC"
+literal "false"
+
+\end_inset
+
+.
  If the analytical form of the Q function is unknown in continuous state
  spaces, it may be represented by a universal function approximating method
  such as Neural Network or Gaussian Process Regression (GPR).
@@ -291,27 +294,16 @@ literal "true"
 \end_inset
 
  data points.
- Various sparse GPR 
+ Various sparse GPR techniques were developed to overcome this computational
+ complexity 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "ecc19ref:Bijl_Online_Sparse_Gaussian"
-literal "true"
-
-\end_inset
-
-,
-\begin_inset CommandInset citation
-LatexCommand cite
-key "ecc19ref:Candela_A_unifying_view"
+key "ecc19ref:Bijl_Online_Sparse_Gaussian,ecc19ref:Candela_A_unifying_view,ecc19ref:Huber_Recursive_GP"
 literal "false"
 
 \end_inset
 
-, 
-\shape italic
-[Huber
-\shape default
-] techniques were developed to overcome this computational complexity.
+.
  One of the conventional GPR sparse method is to use a set of size 
 \begin_inset Formula $m$
 \end_inset
@@ -474,7 +466,7 @@ literal "true"
 \begin_layout Standard
 \begin_inset Formula 
 \[
-f(\mathbf{x})\sim\mathcal{GP}\left(m(\mathbf{x}),k(\mathbf{x},\mathbf{x}')\right),
+f(\mathbf{x})\sim\mathcal{GP}\left(m(\mathbf{x}),\kappa(\mathbf{x},\mathbf{x}')\right),
 \]
 
 \end_inset
@@ -500,7 +492,7 @@ noindent
 \end_inset
 
  and covariance function 
-\begin_inset Formula $k(\mathbf{x},\mathbf{x}'$
+\begin_inset Formula $\kappa(\mathbf{x},\mathbf{x}'$
 \end_inset
 
 ) are given a priori up to some hyperparameters and are defined as
@@ -510,7 +502,7 @@ noindent
 \begin_inset Formula 
 \begin{eqnarray*}
 m(\mathbf{x)} & = & \mathbb{E}\left[f(\mathbf{x})\right],\\
-k(\mathbf{x},\mathbf{x}') & = & \mathbb{E}\left[\left(f(\mathbf{x})-m(\mathbf{x})\right)\left(f(\mathbf{x}')-m(\mathbf{x}')\right)^{\top}\right],
+\kappa(\mathbf{x},\mathbf{x}') & = & \mathbb{E}\left[\left(f(\mathbf{x})-m(\mathbf{x})\right)\left(f(\mathbf{x}')-m(\mathbf{x}')\right)^{\top}\right],
 \end{eqnarray*}
 
 \end_inset
@@ -614,7 +606,7 @@ Assume the finite training set
 
  themselves do not need to be accessible but rather their noisy measurements
  
-\begin_inset Formula $y_{i}=f(\mathbf{x}_{i})+\boldsymbol{\varepsilon}_{i}$
+\begin_inset Formula $\mathbf{y}_{i}=f(\mathbf{x}_{i})+\boldsymbol{\mathbf{\varepsilon}}_{i}$
 \end_inset
 
 , where 
@@ -633,7 +625,7 @@ Assume the finite training set
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\mathrm{cov}(\mathbf{y})=k(\mathbf{X},\mathbf{X})+\sigma_{n}^{2}\mathbf{I}.
+\mathrm{cov}(\mathbf{y})=\kappa(\mathbf{X},\mathbf{X})+\sigma_{n}^{2}\mathbf{I}.
 \]
 
 \end_inset
@@ -657,8 +649,8 @@ f(\mathbf{X}_{*})
 m(\mathbf{X})\\
 m(\mathbf{X}_{*})
 \end{array}\right],\left[\begin{array}{cc}
-k(\mathbf{X},\mathbf{X})+\sigma_{n}^{2}\mathbf{I} & k(\mathbf{X},\mathbf{X}_{*})\\
-k(\mathbf{X}_{*},\mathbf{X}) & k(\mathbf{X}_{*},\mathbf{X}_{*})
+\kappa(\mathbf{X},\mathbf{X})+\sigma_{n}^{2}\mathbf{I} & \kappa(\mathbf{X},\mathbf{X}_{*})\\
+\kappa(\mathbf{X}_{*},\mathbf{X}) & \kappa(\mathbf{X}_{*},\mathbf{X}_{*})
 \end{array}\right]\right)=\\
 \mathcal{N}\left(\left[\begin{array}{c}
 \mathbf{m}\\
@@ -688,6 +680,10 @@ noindent
 \end_inset
 
  where 
+\begin_inset Formula $\mathcal{N}$
+\end_inset
+
+ is normal distribution, defined by mean and covariance, 
 \begin_inset Formula $\mathbf{K}_{f*}$
 \end_inset
 
@@ -719,7 +715,7 @@ noindent
 
 .
  There are many useful covariance functions 
-\begin_inset Formula $k(\mathbf{x},\mathbf{x}')$
+\begin_inset Formula $\kappa(\mathbf{x},\mathbf{x}')$
 \end_inset
 
  called kernels, e.g.
@@ -729,7 +725,7 @@ noindent
 \begin_layout Standard
 \begin_inset Formula 
 \[
-k(\mathbf{x},\mathbf{x}')=\sigma_{f}^{2}\exp\left(-\frac{1}{2l^{2}}\left|\mathbf{x}-\mathbf{x}'\right|^{2}\right)+\sigma_{n}^{2}\delta(\mathbf{x},\mathbf{x}'),
+\kappa(\mathbf{x},\mathbf{x}')=\sigma_{f}^{2}\exp\left(-\frac{1}{2l^{2}}\left|\mathbf{x}-\mathbf{x}'\right|^{2}\right)+\sigma_{n}^{2}\mathbf{I},
 \]
 
 \end_inset
@@ -760,7 +756,7 @@ noindent
 \begin_layout Standard
 \begin_inset Formula 
 \[
-k(\mathbf{x},\mathbf{x}')=\left(\mathbf{x}^{\top}\mathbf{x}'+c\right)^{d},
+\kappa(\mathbf{x},\mathbf{x}')=\left(\mathbf{x}^{\top}\mathbf{x}'+c\right)^{d},
 \]
 
 \end_inset
@@ -830,14 +826,38 @@ If
 \begin_layout Standard
 \begin_inset Formula 
 \begin{eqnarray}
-p(\mathbf{f}_{*}|\mathbf{y}) & = & \mathcal{N}(\boldsymbol{\mu}_{*},\mathbf{\Sigma}_{*}),\label{eq:gp-posterior}\\
+p(\mathbf{f}_{*}|\mathbf{y}) & = & \mathcal{N}(\boldsymbol{\mu}_{*},\mathbf{\Sigma}_{*}),\nonumber \\
 \boldsymbol{\mu}_{*} & = & \mathbb{E}\left[\mathbf{f_{*}}|\mathbf{y}\right]=\mathbf{m}_{*}+\mathbf{K}_{*f}\overline{\mathbf{K}}_{ff}^{-1}(\mathbf{y}-\mathbf{m}),\label{eq:gp-posterior-mean}\\
-\mathbf{\Sigma}_{*} & = & \mathbf{K}_{**}-\mathbf{K}_{*f}\overline{\mathbf{K}}_{ff}^{-1}\mathbf{K}_{f*}.\label{eq:gp-posterior-cov}
+\mathbf{\Sigma}_{*} & = & \mathbf{K}_{**}-\mathbf{K}_{*f}\overline{\mathbf{K}}_{ff}^{-1}\mathbf{K}_{f*},\label{eq:gp-posterior-cov}
 \end{eqnarray}
 
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+noindent
+\end_layout
+
+\end_inset
+
+ where 
+\begin_inset Formula $\boldsymbol{\mu}_{*}$
+\end_inset
+
+ is a mean vector and 
+\begin_inset Formula $\mathbf{\Sigma}_{*}$
+\end_inset
+
+ is a covariance matrix.
 \end_layout
 
 \begin_layout Standard
@@ -1191,7 +1211,7 @@ It is possible to talk either about Q function
 \begin_inset Formula $Q^{*}$
 \end_inset
 
- is minimized by the optimal control action(s) because, it can only be made
+ is minimized by the optimal control action(s) because it can only be made
  worse.
  There is also an important parallel between 
 \begin_inset Formula $Q$
@@ -1358,13 +1378,23 @@ noprefix "false"
 
 \end_inset
 
+,
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:q-function-star"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
 ).
- For a policy 
-\begin_inset Formula $\pi$
+ For an optimal policy 
+\begin_inset Formula $\pi^{*}$
 \end_inset
 
 , function 
-\begin_inset Formula $Q^{\pi}(x_{k},u_{k})$
+\begin_inset Formula $Q^{*}(x_{k},u_{k})$
 \end_inset
 
  must satisfy
@@ -1373,8 +1403,8 @@ noprefix "false"
 \begin_layout Standard
 \begin_inset Formula 
 \begin{multline}
-Q^{\pi}(\mathbf{u}_{k},\mathbf{x}_{k})=\\
-\ell(\mathbf{u}_{k},\mathbf{x}_{k})+\gamma\mathbb{E}\left[\left.Q^{\pi}(\mathbf{u}_{k+1}^{\pi},\mathbf{x}_{k+1})\right|\mathbf{u}_{k},\mathbf{x}_{k}\right],\label{eq:q-value-iteration}
+Q^{*}(\mathbf{u}_{k},\mathbf{x}_{k})=\\
+\ell(\mathbf{u}_{k},\mathbf{x}_{k})+\gamma\mathbb{E}\left[\left.\min_{\mathbf{u}_{k+1}}Q^{*}(\mathbf{u}_{k+1},\mathbf{x}_{k+1})\right|\mathbf{u}_{k},\mathbf{x}_{k}\right],\label{eq:q-value-iteration}
 \end{multline}
 
 \end_inset
@@ -1383,14 +1413,14 @@ Q^{\pi}(\mathbf{u}_{k},\mathbf{x}_{k})=\\
 \end_layout
 
 \begin_layout Standard
-and for optimal policy 
-\begin_inset Formula $\pi^{*}$
+and for general policy 
+\begin_inset Formula $\pi$
 \end_inset
 
  analogously by using (
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "eq:q-function-star"
+reference "eq:q-split-sum"
 plural "false"
 caps "false"
 noprefix "false"
@@ -1441,12 +1471,12 @@ noprefix "false"
 \end_inset
 
  defines the new policy.
- This process is repeated until convergence.
- It converges to the 
+ This process is repeated until convergence to 
 \begin_inset Formula $Q^{*}$
 \end_inset
 
- provided the starting policy is stabilizing in order to ensure the initial
+.
+ The starting policy is selected as stabilizing in order to ensure the initial
  
 \begin_inset Formula $Q^{\pi}$
 \end_inset
@@ -1505,7 +1535,7 @@ noprefix "false"
 
 \begin_layout Standard
 \begin_inset Formula 
-\begin{gather}
+\begin{gather*}
 \mathbf{X}_{*}^{\pi}=\left[\begin{array}{c}
 \mathbf{u}_{2}^{\pi},\mathbf{x}_{2}\\
 \vdots\\
@@ -1515,7 +1545,7 @@ noprefix "false"
 \vdots\\
 \mathbf{u}_{k-1},\mathbf{x}_{k-1}
 \end{array}\right].
-\end{gather}
+\end{gather*}
 
 \end_inset
 
@@ -1582,13 +1612,13 @@ Here
 
 \begin_layout Standard
 \begin_inset Formula 
-\begin{equation}
+\[
 \mathbf{\boldsymbol{\ell}}=\left[\begin{array}{c}
 \ell(\mathbf{u}_{1},\mathbf{x}_{1})\\
 \vdots\\
 \ell(\mathbf{u}_{k-1},\mathbf{x}_{k-1})
 \end{array}\right],
-\end{equation}
+\]
 
 \end_inset
 
@@ -1613,14 +1643,14 @@ noindent
 \begin_inset Formula $\mathbf{f}$
 \end_inset
 
- for the vector unknown function values used in GPR context will be preserved
+ for the vector of unknown function values used in GPR context will be preserved
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
-\begin{equation}
+\[
 \mathbf{f}_{*}^{\pi}=Q^{\pi}(\mathbf{X}_{*}^{\pi}),\quad\mathbf{f}^{\pi}=Q^{\pi}(\mathbf{X}).
-\end{equation}
+\]
 
 \end_inset
 
@@ -1791,7 +1821,8 @@ noprefix "false"
 
 \end_inset
 
-), a system of linear equations the fixed point values satisfy can be solved.
+), a system of linear equations, which satisfy the fixed point values, can
+ be solved.
  However, this system of linear equations will typically be ill-conditioned.
  In general, the update (
 \begin_inset CommandInset ref
@@ -1845,8 +1876,8 @@ literal "false"
 \uwave default
 \noun default
 \color inherit
- does not not vanish.
- We propose to regularize this situation shifting the unobservable poles
+ does not vanish.
+ We propose to regularize this situation by shifting the unobservable poles
  from 1 to some stable real pole 
 \begin_inset Formula $1-\xi$
 \end_inset
@@ -1901,7 +1932,7 @@ Q function values will be estimated as zeros (
 \end_inset
 
  could also be used).
- This regularization adds a fictitious time update step to the Kalman filter
+ This regularization adds a fictitious time update step to the Kalman filter,
  shrinking the right hand side of (
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -1982,7 +2013,7 @@ noindent
 
 \end_inset
 
- Now imagine that also the Q function value at a general query point 
+ Now imagine that the Q function value at a general query point 
 \begin_inset Formula $\mathbf{\mathit{f}}_{q}^{\pi}=Q^{\pi}(\mathbf{u}_{k}^{q},\mathbf{x}_{k})$
 \end_inset
 
@@ -2202,11 +2233,11 @@ reference "alg:Q-learning-with-GP"
 \begin_inset Formula $\pi^{(i)}$
 \end_inset
 
- starting with some known stabilizing policy 
+, starting with some known stabilizing policy 
 \begin_inset Formula $\pi^{(1)}$
 \end_inset
 
- solving a linear system of equations (
+, solving a linear system of equations (
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:Q-unbiased-estimate"
@@ -2333,7 +2364,7 @@ status open
 
 \series bold
 Require: 
-\begin_inset Formula $k([\mathbf{u},\mathbf{x}],[\mathbf{u}',\mathbf{x}']),\epsilon,\gamma,\xi,\mathbf{x}_{j},\mathbf{u}_{j},\boldsymbol{\ell}_{j},\pi^{(1)}$
+\begin_inset Formula $\kappa([\mathbf{u},\mathbf{x}],[\mathbf{u}',\mathbf{x}']),\epsilon,\gamma,\xi,\mathbf{x}_{j},\mathbf{u}_{j},\boldsymbol{\ell}_{j},\pi^{(1)}$
 \end_inset
 
 
@@ -2750,7 +2781,7 @@ noindent
 \begin_inset Formula $T_{s}(t)$
 \end_inset
 
- is a nonlinear function of air flow 
+ is a nonlinear function of air flow rate 
 \begin_inset Formula $u(t)$
 \end_inset
 
@@ -3238,8 +3269,8 @@ This Q learning result makes good sense intuitively.
  However, this feedback gain becomes smaller when the control error is greater
  because the large air flows are less effective for heating due to limited
  heat exchanger effectiveness and the decreasing supply air temperature.
- Instead, the electrical fan noise and the air flow would would just annoy
- the occupants.
+ Instead, the electrical fan noise and the air flow would just annoy the
+ occupants.
  Also, the fan would use more electricity.
  All this is modeled by the second term in 
 \begin_inset Formula $\ell$
@@ -3248,8 +3279,8 @@ This Q learning result makes good sense intuitively.
 .
  As such, the policy resembles a proportional feedback controller with variable
  gain.
- It does not have any integral action whereas a proportional derivative
- integral (PID) controller would be normally used for similar purpose.
+ It does not have any integral action whereas a proportional integral derivative
+ (PID) controller would be normally used for similar purpose.
  However, it can be shown that the integral action can be added augmenting
  the state space with temperature time difference and considering the time
  difference 
@@ -3383,7 +3414,7 @@ reference "fig:Q-Learning-PI-PI"
 
 ).
  A PI controller designed for a linearized model of FCU at 
-\begin_inset Formula $u_{0}=1,x_{0}=22\left[\unit{\textdegree C}\right]$
+\begin_inset Formula $u_{0}=1\left[\unitfrac{1}{h}\right],x_{0}=22\left[\unit{\textdegree C}\right]$
 \end_inset
 
  is also visualized.
@@ -3599,8 +3630,9 @@ literal "false"
  The approach can be integrated with the GPR sparse form in order to lower
  the dimensionality.
  However, details of this reduction is currently a subject of research.
- The approach was tested on a simplified one-input one-state FCU simulation
- model and an optimal control policy 
+ The approach was verified on a simple linear model against Q function calculate
+d as a solution of Riccati equation, tested on a simplified one-input one-state
+ FCU simulation model and an optimal control policy 
 \begin_inset Formula $\pi^{*}$
 \end_inset
 

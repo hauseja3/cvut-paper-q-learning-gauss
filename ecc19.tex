@@ -94,9 +94,9 @@ collected from the process when controlled by a sub-optimal controller.
 A simplified nonlinear Fan Coil Unit (FCU) model is used as an example
 for which the fan speed control is designed using the off-policy Q-Learning
 algorithm. Additionally, the algorithm properties are discussed, i.e.
-effect of the sparse GPR, learning process robustness, GP kernel functions
-choice. The simulation results are compared to a simple PI designed
-based on a linearized model.
+learning process robustness, GP kernel functions choice. The simulation
+results are compared to a simple PI designed based on a linearized
+model.
 \end{abstract}
 
 \section{INTRODUCTION}
@@ -124,23 +124,23 @@ The Q-Learning is an off-policy machine learning (ML) iterative algorithm
 certain function satisfying the Bellman equation. This Q function
 then defines a controller. Q-Learning was developed for Markov Decision
 Process (MDP) with finite number of states and later generalized to
-continuous state spaces {[}\emph{doplnit van Hasselt}{]}. If the analytical
-form of the Q function is unknown in continuous state spaces, it may
-be represented by a universal function approximating method such as
-Neural Network or Gaussian Process Regression (GPR).
+continuous state spaces \cite{ecc19ref:Hasselt_Reinforcement_learning_in_continuous_action_spaces,ecc19ref:Gaskett_Q_Learning_IC}.
+If the analytical form of the Q function is unknown in continuous
+state spaces, it may be represented by a universal function approximating
+method such as Neural Network or Gaussian Process Regression (GPR).
 
 GPR is a non-parametric regression technique \cite{ecc19ref:Rasmussen_Gaussian_Processes}
 which is able to approximate any continuous target function uniformly.
 Unfortunately, the runtime computational requirement is $\mathcal{O}(n^{3})$
 and the memory requirement is $\mathcal{O}(n^{2})$ for $n$ data
-points. Various sparse GPR \cite{ecc19ref:Bijl_Online_Sparse_Gaussian},\cite{ecc19ref:Candela_A_unifying_view},
-\textit{{[}Huber}{]} techniques were developed to overcome this computational
-complexity. One of the conventional GPR sparse method is to use a
-set of size $m$ induction input points which reduces the computational
-complexity to $\mathcal{O}(nm^{2})$ (runtime) and $\mathcal{O}(nm)$
-(memory). These induction points reduce the whole dataset into a smaller
-number of representing data points which are distributed across the
-data space to preserve as much information as possible. GP uses various
+points. Various sparse GPR techniques were developed to overcome this
+computational complexity \cite{ecc19ref:Bijl_Online_Sparse_Gaussian,ecc19ref:Candela_A_unifying_view,ecc19ref:Huber_Recursive_GP}.
+One of the conventional GPR sparse method is to use a set of size
+$m$ induction input points which reduces the computational complexity
+to $\mathcal{O}(nm^{2})$ (runtime) and $\mathcal{O}(nm)$ (memory).
+These induction points reduce the whole dataset into a smaller number
+of representing data points which are distributed across the data
+space to preserve as much information as possible. GP uses various
 covariance (kernel) functions \cite{ecc19ref:Williams_Prediction_with_Gaussian_processes}
 to define the data covariance matrices. The choice of the kernel can
 have significant impact on the accuracy of the regression model.
@@ -185,15 +185,15 @@ considering any dataset $(\mathbf{X},\mathbf{y})$, which can be written
 as 
 
 \[
-f(\mathbf{x})\sim\mathcal{GP}\left(m(\mathbf{x}),k(\mathbf{x},\mathbf{x}')\right),
+f(\mathbf{x})\sim\mathcal{GP}\left(m(\mathbf{x}),\kappa(\mathbf{x},\mathbf{x}')\right),
 \]
 
-\noindent where mean $m(\mathbf{x})$ and covariance function $k(\mathbf{x},\mathbf{x}'$)
+\noindent where mean $m(\mathbf{x})$ and covariance function $\kappa(\mathbf{x},\mathbf{x}'$)
 are given a priori up to some hyperparameters and are defined as
 
 \begin{eqnarray*}
 m(\mathbf{x)} & = & \mathbb{E}\left[f(\mathbf{x})\right],\\
-k(\mathbf{x},\mathbf{x}') & = & \mathbb{E}\left[\left(f(\mathbf{x})-m(\mathbf{x})\right)\left(f(\mathbf{x}')-m(\mathbf{x}')\right)^{\top}\right],
+\kappa(\mathbf{x},\mathbf{x}') & = & \mathbb{E}\left[\left(f(\mathbf{x})-m(\mathbf{x})\right)\left(f(\mathbf{x}')-m(\mathbf{x}')\right)^{\top}\right],
 \end{eqnarray*}
 
 \noindent where $\mathbb{E}$ is the expectation, $\mathbf{x}$ and
@@ -206,13 +206,13 @@ set $\mathbf{X}_{*}$, then GPR can predict $f(\mathbf{x}_{j*})$,
 where $\mathbf{x}_{j*}\in\mathbf{X}_{*}$, by using data $\mathbf{x}_{i}\in\mathbf{X}$
 and their function values $f(\mathbf{x}_{i})$. The function values
 $f(\mathbf{X})$ themselves do not need to be accessible but rather
-their noisy measurements $y_{i}=f(\mathbf{x}_{i})+\boldsymbol{\varepsilon}_{i}$,
+their noisy measurements $\mathbf{y}_{i}=f(\mathbf{x}_{i})+\boldsymbol{\mathbf{\varepsilon}}_{i}$,
 where $\boldsymbol{\varepsilon}$ is a vector of independent identically
 distributed (i.i.d) Gaussian noise with variance $\sigma_{n}^{2}$.
 The prior covariance of the noisy values is defined as 
 
 \[
-\mathrm{cov}(\mathbf{y})=k(\mathbf{X},\mathbf{X})+\sigma_{n}^{2}\mathbf{I}.
+\mathrm{cov}(\mathbf{y})=\kappa(\mathbf{X},\mathbf{X})+\sigma_{n}^{2}\mathbf{I}.
 \]
 
 Then the prior joint probability distribution function (p.d.f) can
@@ -227,8 +227,8 @@ f(\mathbf{X}_{*})
 m(\mathbf{X})\\
 m(\mathbf{X}_{*})
 \end{array}\right],\left[\begin{array}{cc}
-k(\mathbf{X},\mathbf{X})+\sigma_{n}^{2}\mathbf{I} & k(\mathbf{X},\mathbf{X}_{*})\\
-k(\mathbf{X}_{*},\mathbf{X}) & k(\mathbf{X}_{*},\mathbf{X}_{*})
+\kappa(\mathbf{X},\mathbf{X})+\sigma_{n}^{2}\mathbf{I} & \kappa(\mathbf{X},\mathbf{X}_{*})\\
+\kappa(\mathbf{X}_{*},\mathbf{X}) & \kappa(\mathbf{X}_{*},\mathbf{X}_{*})
 \end{array}\right]\right)=\\
 \mathcal{N}\left(\left[\begin{array}{c}
 \mathbf{m}\\
@@ -239,21 +239,22 @@ k(\mathbf{X}_{*},\mathbf{X}) & k(\mathbf{X}_{*},\mathbf{X}_{*})
 \end{array}\right]\right),
 \end{multline*}
 
-\noindent where $\mathbf{K}_{f*}$ is a $n\times n_{*}$ matrix of
-the covariances of all pairs of training and testing datasets, and
-$\mathbf{K}_{ff}$, $\mathbf{K}_{**}$, $\mathbf{K}_{*f}$ analogously.
+\noindent where $\mathcal{N}$ is normal distribution, defined by
+mean and covariance, $\mathbf{K}_{f*}$ is a $n\times n_{*}$ matrix
+of the covariances of all pairs of training and testing datasets,
+and $\mathbf{K}_{ff}$, $\mathbf{K}_{**}$, $\mathbf{K}_{*f}$ analogously.
 Let's also use a notation $\mathbf{\overline{K}}_{aa}=\mathbf{K}_{aa}+\sigma_{n}^{2}\mathbf{I}$
-for any $a$. There are many useful covariance functions $k(\mathbf{x},\mathbf{x}')$
+for any $a$. There are many useful covariance functions $\kappa(\mathbf{x},\mathbf{x}')$
 called kernels, e.g. squared exponential (SE)
 
 \[
-k(\mathbf{x},\mathbf{x}')=\sigma_{f}^{2}\exp\left(-\frac{1}{2l^{2}}\left|\mathbf{x}-\mathbf{x}'\right|^{2}\right)+\sigma_{n}^{2}\delta(\mathbf{x},\mathbf{x}'),
+\kappa(\mathbf{x},\mathbf{x}')=\sigma_{f}^{2}\exp\left(-\frac{1}{2l^{2}}\left|\mathbf{x}-\mathbf{x}'\right|^{2}\right)+\sigma_{n}^{2}\mathbf{I},
 \]
 
 \noindent or polynomial kernel of $d$-degree
 
 \[
-k(\mathbf{x},\mathbf{x}')=\left(\mathbf{x}^{\top}\mathbf{x}'+c\right)^{d},
+\kappa(\mathbf{x},\mathbf{x}')=\left(\mathbf{x}^{\top}\mathbf{x}'+c\right)^{d},
 \]
 
 \noindent where $c\geq0$. These kernel functions are also scalable
@@ -266,10 +267,13 @@ of $\mathbf{f_{*}}$ (shortened expression of $f(\mathbf{X}_{*})$)
 can be defined. The predictive GPR relationships are following
 
 \begin{eqnarray}
-p(\mathbf{f}_{*}|\mathbf{y}) & = & \mathcal{N}(\boldsymbol{\mu}_{*},\mathbf{\Sigma}_{*}),\label{eq:gp-posterior}\\
+p(\mathbf{f}_{*}|\mathbf{y}) & = & \mathcal{N}(\boldsymbol{\mu}_{*},\mathbf{\Sigma}_{*}),\nonumber \\
 \boldsymbol{\mu}_{*} & = & \mathbb{E}\left[\mathbf{f_{*}}|\mathbf{y}\right]=\mathbf{m}_{*}+\mathbf{K}_{*f}\overline{\mathbf{K}}_{ff}^{-1}(\mathbf{y}-\mathbf{m}),\label{eq:gp-posterior-mean}\\
-\mathbf{\Sigma}_{*} & = & \mathbf{K}_{**}-\mathbf{K}_{*f}\overline{\mathbf{K}}_{ff}^{-1}\mathbf{K}_{f*}.\label{eq:gp-posterior-cov}
+\mathbf{\Sigma}_{*} & = & \mathbf{K}_{**}-\mathbf{K}_{*f}\overline{\mathbf{K}}_{ff}^{-1}\mathbf{K}_{f*},\label{eq:gp-posterior-cov}
 \end{eqnarray}
+
+\noindent where $\boldsymbol{\mu}_{*}$ is a mean vector and $\mathbf{\Sigma}_{*}$
+is a covariance matrix.
 
 There is an important relationship between the Kalman filter equations
 and (\ref{eq:gp-posterior-mean}, \ref{eq:gp-posterior-cov}) which
@@ -329,7 +333,7 @@ starting from $\mathbf{x}$ with a control action $\mathbf{u}$ and
 following with the policy $\pi$ (optimal $\pi^{*}$) thereafter.
 $Q^{*}$, as function of $\mathbf{u}$, is thus a measure of quality
 of selecting the control action $\mathbf{u}$ in a given state $\mathbf{x}$.
-$Q^{*}$ is minimized by the optimal control action(s) because, it
+$Q^{*}$ is minimized by the optimal control action(s) because it
 can only be made worse. There is also an important parallel between
 $Q$ function and the value (cost-to-go) function $V$ used in Dynamic
 Programming. It is also related to Lyapunov function and stability
@@ -359,15 +363,16 @@ $\pi^{*}$ is
 
 The Bellman equation (more usually expressed in terms of $V$) provides
 the recursive approach for finding the functions $Q^{\pi}$ and $Q^{*}$.
-It follows directly from (\ref{eq:q-split-sum}). For a policy $\pi$,
-function $Q^{\pi}(x_{k},u_{k})$ must satisfy
+It follows directly from (\ref{eq:q-split-sum},\ref{eq:q-function-star}).
+For an optimal policy $\pi^{*}$, function $Q^{*}(x_{k},u_{k})$ must
+satisfy
 
 \begin{multline}
-Q^{\pi}(\mathbf{u}_{k},\mathbf{x}_{k})=\\
-\ell(\mathbf{u}_{k},\mathbf{x}_{k})+\gamma\mathbb{E}\left[\left.Q^{\pi}(\mathbf{u}_{k+1}^{\pi},\mathbf{x}_{k+1})\right|\mathbf{u}_{k},\mathbf{x}_{k}\right],\label{eq:q-value-iteration}
+Q^{*}(\mathbf{u}_{k},\mathbf{x}_{k})=\\
+\ell(\mathbf{u}_{k},\mathbf{x}_{k})+\gamma\mathbb{E}\left[\left.\min_{\mathbf{u}_{k+1}}Q^{*}(\mathbf{u}_{k+1},\mathbf{x}_{k+1})\right|\mathbf{u}_{k},\mathbf{x}_{k}\right],\label{eq:q-value-iteration}
 \end{multline}
 
-and for optimal policy $\pi^{*}$ analogously by using (\ref{eq:q-function-star}).
+and for general policy $\pi$ analogously by using (\ref{eq:q-split-sum}).
 
 \subsection{Policy Iteration\label{subsec:Policy-Iteration}}
 
@@ -375,9 +380,9 @@ Policy iteration algorithm calculates Q function from Bellman equation
 (\ref{eq:q-value-iteration}) for a current policy and then improves
 the current policy by seeking for minimum values of $Q^{\pi}$ with
 respect to $\mathbf{u}$ for each $\mathbf{x}$. Such minimizing $\mathbf{u}$
-defines the new policy. This process is repeated until convergence.
-It converges to the $Q^{*}$ provided the starting policy is stabilizing
-in order to ensure the initial $Q^{\pi}$ is finite.
+defines the new policy. This process is repeated until convergence
+to $Q^{*}$. The starting policy is selected as stabilizing in order
+to ensure the initial $Q^{\pi}$ is finite.
 
 \subsection{Q-Learning with Gaussian Process Regression}
 
@@ -395,7 +400,7 @@ via numerical minimization. Let us define the set of training and
 prediction points for the GPR as concatenations of points in the state-action
 space
 
-\begin{gather}
+\begin{gather*}
 \mathbf{X}_{*}^{\pi}=\left[\begin{array}{c}
 \mathbf{u}_{2}^{\pi},\mathbf{x}_{2}\\
 \vdots\\
@@ -405,7 +410,7 @@ space
 \vdots\\
 \mathbf{u}_{k-1},\mathbf{x}_{k-1}
 \end{array}\right].
-\end{gather}
+\end{gather*}
 
 Here $\mathbf{X}$ is a collection of state-action pairs visited by
 the process whereas $\mathbf{X}_{*}^{\pi}$ is a collection of states
@@ -415,21 +420,21 @@ is known without actually applying the strategy $\pi$. That is why
 the approach may use a historical dataset to optimize $\pi$. Also,
 the concatenation of the losses will be used
 
-\begin{equation}
+\[
 \mathbf{\boldsymbol{\ell}}=\left[\begin{array}{c}
 \ell(\mathbf{u}_{1},\mathbf{x}_{1})\\
 \vdots\\
 \ell(\mathbf{u}_{k-1},\mathbf{x}_{k-1})
 \end{array}\right],
-\end{equation}
+\]
 
 \noindent and let the Q function be a GP with known kernel. The notation
-$\mathbf{f}$ for the vector unknown function values used in GPR context
-will be preserved
+$\mathbf{f}$ for the vector of unknown function values used in GPR
+context will be preserved
 
-\begin{equation}
+\[
 \mathbf{f}_{*}^{\pi}=Q^{\pi}(\mathbf{X}_{*}^{\pi}),\quad\mathbf{f}^{\pi}=Q^{\pi}(\mathbf{X}).
-\end{equation}
+\]
 
 The noisy realization of $\mathbf{f}^{\pi}=\mathbb{\boldsymbol{\ell}+\gamma E}[Q^{\pi}(\mathbf{X}_{*}^{\pi})]$
 is $\mathbf{y}^{\pi}=\mathbf{\boldsymbol{\ell}}+\gamma\mathbf{f}_{*}^{\pi}$.
@@ -476,20 +481,20 @@ iterations (index $\pi$ dropped)
 
 \noindent An estimate may be calculated starting the iterations from
 $\mathbf{m},\mathbf{m}_{*}$. Instead of actually iterating (\ref{eq:GPR-iterations}),
-a system of linear equations the fixed point values satisfy can be
-solved. However, this system of linear equations will typically be
-ill-conditioned. In general, the update (\ref{eq:Q-data-update})
+a system of linear equations, which satisfy the fixed point values,
+can be solved. However, this system of linear equations will typically
+be ill-conditioned. In general, the update (\ref{eq:Q-data-update})
 does not uniformly reduce the uncertainty and the respective mapping
 is not a contraction. One may now use the Kalman filter and GPR analogy
 to understand that the latter happens because some linear combinations
 of the Q function values are not observalbe \cite{ecc19ref:Kwakernaak_linear_optimal_control_systems}
 and some information from the starting values $\mathbf{m},\mathbf{m}_{*}$
-does not not vanish. We propose to regularize this situation shifting
+does not vanish. We propose to regularize this situation by shifting
 the unobservable poles from 1 to some stable real pole $1-\xi$, i.e.
 slightly to the left by $\xi\geq0$. Practically, this means that
 the unobservable Q function values will be estimated as zeros ($\mathbf{m}$
 could also be used). This regularization adds a fictitious time update
-step to the Kalman filter shrinking the right hand side of (\ref{eq:GPR-iterations})
+step to the Kalman filter, shrinking the right hand side of (\ref{eq:GPR-iterations})
 by the factor of $1-\xi$. It results in the following estimates
 
 \begin{equation}
@@ -510,8 +515,8 @@ as
 \end{array}\right]\overline{\mathbf{K}}_{ff}^{-1}.
 \]
 
-\noindent  Now imagine that also the Q function value at a general
-query point $\mathbf{\mathit{f}}_{q}^{\pi}=Q^{\pi}(\mathbf{u}_{k}^{q},\mathbf{x}_{k})$
+\noindent  Now imagine that the Q function value at a general query
+point $\mathbf{\mathit{f}}_{q}^{\pi}=Q^{\pi}(\mathbf{u}_{k}^{q},\mathbf{x}_{k})$
 is also updated in (\ref{eq:Q-data-update}). Such value may be queried
 by a numerical method trying to improve the current policy. This estimate
 may now be obtained reusing the above estimates $\hat{\mathbf{f}}^{\pi},\mathbf{\hat{f}_{*}^{\pi}}$
@@ -535,11 +540,11 @@ way.
 The flow of calculations is in Algorithm \ref{alg:Q-learning-with-GP}.
 In the first step, it calculates the matrix inversion $\overline{\mathbf{K}}_{ff}^{-1}$
 for later uses as it depends only on the data, not the optimized policy.
-$Q^{\pi^{(i)}}$ estimate is calculated for each policy $\pi^{(i)}$
-starting with some known stabilizing policy $\pi^{(1)}$ solving a
-linear system of equations (\ref{eq:Q-unbiased-estimate}). All available
-data can be used in this step. This $Q^{\pi^{(i)}}$ is then minimized
-at each state from $\mathbf{X}_{*}^{\pi}$ at \ref{enu:update-pi}
+$Q^{\pi^{(i)}}$ estimate is calculated for each policy $\pi^{(i)}$,
+starting with some known stabilizing policy $\pi^{(1)}$, solving
+a linear system of equations (\ref{eq:Q-unbiased-estimate}). All
+available data can be used in this step. This $Q^{\pi^{(i)}}$ is
+then minimized at each state from $\mathbf{X}_{*}^{\pi}$ at \ref{enu:update-pi}
 to define a new improved policy $\pi^{(i+1)}$. The minimization is
 iterative evaluating the Q function using (\ref{eq:Q-fast-update})
 which is an inner product. The stop condition is based on either a
@@ -551,7 +556,7 @@ state implicitly by (\ref{eq:q-function-policy}).
 \begin{algorithm}
 \begin{centering}
 \fbox{\parbox[c]{3in}{%
-\textbf{Require: $k([\mathbf{u},\mathbf{x}],[\mathbf{u}',\mathbf{x}']),\epsilon,\gamma,\xi,\mathbf{x}_{j},\mathbf{u}_{j},\boldsymbol{\ell}_{j},\pi^{(1)}$}
+\textbf{Require: $\kappa([\mathbf{u},\mathbf{x}],[\mathbf{u}',\mathbf{x}']),\epsilon,\gamma,\xi,\mathbf{x}_{j},\mathbf{u}_{j},\boldsymbol{\ell}_{j},\pi^{(1)}$}
 
 $1\leq j\leq k$
 \begin{enumerate}
@@ -618,9 +623,9 @@ $[\unit{kg/\unit{m^{3}}}]$ is air density and $c_{p}$$\left[\unit{J/\unit[kg]{K}
 is air spec. thermal capacity. Let us define the volume independent
 control action as $u(t)=\tau f(t)/V$, i.e. the relative fraction
 of the air replaced per time unit $\tau$ (e.g. one hour). The supply
-air temperature $T_{s}(t)$ is a nonlinear function of air flow $u(t)$.
-The nonlinearity of $T_{s}(t)$ for purpose of this paper was approximated
-by the rational function
+air temperature $T_{s}(t)$ is a nonlinear function of air flow rate
+$u(t)$. The nonlinearity of $T_{s}(t)$ for purpose of this paper
+was approximated by the rational function
 
 \begin{equation}
 T_{s}(t)=\frac{u(t)T_{z}(t)+eT_{0}}{u(k)+e},\label{eq:supply-air-temperature}
@@ -691,11 +696,11 @@ as expected. However, this feedback gain becomes smaller when the
 control error is greater because the large air flows are less effective
 for heating due to limited heat exchanger effectiveness and the decreasing
 supply air temperature. Instead, the electrical fan noise and the
-air flow would would just annoy the occupants. Also, the fan would
-use more electricity. All this is modeled by the second term in $\ell$.
-As such, the policy resembles a proportional feedback controller with
+air flow would just annoy the occupants. Also, the fan would use more
+electricity. All this is modeled by the second term in $\ell$. As
+such, the policy resembles a proportional feedback controller with
 variable gain. It does not have any integral action whereas a proportional
-derivative integral (PID) controller would be normally used for similar
+integral derivative (PID) controller would be normally used for similar
 purpose. However, it can be shown that the integral action can be
 added augmenting the state space with temperature time difference
 and considering the time difference $u_{k}-u_{k-1}$ as the control
@@ -716,7 +721,7 @@ $\mathrm{10^{o}C}$ over next 1,000 sampling periods considering $T_{sp}=22\unit{
 so the results are comparable. These values were compared in Fig.
 (\ref{fig:Comparison-of-PI-Q-Learning}). The best PI controller parameters
 from the grid were selected for Fig. (\ref{fig:Q-Learning-PI-PI}).
-A PI controller designed for a linearized model of FCU at $u_{0}=1,x_{0}=22\left[\unit{\lyxmathsym{\textdegree}C}\right]$
+A PI controller designed for a linearized model of FCU at $u_{0}=1\left[\unitfrac{1}{h}\right],x_{0}=22\left[\unit{\lyxmathsym{\textdegree}C}\right]$
 is also visualized. It can be observed that the best PI almost matches
 the result of the Q learning whereas the model linearization based
 result is different.
@@ -769,27 +774,29 @@ difference equation in the least squares sense which results in a
 biased estimate in the presence of process noise \cite{ecc19ref:Bratke_Linear_Least_Squares_Algo}.
 The approach can be integrated with the GPR sparse form in order to
 lower the dimensionality. However, details of this reduction is currently
-a subject of research. The approach was tested on a simplified one-input
-one-state FCU simulation model and an optimal control policy $\pi^{*}$
-was calculated. The result makes sense intuitively, the feedback gain
-is gradually decreasing with the control error. A grid of PI controllers
-were compared in terms of cumulative loss $L$ towards $L^{*}$ found
-by the Q-learning. The best PI controller from the grid was slightly
-worse than $L^{*}$. However, such direct controller search is impractical
-without a simulation model because it requires evaluating many controllers
-from defined initial conditions and affected by defined disturbances.
-Also, a PI controller was designed based on a linearized FCU model
-and PI tuning rules. This traditional approach could actually be used
-in practice together with, for example, Ziegler Nichols PID calibration
-method. The controllers were compared in Section \ref{sec:RESULTS}
-and the performance of PI designed using linearized FCU was shown
-to be worse than both Q-Learning and the PI found by direct search.
-Here the problem may be the choice of the linearization point. Although
-the example was a single input single output control problem, the
-method applies to multidimensional problems without modifications.
-The whole process was described for reader's understanding on the
-high level. Many technical details were mentioned just briefly. However,
-the method is simple and straightforward.
+a subject of research. The approach was verified on a simple linear
+model against Q function calculated as a solution of Riccati equation,
+tested on a simplified one-input one-state FCU simulation model and
+an optimal control policy $\pi^{*}$ was calculated. The result makes
+sense intuitively, the feedback gain is gradually decreasing with
+the control error. A grid of PI controllers were compared in terms
+of cumulative loss $L$ towards $L^{*}$ found by the Q-learning.
+The best PI controller from the grid was slightly worse than $L^{*}$.
+However, such direct controller search is impractical without a simulation
+model because it requires evaluating many controllers from defined
+initial conditions and affected by defined disturbances. Also, a PI
+controller was designed based on a linearized FCU model and PI tuning
+rules. This traditional approach could actually be used in practice
+together with, for example, Ziegler Nichols PID calibration method.
+The controllers were compared in Section \ref{sec:RESULTS} and the
+performance of PI designed using linearized FCU was shown to be worse
+than both Q-Learning and the PI found by direct search. Here the problem
+may be the choice of the linearization point. Although the example
+was a single input single output control problem, the method applies
+to multidimensional problems without modifications. The whole process
+was described for reader's understanding on the high level. Many technical
+details were mentioned just briefly. However, the method is simple
+and straightforward.
 
 The main pitfalls of the process may be also pointed out. It is necessary
 to choose a kernel function and several hyperparameters. However these
