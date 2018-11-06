@@ -248,7 +248,7 @@ for any $a$. There are many useful covariance functions $\kappa(\mathbf{x},\math
 called kernels, e.g. squared exponential (SE)
 
 \[
-\kappa(\mathbf{x},\mathbf{x}')=\sigma_{f}^{2}\exp\left(-\frac{1}{2l^{2}}\left|\mathbf{x}-\mathbf{x}'\right|^{2}\right)+\sigma_{n}^{2}\mathbf{I},
+\kappa(\mathbf{x},\mathbf{x}')=\sigma_{f}^{2}\exp\left(-\frac{1}{2l^{2}}\left|\mathbf{x}-\mathbf{x}'\right|^{2}\right)+\sigma_{n}^{2},
 \]
 
 \noindent or polynomial kernel of $d$-degree
@@ -667,9 +667,11 @@ $u_{k}$ was selected as random bounded input.
 \begin{figure}
 \centering{}\includegraphics[width=0.95\columnwidth]{figures/training_data}
 \caption{\label{fig:Q-Learning-training-data}Q-Learning training data consists
-of $2,000$ data points $\sim10$ hours. The room temperature $T_{z_{k}}\sim x_{k}$,
-supply air flow rate $u_{k}$, and also supply air temperature $T_{s}$
-calculated from (\ref{eq:supply-air-temperature}) shown. }
+of $2,000$ data points ($\sim10$ hours) consisting of $15$ continuous
+time intervals during which the room was heated from a cold condition.
+The room temperature $T_{z_{k}}\sim x_{k}$, supply air flow rate
+$u_{k}$, and also supply air temperature $T_{s}$ calculated from
+(\ref{eq:supply-air-temperature}) are shown. }
 \end{figure}
 Q function was calculated by the proposed method and optimal control
 policy $\pi^{*}$ was found after several policy iterations (around
@@ -776,7 +778,8 @@ The approach can be integrated with the GPR sparse form in order to
 lower the dimensionality. However, details of this reduction is currently
 a subject of research. The approach was verified on a simple linear
 model against Q function calculated as a solution of Riccati equation,
-tested on a simplified one-input one-state FCU simulation model and
+this verification is not part of the paper. It was then tested on
+a simplified nonlinear one-input one-state FCU simulation model and
 an optimal control policy $\pi^{*}$ was calculated. The result makes
 sense intuitively, the feedback gain is gradually decreasing with
 the control error. A grid of PI controllers were compared in terms

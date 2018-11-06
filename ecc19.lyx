@@ -725,7 +725,7 @@ noindent
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\kappa(\mathbf{x},\mathbf{x}')=\sigma_{f}^{2}\exp\left(-\frac{1}{2l^{2}}\left|\mathbf{x}-\mathbf{x}'\right|^{2}\right)+\sigma_{n}^{2}\mathbf{I},
+\kappa(\mathbf{x},\mathbf{x}')=\sigma_{f}^{2}\exp\left(-\frac{1}{2l^{2}}\left|\mathbf{x}-\mathbf{x}'\right|^{2}\right)+\sigma_{n}^{2},
 \]
 
 \end_inset
@@ -3123,11 +3123,16 @@ Q-Learning training data consists of
 \begin_inset Formula $2,000$
 \end_inset
 
- data points 
+ data points (
 \begin_inset Formula $\sim10$
 \end_inset
 
- hours.
+ hours) consisting of 
+\begin_inset Formula $15$
+\end_inset
+
+ continuous time intervals during which the room was heated from a cold
+ condition.
  The room temperature 
 \begin_inset Formula $T_{z_{k}}\sim x_{k}$
 \end_inset
@@ -3147,7 +3152,7 @@ reference "eq:supply-air-temperature"
 
 \end_inset
 
-) shown.
+) are shown.
  
 \end_layout
 
@@ -3631,8 +3636,10 @@ literal "false"
  the dimensionality.
  However, details of this reduction is currently a subject of research.
  The approach was verified on a simple linear model against Q function calculate
-d as a solution of Riccati equation, tested on a simplified one-input one-state
- FCU simulation model and an optimal control policy 
+d as a solution of Riccati equation, this verification is not part of the
+ paper.
+ It was then tested on a simplified nonlinear one-input one-state FCU simulation
+ model and an optimal control policy 
 \begin_inset Formula $\pi^{*}$
 \end_inset
 
