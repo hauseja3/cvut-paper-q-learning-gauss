@@ -606,15 +606,15 @@ Assume the finite training set
 
  themselves do not need to be accessible but rather their noisy measurements
  
-\begin_inset Formula $y_{i}=f(\mathbf{x}_{i})+\boldsymbol{\mathbf{\varepsilon}}_{i}$
+\begin_inset Formula $y_{i}=f(\mathbf{x}_{i})+\varepsilon_{i}$
 \end_inset
 
 , where 
-\begin_inset Formula $\boldsymbol{\varepsilon}$
+\begin_inset Formula $\varepsilon_{i}$
 \end_inset
 
- is a vector of independent identically distributed (i.i.d) Gaussian noise
- with variance 
+ is independent identically distributed (i.i.d) Gaussian noise with variance
+ 
 \begin_inset Formula $\sigma_{n}^{2}$
 \end_inset
 
@@ -3526,11 +3526,7 @@ Next, the controllers and the Q learning were tested considering the net
 \end_inset
 
  not constant but uniformly distributed over 
-\begin_inset Formula $-7\pm\varDelta$
-\end_inset
-
-, where 
-\begin_inset Formula $\varDelta\in\left[-2,2\right]$
+\begin_inset Formula $\left[-9,-5\right]$
 \end_inset
 
 .
@@ -3632,9 +3628,8 @@ literal "false"
 .
  An unbiased Q estimate makes the method insensitive to noise affecting
  the process.
- It is more accurate than just solving the so-called temporal difference
- equation in the least squares sense which results in a biased estimate
- in the presence of process noise 
+ Our approach is consistent with the Least-Squares Temporal Difference Learning
+ (LSTD) 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "ecc19ref:Bratke_Linear_Least_Squares_Algo"
@@ -3642,7 +3637,7 @@ literal "false"
 
 \end_inset
 
-.
+ using GPR.
  The approach can be integrated with the GPR sparse form in order to lower
  the dimensionality.
  However, details of this reduction is currently a subject of research.

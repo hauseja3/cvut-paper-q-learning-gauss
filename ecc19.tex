@@ -206,10 +206,10 @@ set $\mathbf{X}_{p}$, then GPR can predict $z_{j}=f(\mathbf{x}_{p_{j}}^{\mathrm{
 where $\mathbf{x}_{p_{j}}^{\mathrm{}}\in\mathbf{X}_{p}$, by using
 data $\mathbf{x}_{i}\in\mathbf{X}$ and their function values $f(\mathbf{x}_{i})$.
 The function values $f(\mathbf{X})$ themselves do not need to be
-accessible but rather their noisy measurements $y_{i}=f(\mathbf{x}_{i})+\boldsymbol{\mathbf{\varepsilon}}_{i}$,
-where $\boldsymbol{\varepsilon}$ is a vector of independent identically
-distributed (i.i.d) Gaussian noise with variance $\sigma_{n}^{2}$.
-The prior covariance of the noisy values is defined as 
+accessible but rather their noisy measurements $y_{i}=f(\mathbf{x}_{i})+\varepsilon_{i}$,
+where $\varepsilon_{i}$ is independent identically distributed (i.i.d)
+Gaussian noise with variance $\sigma_{n}^{2}$. The prior covariance
+of the noisy values is defined as 
 
 \begin{equation}
 \mathrm{cov}(\mathbf{y})=\kappa(\mathbf{X},\mathbf{X})+\sigma_{n}^{2}\mathbf{I}.\label{eq:covariance-noisy-measurements}
@@ -746,11 +746,10 @@ presented on nonlinear FCU model.}
 \end{figure}
 Next, the controllers and the Q learning were tested considering the
 net heat load/heat loss $q_{L}$ not constant but uniformly distributed
-over $-7\pm\varDelta$, where $\varDelta\in\left[-2,2\right]$. The
-result is shown in Fig. (\ref{fig:Q-Learning-PI-PI-noisy}). Note
-that Q-Learning designed controller is robust towards such a noise.
-It should be noted that the same noise was used to generate the learning
-data for this test, not only when simulating the controller.
+over $\left[-9,-5\right]$. The result is shown in Fig. (\ref{fig:Q-Learning-PI-PI-noisy}).
+Note that Q-Learning designed controller is robust towards such a
+noise. It should be noted that the same noise was used to generate
+the learning data for this test, not only when simulating the controller.
 
 \begin{figure}
 \centering{}\includegraphics[width=0.95\columnwidth]{figures/optimal_policy_noisy}
@@ -776,19 +775,18 @@ a low dimensional space of controller outputs and is thus numerically
 tractable. Although not explained in this paper, GP can be globally
 minimized even if it is not convex, see \cite{ecc19ref:Franey_Branch_and_Bound_Algo}.
 An unbiased Q estimate makes the method insensitive to noise affecting
-the process. It is more accurate than just solving the so-called temporal
-difference equation in the least squares sense which results in a
-biased estimate in the presence of process noise \cite{ecc19ref:Bratke_Linear_Least_Squares_Algo}.
-The approach can be integrated with the GPR sparse form in order to
-lower the dimensionality. However, details of this reduction is currently
-a subject of research. The approach was verified on a simple linear
-model against Q function calculated as a solution of Riccati equation,
-this verification is not part of the paper. It was then tested on
-a simplified nonlinear one-input one-state FCU simulation model and
-an optimal control policy $\pi^{*}$ was calculated. The result makes
-sense intuitively, the feedback gain is gradually decreasing with
-the control error. A grid of PI controllers were compared in terms
-of cumulative loss $L$ towards $L^{*}$ found by the Q-learning.
+the process. Our approach is consistent with the Least-Squares Temporal
+Difference Learning (LSTD) \cite{ecc19ref:Bratke_Linear_Least_Squares_Algo}
+using GPR. The approach can be integrated with the GPR sparse form
+in order to lower the dimensionality. However, details of this reduction
+is currently a subject of research. The approach was verified on a
+simple linear model against Q function calculated as a solution of
+Riccati equation, this verification is not part of the paper. It was
+then tested on a simplified nonlinear one-input one-state FCU simulation
+model and an optimal control policy $\pi^{*}$ was calculated. The
+result makes sense intuitively, the feedback gain is gradually decreasing
+with the control error. A grid of PI controllers were compared in
+terms of cumulative loss $L$ towards $L^{*}$ found by the Q-learning.
 The best PI controller from the grid was slightly worse than $L^{*}$.
 However, such direct controller search is impractical without a simulation
 model because it requires evaluating many controllers from defined
