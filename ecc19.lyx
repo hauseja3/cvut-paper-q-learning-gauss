@@ -44,7 +44,7 @@
 
 
 \author{Jan Hauser,$^{1}$ Daniel Pachner$^{2}$ and Vladimír Havlena$^{1}$% <-this % stops a space
-\thanks{*This work was supported by ...?}% <-this % stops a space
+\thanks{*This work has been supported by the project 18-26278S sponsored by Grant Agency of the Czech Republic.}% <-this % stops a space
 \thanks{$^{1}$Jan Hauser and Vladimír Havlena are with Department of Control Engineering, 
 Faculty of Electrical Engineering of Czech Technical University in Prague, Technicka 2, 166 27 Praha 6, Czech Republic.
 Email: {\tt\small \{hauseja3,havlena\}@fel.cvut.cz}}%
@@ -563,7 +563,7 @@ noindent
 
  are a pair of vectors in the data space.
  A dataset is a number of such vectors 
-\begin_inset Formula $\mathbf{X}=\left[\mathbf{x}_{1},\mathbf{x}_{2},\ldots,\mathbf{x}_{n}\right]$
+\begin_inset Formula $\mathbf{X}=\left\{ \mathbf{x}_{1},\mathbf{x}_{2},\ldots,\mathbf{x}_{n}\right\} $
 \end_inset
 
 .
@@ -580,15 +580,15 @@ Assume the finite training set
 \end_inset
 
  and the finite testing set 
-\begin_inset Formula $\mathbf{X}_{*}$
+\begin_inset Formula $\mathbf{X}_{p}$
 \end_inset
 
 , then GPR can predict 
-\begin_inset Formula $f(\mathbf{x}_{j*})$
+\begin_inset Formula $z_{j}=f(\mathbf{x}_{p_{j}}^{\mathrm{}})$
 \end_inset
 
 , where 
-\begin_inset Formula $\mathbf{x}_{j*}\in\mathbf{X}_{*}$
+\begin_inset Formula $\mathbf{x}_{p_{j}}^{\mathrm{}}\in\mathbf{X}_{p}$
 \end_inset
 
 , by using data 
@@ -606,7 +606,7 @@ Assume the finite training set
 
  themselves do not need to be accessible but rather their noisy measurements
  
-\begin_inset Formula $\mathbf{y}_{i}=f(\mathbf{x}_{i})+\boldsymbol{\mathbf{\varepsilon}}_{i}$
+\begin_inset Formula $y_{i}=f(\mathbf{x}_{i})+\boldsymbol{\mathbf{\varepsilon}}_{i}$
 \end_inset
 
 , where 
@@ -624,9 +624,9 @@ Assume the finite training set
 
 \begin_layout Standard
 \begin_inset Formula 
-\[
-\mathrm{cov}(\mathbf{y})=\kappa(\mathbf{X},\mathbf{X})+\sigma_{n}^{2}\mathbf{I}.
-\]
+\begin{equation}
+\mathrm{cov}(\mathbf{y})=\kappa(\mathbf{X},\mathbf{X})+\sigma_{n}^{2}\mathbf{I}.\label{eq:covariance-noisy-measurements}
+\end{equation}
 
 \end_inset
 
@@ -643,21 +643,24 @@ Then the prior joint probability distribution function (p.d.f) can be defined
 \begin{multline*}
 \left[\begin{array}{c}
 \mathbf{y}\\
-f(\mathbf{X}_{*})
+\mathbf{z}
+\end{array}\right]\sim\left[\begin{array}{c}
+f(\mathbf{X})\\
+f(\mathbf{X}_{p})
 \end{array}\right]\sim\\
 \mathcal{N}\left(\left[\begin{array}{c}
 m(\mathbf{X})\\
-m(\mathbf{X}_{*})
+m(\mathbf{X}_{p})
 \end{array}\right],\left[\begin{array}{cc}
-\kappa(\mathbf{X},\mathbf{X})+\sigma_{n}^{2}\mathbf{I} & \kappa(\mathbf{X},\mathbf{X}_{*})\\
-\kappa(\mathbf{X}_{*},\mathbf{X}) & \kappa(\mathbf{X}_{*},\mathbf{X}_{*})
+\kappa(\mathbf{X},\mathbf{X})+\sigma_{n}^{2}\mathbf{I} & \kappa(\mathbf{X},\mathbf{X}_{p})\\
+\kappa(\mathbf{X}_{p},\mathbf{X}) & \kappa(\mathbf{X}_{p},\mathbf{X}_{p})
 \end{array}\right]\right)=\\
 \mathcal{N}\left(\left[\begin{array}{c}
 \mathbf{m}\\
-\mathbf{m}_{*}
+\mathbf{m}_{z}
 \end{array}\right],\left[\begin{array}{cc}
-\mathbf{K}_{ff}+\sigma_{n}^{2}\mathbf{I} & \mathbf{K}_{f*}\\
-\mathbf{K}_{*f} & \mathbf{K}_{**}
+\mathbf{K}_{ff}+\sigma_{n}^{2}\mathbf{I} & \mathbf{K}_{fz}\\
+\mathbf{K}_{zf} & \mathbf{K}_{zz}
 \end{array}\right]\right),
 \end{multline*}
 
@@ -683,12 +686,12 @@ noindent
 \begin_inset Formula $\mathcal{N}$
 \end_inset
 
- is normal distribution, defined by mean and covariance, 
-\begin_inset Formula $\mathbf{K}_{f*}$
+ is normal distribution defined by mean and covariance, 
+\begin_inset Formula $\mathbf{K}_{fz}$
 \end_inset
 
  is a 
-\begin_inset Formula $n\times n_{*}$
+\begin_inset Formula $n\times n_{p}$
 \end_inset
 
  matrix of the covariances of all pairs of training and testing datasets,
@@ -697,23 +700,33 @@ noindent
 \end_inset
 
 , 
-\begin_inset Formula $\mathbf{K}_{**}$
+\begin_inset Formula $\mathbf{K}_{zz}$
 \end_inset
 
 , 
-\begin_inset Formula $\mathbf{K}_{*f}$
+\begin_inset Formula $\mathbf{K}_{zf}$
 \end_inset
 
  analogously.
  Let's also use a notation 
-\begin_inset Formula $\mathbf{\overline{K}}_{aa}=\mathbf{K}_{aa}+\sigma_{n}^{2}\mathbf{I}$
+\begin_inset Formula $\mathbf{K}_{yy}=\mathbf{K}_{ff}+\sigma_{n}^{2}\mathbf{I}$
 \end_inset
 
- for any 
-\begin_inset Formula $a$
+ for covariance of noisy measurements 
+\begin_inset Formula $\mathbf{y}$
 \end_inset
 
-.
+ (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:covariance-noisy-measurements"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+).
  There are many useful covariance functions 
 \begin_inset Formula $\kappa(\mathbf{x},\mathbf{x}')$
 \end_inset
@@ -724,9 +737,10 @@ noindent
 
 \begin_layout Standard
 \begin_inset Formula 
-\[
-\kappa(\mathbf{x},\mathbf{x}')=\sigma_{f}^{2}\exp\left(-\frac{1}{2l^{2}}\left|\mathbf{x}-\mathbf{x}'\right|^{2}\right)+\sigma_{n}^{2},
-\]
+\begin{align*}
+\kappa(\mathbf{x},\mathbf{x}') & =\sigma_{f}^{2}\exp\left(-\frac{1}{2}\left(\mathbf{x}-\mathbf{x}'\right)\mathbf{\Lambda}^{-1}\left(\mathbf{x}-\mathbf{x}'\right)\right),\\
+\mathbf{\Lambda} & =\mathrm{diag}(\lambda_{1}^{2},\ldots,\lambda_{n}^{2}),
+\end{align*}
 
 \end_inset
 
@@ -787,12 +801,8 @@ noindent
 \begin_inset Formula $\sigma_{f}^{2}$
 \end_inset
 
-, length-scale 
-\begin_inset Formula $l^{2}$
-\end_inset
-
- and noise variance 
-\begin_inset Formula $\sigma_{n}^{2}$
+ and length-scale 
+\begin_inset Formula $\mathbf{\Lambda}$
 \end_inset
 
  for SE kernel or degree 
@@ -812,23 +822,19 @@ If
 \end_inset
 
  is known, then the posterior conditional normal distribution of 
-\begin_inset Formula $\mathbf{f_{*}}$
+\begin_inset Formula $\mathbf{z}$
 \end_inset
 
- (shortened expression of 
-\begin_inset Formula $f(\mathbf{X}_{*})$
-\end_inset
-
-) can be defined.
+ can be defined.
  The predictive GPR relationships are following
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \begin{eqnarray}
-p(\mathbf{f}_{*}|\mathbf{y}) & = & \mathcal{N}(\boldsymbol{\mu}_{*},\mathbf{\Sigma}_{*}),\nonumber \\
-\boldsymbol{\mu}_{*} & = & \mathbb{E}\left[\mathbf{f_{*}}|\mathbf{y}\right]=\mathbf{m}_{*}+\mathbf{K}_{*f}\overline{\mathbf{K}}_{ff}^{-1}(\mathbf{y}-\mathbf{m}),\label{eq:gp-posterior-mean}\\
-\mathbf{\Sigma}_{*} & = & \mathbf{K}_{**}-\mathbf{K}_{*f}\overline{\mathbf{K}}_{ff}^{-1}\mathbf{K}_{f*},\label{eq:gp-posterior-cov}
+p(\mathbf{z}|\mathbf{y}) & = & \mathcal{N}(\boldsymbol{\mu}_{z},\mathbf{\Sigma}_{z}),\nonumber \\
+\boldsymbol{\mu}_{z} & = & \mathbb{E}\left[\mathbf{z}|\mathbf{y}\right]=\mathbf{m}_{z}+\mathbf{K}_{zf}\mathbf{K}_{yy}^{-1}(\mathbf{y}-\mathbf{m}),\label{eq:gp-posterior-mean}\\
+\mathbf{\Sigma}_{z} & = & \mathbf{K}_{zz}-\mathbf{K}_{zf}\mathbf{K}_{yy}^{-1}\mathbf{K}_{fz},\label{eq:gp-posterior-cov}
 \end{eqnarray}
 
 \end_inset
@@ -850,11 +856,11 @@ noindent
 \end_inset
 
  where 
-\begin_inset Formula $\boldsymbol{\mu}_{*}$
+\begin_inset Formula $\boldsymbol{\mu}_{z}$
 \end_inset
 
  is a mean vector and 
-\begin_inset Formula $\mathbf{\Sigma}_{*}$
+\begin_inset Formula $\mathbf{\Sigma}_{z}$
 \end_inset
 
  is a covariance matrix.
@@ -897,7 +903,7 @@ noprefix "false"
 \noun off
 \color none
 
-\begin_inset Formula $\mathbf{G}=\mathbf{K}_{*f}\overline{\mathbf{K}}_{ff}^{-1}$
+\begin_inset Formula $\mathbf{G}=\mathbf{K}_{zf}\mathbf{K}_{yy}^{-1}$
 \end_inset
 
 
@@ -927,11 +933,11 @@ noprefix "false"
 \end_inset
 
  define the posterior expectations (predictions) 
-\begin_inset Formula $\mathbf{f}_{*}$
+\begin_inset Formula $\mathbf{z}$
 \end_inset
 
  for any test points over a dataset 
-\begin_inset Formula $\mathbf{X}_{*}$
+\begin_inset Formula $\mathbf{X}_{p}$
 \end_inset
 
 .
@@ -939,7 +945,7 @@ noprefix "false"
  the inverse of matrix 
 \series bold
 
-\begin_inset Formula $\overline{\mathbf{K}}_{ff}$
+\begin_inset Formula $\mathbf{K}_{yy}$
 \end_inset
 
 
@@ -996,7 +1002,8 @@ literal "true"
 
 \begin_layout Standard
 For purpose of this section, let's highlight the analogies and slight difference
-s between two closely related fields: Control Theory (CT), and MDP respectively.
+s between two closely related fields: Optimal Control Theory (OCT), and
+ MDP respectively.
  At a discrete time 
 \begin_inset Formula $k$
 \end_inset
@@ -1009,7 +1016,7 @@ s between two closely related fields: Control Theory (CT), and MDP respectively.
 \begin_inset Formula $\mathbf{u}_{k}\in\mathcal{U}$
 \end_inset
 
- are usually considered in CT for a process model, whereas MDP uses the
+ are usually considered in OCT for a process model, whereas MDP uses the
  Markov process states 
 \begin_inset Formula $\mathbf{s}_{k}\in\mathcal{S}$
 \end_inset
@@ -1072,12 +1079,12 @@ s between two closely related fields: Control Theory (CT), and MDP respectively.
 \begin_inset Formula $\mathbf{u}_{k}=C(\mathbf{x}_{k})$
 \end_inset
 
- in CT is an analogy of a deterministic policy 
+ in OCT is an analogy of a deterministic policy 
 \begin_inset Formula $\mathbf{a}_{k}=\pi(\mathbf{s}_{k})$
 \end_inset
 
 .
- A stochastic policy, usually not used in CT, defines the joint p.d.f.
+ A stochastic policy, usually not used in OCT, defines the joint p.d.f.
  
 \family roman
 \series medium
@@ -1117,13 +1124,13 @@ s between two closely related fields: Control Theory (CT), and MDP respectively.
 \begin_inset Formula $\ell(\mathbf{x}_{k},\mathbf{u}_{k})$
 \end_inset
 
- used in CT (not bounded in general, to be minimized, almost never depending
+ used in OCT (not bounded in general, to be minimized, almost never depending
  on 
 \begin_inset Formula $\mathbf{x}_{k+1}$
 \end_inset
 
 ).
- The ML theory will be discussed below mostly with CT notations and assumptions.
+ The ML theory will be discussed below mostly with OCT notations and assumptions.
 \end_layout
 
 \begin_layout Subsection
@@ -1536,15 +1543,15 @@ noprefix "false"
 \begin_layout Standard
 \begin_inset Formula 
 \begin{gather*}
-\mathbf{X}_{*}^{\pi}=\left[\begin{array}{c}
+\mathbf{X}_{p}^{\pi}=\left\{ \begin{array}{c}
 \mathbf{u}_{2}^{\pi},\mathbf{x}_{2}\\
 \vdots\\
 \mathbf{u}_{k}^{\pi},\mathbf{x}_{k}^{\pi}
-\end{array}\right],\;\mathbf{X}=\left[\begin{array}{c}
+\end{array}\right\} ,\;\mathbf{X}=\left\{ \begin{array}{c}
 \mathbf{u}_{1},\mathbf{x}_{1}\\
 \vdots\\
 \mathbf{u}_{k-1},\mathbf{x}_{k-1}
-\end{array}\right].
+\end{array}\right\} .
 \end{gather*}
 
 \end_inset
@@ -1558,7 +1565,7 @@ Here
 \end_inset
 
  is a collection of state-action pairs visited by the process whereas 
-\begin_inset Formula $\mathbf{X}_{*}^{\pi}$
+\begin_inset Formula $\mathbf{X}_{p}^{\pi}$
 \end_inset
 
  is a collection of states observed as results of the actions accompanied
@@ -1581,7 +1588,7 @@ Here
 \noun off
 \color none
 
-\begin_inset Formula $\mathbf{X}_{*}^{\pi}$
+\begin_inset Formula $\mathbf{X}_{p}^{\pi}$
 \end_inset
 
  is known without actually applying the strategy 
@@ -1649,7 +1656,7 @@ noindent
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\mathbf{f}_{*}^{\pi}=Q^{\pi}(\mathbf{X}_{*}^{\pi}),\quad\mathbf{f}^{\pi}=Q^{\pi}(\mathbf{X}).
+\mathbf{z}^{\pi}=Q^{\pi}(\mathbf{X}_{p}^{\pi}),\quad\mathbf{f}^{\pi}=Q^{\pi}(\mathbf{X}).
 \]
 
 \end_inset
@@ -1659,11 +1666,11 @@ noindent
 
 \begin_layout Standard
 The noisy realization of 
-\begin_inset Formula $\mathbf{f}^{\pi}=\mathbb{\boldsymbol{\ell}+\gamma E}[Q^{\pi}(\mathbf{X}_{*}^{\pi})]$
+\begin_inset Formula $\mathbf{f}^{\pi}=\mathbb{\boldsymbol{\ell}+\gamma E}[Q^{\pi}(\mathbf{X}_{p}^{\pi})]$
 \end_inset
 
  is 
-\begin_inset Formula $\mathbf{y}^{\pi}=\mathbf{\boldsymbol{\ell}}+\gamma\mathbf{f}_{*}^{\pi}$
+\begin_inset Formula $\mathbf{y}^{\pi}=\mathbf{\boldsymbol{\ell}}+\gamma\mathbf{z}^{\pi}$
 \end_inset
 
 .
@@ -1695,15 +1702,15 @@ noprefix "false"
 \begin{multline}
 \mathbb{E\left[\mathit{\left.\begin{array}{c}
 \mathbf{f}^{\pi}\\
-\mathbf{f}_{*}^{\pi}
+\mathbf{z}^{\pi}
 \end{array}\right|\mathbf{\mathit{\mathbf{y}}}^{\pi}}\right]}=\\
 \left[\begin{array}{c}
 \mathbf{m}\\
-\mathbf{m}_{*}
+\mathbf{m}_{z}
 \end{array}\right]+\left[\begin{array}{c}
 \mathbf{K}_{ff}\\
-\mathbf{K}_{*f}^{\pi}
-\end{array}\right]\overline{\mathbf{K}}_{ff}^{-1}\left(\mathbf{\boldsymbol{\ell}}+\gamma\mathbf{f}_{*}^{\pi}-\mathbf{m}\right).\label{eq:Q-data-update}
+\mathbf{K}_{zf}^{\pi}
+\end{array}\right]\mathbf{K}_{yy}^{-1}\left(\mathbf{\boldsymbol{\ell}}+\gamma\mathbf{z}^{\pi}-\mathbf{m}\right).\label{eq:Q-data-update}
 \end{multline}
 
 \end_inset
@@ -1723,7 +1730,7 @@ noprefix "false"
 \end_inset
 
 ) may seem useless because the Q estimates depend on 
-\begin_inset Formula $\mathbf{f}_{*}^{\pi}$
+\begin_inset Formula $\mathbf{z}^{\pi}$
 \end_inset
 
  value which we do not know.
@@ -1737,7 +1744,7 @@ noprefix "false"
 
 \series default
  and 
-\begin_inset Formula $\mathbf{f}_{*}^{\pi}$
+\begin_inset Formula $\mathbf{z}^{\pi}$
 \end_inset
 
  for 
@@ -1749,7 +1756,7 @@ noprefix "false"
 \end_inset
 
  and 
-\begin_inset Formula $\mathbf{m}_{*}=\mathbf{f}_{*}^{\pi}$
+\begin_inset Formula $\mathbf{m}_{z}=\mathbf{z}^{\pi}$
 \end_inset
 
 .
@@ -1762,7 +1769,7 @@ noprefix "false"
 
 \series default
  and 
-\begin_inset Formula $\mathbf{f}_{*}^{\pi}$
+\begin_inset Formula $\mathbf{z}^{\pi}$
 \end_inset
 
  thus represent a fixed point of the following iterations (index 
@@ -1777,15 +1784,15 @@ noprefix "false"
 \begin{multline}
 \left[\begin{array}{c}
 \mathbf{f}^{(i+1)}\\
-\mathbf{f}_{*}^{(i+1)}
+\mathbf{z}^{(i+1)}
 \end{array}\right]=\\
 \left[\begin{array}{c}
 \mathbf{f}^{(i)}\\
-\mathbf{f}_{*}^{(i)}
+\mathbf{z}^{(i)}
 \end{array}\right]+\left[\begin{array}{c}
 \mathbf{K}_{ff}\\
-\mathbf{K}_{*f}
-\end{array}\right]\overline{\mathbf{K}}_{ff}^{-1}\left(\boldsymbol{\ell}+\gamma\mathbf{f}_{*}^{(i)}-\mathbf{f}^{(i)}\right).\label{eq:GPR-iterations}
+\mathbf{K}_{zf}
+\end{array}\right]\mathbf{K}_{yy}^{-1}\left(\boldsymbol{\ell}+\gamma\mathbf{z}^{(i)}-\mathbf{f}^{(i)}\right).\label{eq:GPR-iterations}
 \end{multline}
 
 \end_inset
@@ -1807,7 +1814,7 @@ noindent
 \end_inset
 
  An estimate may be calculated starting the iterations from 
-\begin_inset Formula $\mathbf{m},\mathbf{m}_{*}$
+\begin_inset Formula $\mathbf{m},\mathbf{m}_{z}$
 \end_inset
 
 .
@@ -1860,7 +1867,7 @@ literal "false"
 \noun off
 \color none
 
-\begin_inset Formula $\mathbf{m},\mathbf{m}_{*}$
+\begin_inset Formula $\mathbf{m},\mathbf{m}_{z}$
 \end_inset
 
 
@@ -1956,7 +1963,7 @@ noprefix "false"
 \begin{equation}
 \left[\begin{array}{c}
 \hat{\mathbf{f}}^{\pi}\\
-\mathbf{\hat{f}}_{*}^{\pi}
+\mathbf{\hat{z}}^{\pi}
 \end{array}\right]=\left(\left(1-\xi\right)\left[\begin{array}{cc}
 \mathbf{G}^{\pi}, & -\gamma\mathbf{G}^{\pi}\end{array}\right]-\xi\mathbf{I}\right)^{-1}\mathbf{G}^{\pi}\mathbf{\ell},\label{eq:Q-unbiased-estimate}
 \end{equation}
@@ -1991,8 +1998,8 @@ noindent
 \[
 \mathbf{G}^{\pi}=\left[\begin{array}{c}
 \mathbf{K}_{ff}\\
-\mathbf{K}_{*f}^{\pi}
-\end{array}\right]\overline{\mathbf{K}}_{ff}^{-1}.
+\mathbf{K}_{zf}^{\pi}
+\end{array}\right]\mathbf{K}_{yy}^{-1}.
 \]
 
 \end_inset
@@ -2044,7 +2051,7 @@ noprefix "false"
 \noun off
 \color none
 
-\begin_inset Formula $\hat{\mathbf{f}}^{\pi},\mathbf{\hat{f}_{*}^{\pi}}$
+\begin_inset Formula $\hat{\mathbf{f}}^{\pi},\mathbf{\hat{z}^{\pi}}$
 \end_inset
 
 
@@ -2074,7 +2081,7 @@ noprefix "false"
 \noun off
 \color none
  
-\begin_inset Formula $\overline{\mathbf{K}}_{ff}^{-1}$
+\begin_inset Formula $\mathbf{K}_{yy}^{-1}$
 \end_inset
 
 
@@ -2114,7 +2121,7 @@ noprefix "false"
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-\mathbf{\hat{\mathit{f}}}_{q}^{\pi}=\mathbf{K}_{qf}^{\pi}\overline{\mathbf{K}}_{ff}^{-1}\left(\frac{1-\xi}{\xi}\left(\hat{\mathbf{f}^{\pi}}-\gamma\hat{\mathbf{f}_{*}^{\pi}}\right)-\frac{1}{\xi}\boldsymbol{\ell}\right).\label{eq:Q-fast-update}
+\mathbf{\hat{\mathit{f}}}_{q}^{\pi}=\mathbf{K}_{qf}^{\pi}\mathbf{K}_{yy}^{-1}\left(\frac{1-\xi}{\xi}\left(\hat{\mathbf{f}}^{\pi}-\gamma\mathbf{\hat{z}}^{\pi}\right)-\frac{1}{\xi}\boldsymbol{\ell}\right).\label{eq:Q-fast-update}
 \end{equation}
 
 \end_inset
@@ -2208,7 +2215,7 @@ reference "alg:Q-learning-with-GP"
 \noun off
 \color none
 
-\begin_inset Formula $\overline{\mathbf{K}}_{ff}^{-1}$
+\begin_inset Formula $\mathbf{K}_{yy}^{-1}$
 \end_inset
 
 
@@ -2267,7 +2274,7 @@ noprefix "false"
 \noun off
 \color none
 
-\begin_inset Formula $\mathbf{X}_{*}^{\pi}$
+\begin_inset Formula $\mathbf{X}_{p}^{\pi}$
 \end_inset
 
 
@@ -2283,7 +2290,7 @@ noprefix "false"
 \uwave default
 \noun default
 \color inherit
- at 
+ at (
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "enu:update-pi"
@@ -2293,7 +2300,7 @@ noprefix "false"
 
 \end_inset
 
- to define a new improved policy 
+) to define a new improved policy 
 \begin_inset Formula $\pi^{(i+1)}$
 \end_inset
 
@@ -2405,7 +2412,7 @@ calculate kernel and its inversion
 \noun off
 \color none
 
-\begin_inset Formula $\overline{\mathbf{K}}_{ff}^{-1}$
+\begin_inset Formula $\mathbf{K}_{yy}^{-1}$
 \end_inset
 
 
@@ -2449,7 +2456,7 @@ update
 \noun off
 \color none
 
-\begin_inset Formula $\mathbf{X}_{*}^{\pi^{(i)}}$
+\begin_inset Formula $\mathbf{X}_{p}^{\pi^{(i)}}$
 \end_inset
 
 
@@ -2466,7 +2473,7 @@ update
 \noun default
 \color inherit
  and kernel 
-\begin_inset Formula $\mathbf{K}_{*f}^{(i)}$
+\begin_inset Formula $\mathbf{K}_{zf}^{(i)}$
 \end_inset
 
 
@@ -2494,7 +2501,7 @@ calculate
 \noun off
 \color none
 
-\begin_inset Formula $\hat{\mathbf{f}}^{(i)},\mathbf{\hat{f}}_{*}^{(i)}$
+\begin_inset Formula $\hat{\mathbf{f}}^{(i)},\mathbf{\hat{z}}^{(i)}$
 \end_inset
 
  using (
@@ -3520,6 +3527,10 @@ Next, the controllers and the Q learning were tested considering the net
 
  not constant but uniformly distributed over 
 \begin_inset Formula $-7\pm\varDelta$
+\end_inset
+
+, where 
+\begin_inset Formula $\varDelta\in\left[-2,2\right]$
 \end_inset
 
 .

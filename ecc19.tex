@@ -72,7 +72,7 @@
 
 
 \author{Jan Hauser,$^{1}$ Daniel Pachner$^{2}$ and Vladimír Havlena$^{1}$% <-this % stops a space
-\thanks{*This work was supported by ...?}% <-this % stops a space
+\thanks{*This work has been supported by the project 18-26278S sponsored by Grant Agency of the Czech Republic.}% <-this % stops a space
 \thanks{$^{1}$Jan Hauser and Vladimír Havlena are with Department of Control Engineering, 
 Faculty of Electrical Engineering of Czech Technical University in Prague, Technicka 2, 166 27 Praha 6, Czech Republic.
 Email: {\tt\small \{hauseja3,havlena\}@fel.cvut.cz}}%
@@ -198,22 +198,22 @@ m(\mathbf{x)} & = & \mathbb{E}\left[f(\mathbf{x})\right],\\
 
 \noindent where $\mathbb{E}$ is the expectation, $\mathbf{x}$ and
 $\mathbf{x}'$ are a pair of vectors in the data space. A dataset
-is a number of such vectors $\mathbf{X}=\left[\mathbf{x}_{1},\mathbf{x}_{2},\ldots,\mathbf{x}_{n}\right]$.
+is a number of such vectors $\mathbf{X}=\left\{ \mathbf{x}_{1},\mathbf{x}_{2},\ldots,\mathbf{x}_{n}\right\} $.
 In this article $f(\mathbf{x})\in\mathbb{R}.$
 
 Assume the finite training set $\mathbf{X}$ and the finite testing
-set $\mathbf{X}_{*}$, then GPR can predict $f(\mathbf{x}_{j*})$,
-where $\mathbf{x}_{j*}\in\mathbf{X}_{*}$, by using data $\mathbf{x}_{i}\in\mathbf{X}$
-and their function values $f(\mathbf{x}_{i})$. The function values
-$f(\mathbf{X})$ themselves do not need to be accessible but rather
-their noisy measurements $\mathbf{y}_{i}=f(\mathbf{x}_{i})+\boldsymbol{\mathbf{\varepsilon}}_{i}$,
+set $\mathbf{X}_{p}$, then GPR can predict $z_{j}=f(\mathbf{x}_{p_{j}}^{\mathrm{}})$,
+where $\mathbf{x}_{p_{j}}^{\mathrm{}}\in\mathbf{X}_{p}$, by using
+data $\mathbf{x}_{i}\in\mathbf{X}$ and their function values $f(\mathbf{x}_{i})$.
+The function values $f(\mathbf{X})$ themselves do not need to be
+accessible but rather their noisy measurements $y_{i}=f(\mathbf{x}_{i})+\boldsymbol{\mathbf{\varepsilon}}_{i}$,
 where $\boldsymbol{\varepsilon}$ is a vector of independent identically
 distributed (i.i.d) Gaussian noise with variance $\sigma_{n}^{2}$.
 The prior covariance of the noisy values is defined as 
 
-\[
-\mathrm{cov}(\mathbf{y})=\kappa(\mathbf{X},\mathbf{X})+\sigma_{n}^{2}\mathbf{I}.
-\]
+\begin{equation}
+\mathrm{cov}(\mathbf{y})=\kappa(\mathbf{X},\mathbf{X})+\sigma_{n}^{2}\mathbf{I}.\label{eq:covariance-noisy-measurements}
+\end{equation}
 
 Then the prior joint probability distribution function (p.d.f) can
 be defined for training and testing sets values as 
@@ -221,35 +221,40 @@ be defined for training and testing sets values as
 \begin{multline*}
 \left[\begin{array}{c}
 \mathbf{y}\\
-f(\mathbf{X}_{*})
+\mathbf{z}
+\end{array}\right]\sim\left[\begin{array}{c}
+f(\mathbf{X})\\
+f(\mathbf{X}_{p})
 \end{array}\right]\sim\\
 \mathcal{N}\left(\left[\begin{array}{c}
 m(\mathbf{X})\\
-m(\mathbf{X}_{*})
+m(\mathbf{X}_{p})
 \end{array}\right],\left[\begin{array}{cc}
-\kappa(\mathbf{X},\mathbf{X})+\sigma_{n}^{2}\mathbf{I} & \kappa(\mathbf{X},\mathbf{X}_{*})\\
-\kappa(\mathbf{X}_{*},\mathbf{X}) & \kappa(\mathbf{X}_{*},\mathbf{X}_{*})
+\kappa(\mathbf{X},\mathbf{X})+\sigma_{n}^{2}\mathbf{I} & \kappa(\mathbf{X},\mathbf{X}_{p})\\
+\kappa(\mathbf{X}_{p},\mathbf{X}) & \kappa(\mathbf{X}_{p},\mathbf{X}_{p})
 \end{array}\right]\right)=\\
 \mathcal{N}\left(\left[\begin{array}{c}
 \mathbf{m}\\
-\mathbf{m}_{*}
+\mathbf{m}_{z}
 \end{array}\right],\left[\begin{array}{cc}
-\mathbf{K}_{ff}+\sigma_{n}^{2}\mathbf{I} & \mathbf{K}_{f*}\\
-\mathbf{K}_{*f} & \mathbf{K}_{**}
+\mathbf{K}_{ff}+\sigma_{n}^{2}\mathbf{I} & \mathbf{K}_{fz}\\
+\mathbf{K}_{zf} & \mathbf{K}_{zz}
 \end{array}\right]\right),
 \end{multline*}
 
-\noindent where $\mathcal{N}$ is normal distribution, defined by
-mean and covariance, $\mathbf{K}_{f*}$ is a $n\times n_{*}$ matrix
+\noindent where $\mathcal{N}$ is normal distribution defined by
+mean and covariance, $\mathbf{K}_{fz}$ is a $n\times n_{p}$ matrix
 of the covariances of all pairs of training and testing datasets,
-and $\mathbf{K}_{ff}$, $\mathbf{K}_{**}$, $\mathbf{K}_{*f}$ analogously.
-Let's also use a notation $\mathbf{\overline{K}}_{aa}=\mathbf{K}_{aa}+\sigma_{n}^{2}\mathbf{I}$
-for any $a$. There are many useful covariance functions $\kappa(\mathbf{x},\mathbf{x}')$
+and $\mathbf{K}_{ff}$, $\mathbf{K}_{zz}$, $\mathbf{K}_{zf}$ analogously.
+Let's also use a notation $\mathbf{K}_{yy}=\mathbf{K}_{ff}+\sigma_{n}^{2}\mathbf{I}$
+for covariance of noisy measurements $\mathbf{y}$ (\ref{eq:covariance-noisy-measurements}).
+There are many useful covariance functions $\kappa(\mathbf{x},\mathbf{x}')$
 called kernels, e.g. squared exponential (SE)
 
-\[
-\kappa(\mathbf{x},\mathbf{x}')=\sigma_{f}^{2}\exp\left(-\frac{1}{2l^{2}}\left|\mathbf{x}-\mathbf{x}'\right|^{2}\right)+\sigma_{n}^{2},
-\]
+\begin{align*}
+\kappa(\mathbf{x},\mathbf{x}') & =\sigma_{f}^{2}\exp\left(-\frac{1}{2}\left(\mathbf{x}-\mathbf{x}'\right)\mathbf{\Lambda}^{-1}\left(\mathbf{x}-\mathbf{x}'\right)\right),\\
+\mathbf{\Lambda} & =\mathrm{diag}(\lambda_{1}^{2},\ldots,\lambda_{n}^{2}),
+\end{align*}
 
 \noindent or polynomial kernel of $d$-degree
 
@@ -258,35 +263,35 @@ called kernels, e.g. squared exponential (SE)
 \]
 
 \noindent where $c\geq0$. These kernel functions are also scalable
-by their hyperparameters, i.e. these are signal variance $\sigma_{f}^{2}$,
-length-scale $l^{2}$ and noise variance $\sigma_{n}^{2}$ for SE
-kernel or degree $d$ and soft-margin $c$ for polynomial kernel.
+by their hyperparameters, i.e. these are signal variance $\sigma_{f}^{2}$
+and length-scale $\mathbf{\Lambda}$ for SE kernel or degree $d$
+and soft-margin $c$ for polynomial kernel.
 
 If $\mathbf{y}$ is known, then the posterior conditional normal distribution
-of $\mathbf{f_{*}}$ (shortened expression of $f(\mathbf{X}_{*})$)
-can be defined. The predictive GPR relationships are following
+of $\mathbf{z}$ can be defined. The predictive GPR relationships
+are following
 
 \begin{eqnarray}
-p(\mathbf{f}_{*}|\mathbf{y}) & = & \mathcal{N}(\boldsymbol{\mu}_{*},\mathbf{\Sigma}_{*}),\nonumber \\
-\boldsymbol{\mu}_{*} & = & \mathbb{E}\left[\mathbf{f_{*}}|\mathbf{y}\right]=\mathbf{m}_{*}+\mathbf{K}_{*f}\overline{\mathbf{K}}_{ff}^{-1}(\mathbf{y}-\mathbf{m}),\label{eq:gp-posterior-mean}\\
-\mathbf{\Sigma}_{*} & = & \mathbf{K}_{**}-\mathbf{K}_{*f}\overline{\mathbf{K}}_{ff}^{-1}\mathbf{K}_{f*},\label{eq:gp-posterior-cov}
+p(\mathbf{z}|\mathbf{y}) & = & \mathcal{N}(\boldsymbol{\mu}_{z},\mathbf{\Sigma}_{z}),\nonumber \\
+\boldsymbol{\mu}_{z} & = & \mathbb{E}\left[\mathbf{z}|\mathbf{y}\right]=\mathbf{m}_{z}+\mathbf{K}_{zf}\mathbf{K}_{yy}^{-1}(\mathbf{y}-\mathbf{m}),\label{eq:gp-posterior-mean}\\
+\mathbf{\Sigma}_{z} & = & \mathbf{K}_{zz}-\mathbf{K}_{zf}\mathbf{K}_{yy}^{-1}\mathbf{K}_{fz},\label{eq:gp-posterior-cov}
 \end{eqnarray}
 
-\noindent where $\boldsymbol{\mu}_{*}$ is a mean vector and $\mathbf{\Sigma}_{*}$
+\noindent where $\boldsymbol{\mu}_{z}$ is a mean vector and $\mathbf{\Sigma}_{z}$
 is a covariance matrix.
 
 There is an important relationship between the Kalman filter equations
 and (\ref{eq:gp-posterior-mean}, \ref{eq:gp-posterior-cov}) which
-will be used later. Specifically, we remind that the term $\mathbf{G}=\mathbf{K}_{*f}\overline{\mathbf{K}}_{ff}^{-1}$
+will be used later. Specifically, we remind that the term $\mathbf{G}=\mathbf{K}_{zf}\mathbf{K}_{yy}^{-1}$
 is the Kalman gain matrix. Assuming the unknown continuous function
 $f$ is a GP, then training points from dataset $\mathbf{X}$ and
 the observed function values $\mathbf{y}$ define the posterior expectations
-(predictions) $\mathbf{f}_{*}$ for any test points over a dataset
-$\mathbf{X}_{*}$. Unfortunately, these simple calculations can get
-very expensive due to the inverse of matrix \textbf{$\overline{\mathbf{K}}_{ff}$},
-which is of size $n\times n$ where $n$ is the number of training
-data points. This is the operation which costs $\mathcal{O}(n^{3})$.
-This is the moment when sparse GPR is taken into account \cite{ecc19ref:Bijl_Online_Sparse_Gaussian}.
+(predictions) $\mathbf{z}$ for any test points over a dataset $\mathbf{X}_{p}$.
+Unfortunately, these simple calculations can get very expensive due
+to the inverse of matrix \textbf{$\mathbf{K}_{yy}$}, which is of
+size $n\times n$ where $n$ is the number of training data points.
+This is the operation which costs $\mathcal{O}(n^{3})$. This is the
+moment when sparse GPR is taken into account \cite{ecc19ref:Bijl_Online_Sparse_Gaussian}.
 
 \section{Q-LEARNING\label{sec:Q-Learning}}
 
@@ -296,10 +301,10 @@ reinforcement learning approach. Then the policy iteration algorithm
 based on Bellman equation is introduced. 
 
 For purpose of this section, let's highlight the analogies and slight
-differences between two closely related fields: Control Theory (CT),
-and MDP respectively. At a discrete time $k$, the vectors of states
-$\mathbf{x}_{k}\in\mathcal{X}$ and inputs $\mathbf{u}_{k}\in\mathcal{U}$
-are usually considered in CT for a process model, whereas MDP uses
+differences between two closely related fields: Optimal Control Theory
+(OCT), and MDP respectively. At a discrete time $k$, the vectors
+of states $\mathbf{x}_{k}\in\mathcal{X}$ and inputs $\mathbf{u}_{k}\in\mathcal{U}$
+are usually considered in OCT for a process model, whereas MDP uses
 the Markov process states $\mathbf{s}_{k}\in\mathcal{S}$ and the
 agent's actions $\mathbf{a}_{k}\in\mathcal{A}$ analogously. Note
 that the sets $\mathcal{X}$ and $\mathcal{U}$ are usually real vector
@@ -307,14 +312,14 @@ spaces in control problems whereas $\mathcal{S}$ and $\mathcal{A}$
 may often be finite sets in MDP. The process model itself is an analogy
 of probability transition matrix $p(\mathbf{s}_{k+1}|\mathbf{a}_{k},\mathbf{s}_{k})$
 of MDP. Control law, or a state feedback $\mathbf{u}_{k}=C(\mathbf{x}_{k})$
-in CT is an analogy of a deterministic policy $\mathbf{a}_{k}=\pi(\mathbf{s}_{k})$.
-A stochastic policy, usually not used in CT, defines the joint p.d.f.
+in OCT is an analogy of a deterministic policy $\mathbf{a}_{k}=\pi(\mathbf{s}_{k})$.
+A stochastic policy, usually not used in OCT, defines the joint p.d.f.
 $\pi(\mathbf{a}_{k},\mathbf{s}_{k})$ instead of an explicit function.
 An important difference exists between the reward $r(\mathbf{a}_{k},\mathbf{s}_{k},\mathbf{s}_{k+1})$
 used in MDP (bounded, to be maximized) and loss function $\ell(\mathbf{x}_{k},\mathbf{u}_{k})$
-used in CT (not bounded in general, to be minimized, almost never
+used in OCT (not bounded in general, to be minimized, almost never
 depending on $\mathbf{x}_{k+1}$). The ML theory will be discussed
-below mostly with CT notations and assumptions.
+below mostly with OCT notations and assumptions.
 
 \subsection{Q Function}
 
@@ -401,21 +406,21 @@ prediction points for the GPR as concatenations of points in the state-action
 space
 
 \begin{gather*}
-\mathbf{X}_{*}^{\pi}=\left[\begin{array}{c}
+\mathbf{X}_{p}^{\pi}=\left\{ \begin{array}{c}
 \mathbf{u}_{2}^{\pi},\mathbf{x}_{2}\\
 \vdots\\
 \mathbf{u}_{k}^{\pi},\mathbf{x}_{k}^{\pi}
-\end{array}\right],\;\mathbf{X}=\left[\begin{array}{c}
+\end{array}\right\} ,\;\mathbf{X}=\left\{ \begin{array}{c}
 \mathbf{u}_{1},\mathbf{x}_{1}\\
 \vdots\\
 \mathbf{u}_{k-1},\mathbf{x}_{k-1}
-\end{array}\right].
+\end{array}\right\} .
 \end{gather*}
 
 Here $\mathbf{X}$ is a collection of state-action pairs visited by
-the process whereas $\mathbf{X}_{*}^{\pi}$ is a collection of states
+the process whereas $\mathbf{X}_{p}^{\pi}$ is a collection of states
 observed as results of the actions accompanied with the actions the
-evaluated strategy $\pi$ would presumably apply there. Note $\mathbf{X}_{*}^{\pi}$
+evaluated strategy $\pi$ would presumably apply there. Note $\mathbf{X}_{p}^{\pi}$
 is known without actually applying the strategy $\pi$. That is why
 the approach may use a historical dataset to optimize $\pi$. Also,
 the concatenation of the losses will be used
@@ -433,54 +438,54 @@ $\mathbf{f}$ for the vector of unknown function values used in GPR
 context will be preserved
 
 \[
-\mathbf{f}_{*}^{\pi}=Q^{\pi}(\mathbf{X}_{*}^{\pi}),\quad\mathbf{f}^{\pi}=Q^{\pi}(\mathbf{X}).
+\mathbf{z}^{\pi}=Q^{\pi}(\mathbf{X}_{p}^{\pi}),\quad\mathbf{f}^{\pi}=Q^{\pi}(\mathbf{X}).
 \]
 
-The noisy realization of $\mathbf{f}^{\pi}=\mathbb{\boldsymbol{\ell}+\gamma E}[Q^{\pi}(\mathbf{X}_{*}^{\pi})]$
-is $\mathbf{y}^{\pi}=\mathbf{\boldsymbol{\ell}}+\gamma\mathbf{f}_{*}^{\pi}$.
+The noisy realization of $\mathbf{f}^{\pi}=\mathbb{\boldsymbol{\ell}+\gamma E}[Q^{\pi}(\mathbf{X}_{p}^{\pi})]$
+is $\mathbf{y}^{\pi}=\mathbf{\boldsymbol{\ell}}+\gamma\mathbf{z}^{\pi}$.
 Then based on (\ref{eq:gp-posterior-mean}) and (\ref{eq:q-value-iteration}),
 the conditional means are
 
 \begin{multline}
 \mathbb{E\left[\mathit{\left.\begin{array}{c}
 \mathbf{f}^{\pi}\\
-\mathbf{f}_{*}^{\pi}
+\mathbf{z}^{\pi}
 \end{array}\right|\mathbf{\mathit{\mathbf{y}}}^{\pi}}\right]}=\\
 \left[\begin{array}{c}
 \mathbf{m}\\
-\mathbf{m}_{*}
+\mathbf{m}_{z}
 \end{array}\right]+\left[\begin{array}{c}
 \mathbf{K}_{ff}\\
-\mathbf{K}_{*f}^{\pi}
-\end{array}\right]\overline{\mathbf{K}}_{ff}^{-1}\left(\mathbf{\boldsymbol{\ell}}+\gamma\mathbf{f}_{*}^{\pi}-\mathbf{m}\right).\label{eq:Q-data-update}
+\mathbf{K}_{zf}^{\pi}
+\end{array}\right]\mathbf{K}_{yy}^{-1}\left(\mathbf{\boldsymbol{\ell}}+\gamma\mathbf{z}^{\pi}-\mathbf{m}\right).\label{eq:Q-data-update}
 \end{multline}
 
 The expression (\ref{eq:Q-data-update}) may seem useless because
-the Q estimates depend on $\mathbf{f}_{*}^{\pi}$ value which we do
-not know. Recall that Q function is neither measured nor observed.
-However, consider the left hand side equals the true values \textbf{$\mathbf{f}^{\pi}$}
-and $\mathbf{f}_{*}^{\pi}$ for $k\rightarrow\infty$ and sufficient
-excitation in the state-action space, and when $\mathbf{m}=\mathbf{f}^{\pi}$
-and $\mathbf{m}_{*}=\mathbf{f}_{*}^{\pi}$. The \textbf{$\mathbf{f}^{\pi}$}
-and $\mathbf{f}_{*}^{\pi}$ thus represent a fixed point of the following
+the Q estimates depend on $\mathbf{z}^{\pi}$ value which we do not
+know. Recall that Q function is neither measured nor observed. However,
+consider the left hand side equals the true values \textbf{$\mathbf{f}^{\pi}$}
+and $\mathbf{z}^{\pi}$ for $k\rightarrow\infty$ and sufficient excitation
+in the state-action space, and when $\mathbf{m}=\mathbf{f}^{\pi}$
+and $\mathbf{m}_{z}=\mathbf{z}^{\pi}$. The \textbf{$\mathbf{f}^{\pi}$}
+and $\mathbf{z}^{\pi}$ thus represent a fixed point of the following
 iterations (index $\pi$ dropped)
 
 \begin{multline}
 \left[\begin{array}{c}
 \mathbf{f}^{(i+1)}\\
-\mathbf{f}_{*}^{(i+1)}
+\mathbf{z}^{(i+1)}
 \end{array}\right]=\\
 \left[\begin{array}{c}
 \mathbf{f}^{(i)}\\
-\mathbf{f}_{*}^{(i)}
+\mathbf{z}^{(i)}
 \end{array}\right]+\left[\begin{array}{c}
 \mathbf{K}_{ff}\\
-\mathbf{K}_{*f}
-\end{array}\right]\overline{\mathbf{K}}_{ff}^{-1}\left(\boldsymbol{\ell}+\gamma\mathbf{f}_{*}^{(i)}-\mathbf{f}^{(i)}\right).\label{eq:GPR-iterations}
+\mathbf{K}_{zf}
+\end{array}\right]\mathbf{K}_{yy}^{-1}\left(\boldsymbol{\ell}+\gamma\mathbf{z}^{(i)}-\mathbf{f}^{(i)}\right).\label{eq:GPR-iterations}
 \end{multline}
 
 \noindent An estimate may be calculated starting the iterations from
-$\mathbf{m},\mathbf{m}_{*}$. Instead of actually iterating (\ref{eq:GPR-iterations}),
+$\mathbf{m},\mathbf{m}_{z}$. Instead of actually iterating (\ref{eq:GPR-iterations}),
 a system of linear equations, which satisfy the fixed point values,
 can be solved. However, this system of linear equations will typically
 be ill-conditioned. In general, the update (\ref{eq:Q-data-update})
@@ -488,7 +493,7 @@ does not uniformly reduce the uncertainty and the respective mapping
 is not a contraction. One may now use the Kalman filter and GPR analogy
 to understand that the latter happens because some linear combinations
 of the Q function values are not observalbe \cite{ecc19ref:Kwakernaak_linear_optimal_control_systems}
-and some information from the starting values $\mathbf{m},\mathbf{m}_{*}$
+and some information from the starting values $\mathbf{m},\mathbf{m}_{z}$
 does not vanish. We propose to regularize this situation by shifting
 the unobservable poles from 1 to some stable real pole $1-\xi$, i.e.
 slightly to the left by $\xi\geq0$. Practically, this means that
@@ -500,7 +505,7 @@ by the factor of $1-\xi$. It results in the following estimates
 \begin{equation}
 \left[\begin{array}{c}
 \hat{\mathbf{f}}^{\pi}\\
-\mathbf{\hat{f}}_{*}^{\pi}
+\mathbf{\hat{z}}^{\pi}
 \end{array}\right]=\left(\left(1-\xi\right)\left[\begin{array}{cc}
 \mathbf{G}^{\pi}, & -\gamma\mathbf{G}^{\pi}\end{array}\right]-\xi\mathbf{I}\right)^{-1}\mathbf{G}^{\pi}\mathbf{\ell},\label{eq:Q-unbiased-estimate}
 \end{equation}
@@ -511,21 +516,21 @@ as
 \[
 \mathbf{G}^{\pi}=\left[\begin{array}{c}
 \mathbf{K}_{ff}\\
-\mathbf{K}_{*f}^{\pi}
-\end{array}\right]\overline{\mathbf{K}}_{ff}^{-1}.
+\mathbf{K}_{zf}^{\pi}
+\end{array}\right]\mathbf{K}_{yy}^{-1}.
 \]
 
 \noindent  Now imagine that the Q function value at a general query
 point $\mathbf{\mathit{f}}_{q}^{\pi}=Q^{\pi}(\mathbf{u}_{k}^{q},\mathbf{x}_{k})$
 is also updated in (\ref{eq:Q-data-update}). Such value may be queried
 by a numerical method trying to improve the current policy. This estimate
-may now be obtained reusing the above estimates $\hat{\mathbf{f}}^{\pi},\mathbf{\hat{f}_{*}^{\pi}}$
-as well as $\overline{\mathbf{K}}_{ff}^{-1}$ and recalculating only
-a row kernel matrix $\mathbf{K}_{qf}^{\pi}$ which is the only datum
-changed by the query point. The result is
+may now be obtained reusing the above estimates $\hat{\mathbf{f}}^{\pi},\mathbf{\hat{z}^{\pi}}$
+as well as $\mathbf{K}_{yy}^{-1}$ and recalculating only a row kernel
+matrix $\mathbf{K}_{qf}^{\pi}$ which is the only datum changed by
+the query point. The result is
 
 \begin{equation}
-\mathbf{\hat{\mathit{f}}}_{q}^{\pi}=\mathbf{K}_{qf}^{\pi}\overline{\mathbf{K}}_{ff}^{-1}\left(\frac{1-\xi}{\xi}\left(\hat{\mathbf{f}^{\pi}}-\gamma\hat{\mathbf{f}_{*}^{\pi}}\right)-\frac{1}{\xi}\boldsymbol{\ell}\right).\label{eq:Q-fast-update}
+\mathbf{\hat{\mathit{f}}}_{q}^{\pi}=\mathbf{K}_{qf}^{\pi}\mathbf{K}_{yy}^{-1}\left(\frac{1-\xi}{\xi}\left(\hat{\mathbf{f}}^{\pi}-\gamma\mathbf{\hat{z}}^{\pi}\right)-\frac{1}{\xi}\boldsymbol{\ell}\right).\label{eq:Q-fast-update}
 \end{equation}
 
 \noindent Without proofs we state several statistical properties
@@ -538,13 +543,13 @@ by (\ref{eq:gp-posterior-cov}) but must be estimated in a different
 way.
 
 The flow of calculations is in Algorithm \ref{alg:Q-learning-with-GP}.
-In the first step, it calculates the matrix inversion $\overline{\mathbf{K}}_{ff}^{-1}$
+In the first step, it calculates the matrix inversion $\mathbf{K}_{yy}^{-1}$
 for later uses as it depends only on the data, not the optimized policy.
 $Q^{\pi^{(i)}}$ estimate is calculated for each policy $\pi^{(i)}$,
 starting with some known stabilizing policy $\pi^{(1)}$, solving
 a linear system of equations (\ref{eq:Q-unbiased-estimate}). All
 available data can be used in this step. This $Q^{\pi^{(i)}}$ is
-then minimized at each state from $\mathbf{X}_{*}^{\pi}$ at \ref{enu:update-pi}
+then minimized at each state from $\mathbf{X}_{p}^{\pi}$ at (\ref{enu:update-pi})
 to define a new improved policy $\pi^{(i+1)}$. The minimization is
 iterative evaluating the Q function using (\ref{eq:Q-fast-update})
 which is an inner product. The stop condition is based on either a
@@ -560,13 +565,12 @@ state implicitly by (\ref{eq:q-function-policy}).
 
 $1\leq j\leq k$
 \begin{enumerate}
-\item calculate kernel and its inversion $\overline{\mathbf{K}}_{ff}^{-1}$\label{enu:calculate-kernel-inv}
+\item calculate kernel and its inversion $\mathbf{K}_{yy}^{-1}$\label{enu:calculate-kernel-inv}
 \item $i=1$,\textbf{ repeat}
 
 \begin{enumerate}
-\item update $\mathbf{X}_{*}^{\pi^{(i)}}$ and kernel $\mathbf{K}_{*f}^{(i)}$\label{enu:update-kalman-gain}
-\item calculate $\hat{\mathbf{f}}^{(i)},\mathbf{\hat{f}}_{*}^{(i)}$ using
-(\ref{eq:Q-unbiased-estimate})\label{enu:calculate-Q-estimate}
+\item update $\mathbf{X}_{p}^{\pi^{(i)}}$ and kernel $\mathbf{K}_{zf}^{(i)}$\label{enu:update-kalman-gain}
+\item calculate $\hat{\mathbf{f}}^{(i)},\mathbf{\hat{z}}^{(i)}$ using (\ref{eq:Q-unbiased-estimate})\label{enu:calculate-Q-estimate}
 \item $\pi^{(i+1)}(\mathbf{x}_{j})\leftarrow\arg\min_{\mathbf{u}_{j}}Q^{\pi^{(i)}}(\mathbf{u}_{j},\mathbf{x}_{j})$\label{enu:update-pi}
 \item $i=i+1$
 \end{enumerate}
@@ -742,10 +746,11 @@ presented on nonlinear FCU model.}
 \end{figure}
 Next, the controllers and the Q learning were tested considering the
 net heat load/heat loss $q_{L}$ not constant but uniformly distributed
-over $-7\pm\varDelta$. The result is shown in Fig. (\ref{fig:Q-Learning-PI-PI-noisy}).
-Note that Q-Learning designed controller is robust towards such a
-noise. It should be noted that the same noise was used to generate
-the learning data for this test, not only when simulating the controller.
+over $-7\pm\varDelta$, where $\varDelta\in\left[-2,2\right]$. The
+result is shown in Fig. (\ref{fig:Q-Learning-PI-PI-noisy}). Note
+that Q-Learning designed controller is robust towards such a noise.
+It should be noted that the same noise was used to generate the learning
+data for this test, not only when simulating the controller.
 
 \begin{figure}
 \centering{}\includegraphics[width=0.95\columnwidth]{figures/optimal_policy_noisy}
