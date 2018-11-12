@@ -76,7 +76,7 @@
 \thanks{$^{1}$Jan Hauser and Vladimír Havlena are with Department of Control Engineering, 
 Faculty of Electrical Engineering of Czech Technical University in Prague, Technicka 2, 166 27 Praha 6, Czech Republic.
 Email: {\tt\small \{hauseja3,havlena\}@fel.cvut.cz}}%
-\thanks{$^{2}$Daniel Pachner is with Honeywell ACS Global Laboratory Prague, 
+\thanks{$^{2}$Daniel Pachner is with Honeywell HBT Architecture $\&$ Innovation Team, 
 V Parku 2326/18, 148 00 Prague, Czech Republic 
 Email: {\tt\small daniel.pachner@honeywell.com}}%
 }
@@ -496,7 +496,7 @@ of the Q function values are not observable \cite{ecc19ref:Kwakernaak_linear_opt
 and some information from the starting values $\mathbf{m},\mathbf{m}_{z}$
 does not vanish. We propose to regularize this situation by shifting
 the unobservable poles from 1 to some stable real pole $1-\xi$, i.e.
-slightly to the left by $\xi\geq0$. Practically, this means that
+inside the unit circle by $\xi\geq0$. Practically, this means that
 the unobservable Q function values will be estimated as zeros ($\mathbf{m}$
 could also be used). This regularization adds a fictitious time update
 step to the Kalman filter, shrinking the right hand side of (\ref{eq:GPR-iterations})
@@ -549,9 +549,9 @@ $Q^{\pi^{(i)}}$ estimate is calculated for each policy $\pi^{(i)}$,
 starting with some known stabilizing policy $\pi^{(1)}$, solving
 a linear system of equations (\ref{eq:Q-unbiased-estimate}). All
 available data can be used in this step. This $Q^{\pi^{(i)}}$ is
-then minimized at each state from $\mathbf{X}_{p}^{\pi}$ at (\ref{enu:update-pi})
-to define a new improved policy $\pi^{(i+1)}$. The minimization is
-iterative, evaluating the Q function using (\ref{eq:Q-fast-update}),
+then minimized at each state from $\mathbf{X}_{p}^{\pi}$ at step
+(\ref{enu:update-pi}) to define a new improved policy $\pi^{(i+1)}$.
+The minimization is iterative, evaluating the Q function using (\ref{eq:Q-fast-update}),
 which is an inner product. The stop condition is based on either a
 number of iterations limit or vanishing difference between the Q function
 values evaluated at last two policies $\pi^{(i)}$ and $\pi^{(i-1)}$.
