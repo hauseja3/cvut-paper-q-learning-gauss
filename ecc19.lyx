@@ -1647,15 +1647,22 @@ noindent
 
  and let the Q function be a GP with known kernel.
  The notation 
-\begin_inset Formula $f(\mathbf{X}$
-\end_inset
-
-) for the vector of unknown function values used in GPR context will be
- preserved, but shortened as 
 \begin_inset Formula $\mathbf{f}$
 \end_inset
 
+ (shortened 
+\begin_inset Formula $f(\mathbf{X})$
+\end_inset
 
+), 
+\begin_inset Formula $\mathbf{z}$
+\end_inset
+
+ for the vectors of unknown function values and 
+\begin_inset Formula $\mathbf{y}$
+\end_inset
+
+ for the noisy observed values used in GPR context will be preserved
 \end_layout
 
 \begin_layout Standard
@@ -3687,7 +3694,18 @@ reference "sec:RESULTS"
 
  and the performance of PI designed using linearized FCU was shown to be
  worse than both Q-Learning and the PI found by direct search.
- Here the problem may be the choice of the linearization point.
+ Here the problem may be both linearization point and PID tuning rule which
+ does not minimize the loss (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:loss-calculation"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+).
  Although the example was a single input single output control problem,
  the method applies to multidimensional problems without modifications.
  The whole process was described for reader's understanding on the high
