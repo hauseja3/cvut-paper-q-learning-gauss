@@ -43,7 +43,7 @@
 }
 
 
-\author{Jan Hauser,$^{1}$ Daniel Pachner$^{2}$ and Vladimír Havlena$^{1}$% <-this % stops a space
+\author{Jan Hauser$^{1}$, Daniel Pachner$^{2}$ and Vladimír Havlena$^{1}$% <-this % stops a space
 \thanks{*This work has been supported by the project 18-26278S sponsored by Grant Agency of the Czech Republic.}% <-this % stops a space
 \thanks{$^{1}$Jan Hauser and Vladimír Havlena are with Department of Control Engineering, 
 Faculty of Electrical Engineering of Czech Technical University in Prague, Technicka 2, 166 27 Praha 6, Czech Republic.
@@ -214,7 +214,7 @@ The aim of this paper is to demonstrate how Machine Learning (ML) based
  algorithm.
  Additionally, the algorithm properties are discussed, i.e.
  learning process robustness, GP kernel functions choice.
- The simulation results are compared to a simple PI designed based on a
+ The simulation results are compared to a simple PI, designed based on a
  linearized model.
 \end_layout
 
@@ -232,7 +232,7 @@ d process is available and the controller is designed from the measurement
  improve the control continuously.
  In this article the former offline approach is considered, i.e.
  the situation when some sub-optimal controller was already in use and the
- data were collected and can be used to optimize, or improve, that controller.
+ data were collected and can be used to optimize or improve that controller.
  Many existing control design techniques first create a model from data
  to use it for a control design method afterwards, which makes sense if
  some reliable modeling information, e.g.
@@ -267,7 +267,7 @@ literal "false"
 
 .
  If the analytical form of the Q function is unknown in continuous state
- spaces, it may be represented by a universal function approximating method
+ spaces, it may be represented by an universal function approximating method
  such as Neural Network or Gaussian Process Regression (GPR).
 \end_layout
 
@@ -308,7 +308,7 @@ literal "false"
 \begin_inset Formula $m$
 \end_inset
 
- induction input points which reduces the computational complexity to 
+ induction input points, which reduce the computational complexity to 
 \begin_inset Formula $\mathcal{O}(nm^{2})$
 \end_inset
 
@@ -318,7 +318,7 @@ literal "false"
 
  (memory).
  These induction points reduce the whole dataset into a smaller number of
- representing data points which are distributed across the data space to
+ representing data points, which are distributed across the data space to
  preserve as much information as possible.
  GP uses various covariance (kernel) functions 
 \begin_inset CommandInset citation
@@ -645,7 +645,7 @@ Then the prior joint probability distribution function (p.d.f) can be defined
 \mathbf{y}\\
 \mathbf{z}
 \end{array}\right]\sim\left[\begin{array}{c}
-f(\mathbf{X})\\
+f(\mathbf{X})+\boldsymbol{\varepsilon}\\
 f(\mathbf{X}_{p})
 \end{array}\right]\sim\\
 \mathcal{N}\left(\left[\begin{array}{c}
@@ -995,7 +995,7 @@ literal "true"
 
 \end_inset
 
- which is a model-less reinforcement learning approach.
+, which is a model-less reinforcement learning approach.
  Then the policy iteration algorithm based on Bellman equation is introduced.
  
 \end_layout
@@ -1139,7 +1139,7 @@ Q Function
 
 \begin_layout Standard
 Generally, Q function is a scalar function of a state-input (state-action)
- pair which maps to real values 
+ pair, which maps to real values 
 \end_layout
 
 \begin_layout Standard
@@ -1166,7 +1166,7 @@ It is possible to talk either about Q function
 \begin_inset Formula $Q^{*}(\mathbf{x},\mathbf{u})$
 \end_inset
 
- which pertains to the optimal policy 
+, which pertains to the optimal policy 
 \begin_inset Formula $\pi^{*}$
 \end_inset
 
@@ -1260,7 +1260,7 @@ It is possible to talk either about Q function
 \begin_inset Formula $k\in\mathbb{N}$
 \end_inset
 
-, the Q is defined
+, the Q is defined as
 \end_layout
 
 \begin_layout Standard
@@ -1385,7 +1385,7 @@ noprefix "false"
 
 \end_inset
 
-,
+, 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:q-function-star"
@@ -1459,7 +1459,7 @@ noprefix "false"
 
 \end_inset
 
-) for a current policy and then improves the current policy by seeking for
+) for current policy and then improves the current policy by seeking for
  minimum values of 
 \begin_inset Formula $Q^{\pi}$
 \end_inset
@@ -1497,7 +1497,7 @@ Q-Learning with Gaussian Process Regression
 
 \begin_layout Standard
 Last step in this section is to introduce Q-Learning algorithm with GPR.
- For a finite (number of states and actions) MDP, the Q-Learning algorithms
+ For a finite (in number of states and actions) MDP, the Q-Learning algorithms
  may approximate the Q function at every element of the state-action space
  using the observed samples 
 \begin_inset Formula $\mathbf{x}_{k},\mathbf{u}_{k}$
@@ -1647,10 +1647,15 @@ noindent
 
  and let the Q function be a GP with known kernel.
  The notation 
+\begin_inset Formula $f(\mathbf{X}$
+\end_inset
+
+) for the vector of unknown function values used in GPR context will be
+ preserved, but shortened as 
 \begin_inset Formula $\mathbf{f}$
 \end_inset
 
- for the vector of unknown function values used in GPR context will be preserved
+
 \end_layout
 
 \begin_layout Standard
@@ -1733,9 +1738,9 @@ noprefix "false"
 \begin_inset Formula $\mathbf{z}^{\pi}$
 \end_inset
 
- value which we do not know.
+ value, which we do not know.
  Recall that Q function is neither measured nor observed.
- However, consider the left hand side equals the true values 
+ However, consider the left hand side equals to the true values 
 \series bold
 
 \begin_inset Formula $\mathbf{f}^{\pi}$
@@ -1751,15 +1756,15 @@ noprefix "false"
 \begin_inset Formula $k\rightarrow\infty$
 \end_inset
 
- and sufficient excitation in the state-action space, and when 
+, sufficient excitation in the state-action space, and when 
 \begin_inset Formula $\mathbf{m}=\mathbf{f}^{\pi}$
 \end_inset
 
- and 
+, 
 \begin_inset Formula $\mathbf{m}_{z}=\mathbf{z}^{\pi}$
 \end_inset
 
-.
+ respectively.
  The 
 \series bold
 
@@ -1845,7 +1850,7 @@ noprefix "false"
  not a contraction.
  One may now use the Kalman filter and GPR analogy to understand that the
  latter happens because some linear combinations of the Q function values
- are not observalbe 
+ are not observable 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "ecc19ref:Kwakernaak_linear_optimal_control_systems"
@@ -2142,7 +2147,7 @@ noindent
 
 \end_inset
 
-Without proofs we state several statistical properties of the estimates
+Without proofs, we state several statistical properties of the estimates
  (
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -2189,7 +2194,7 @@ noprefix "false"
 
 \end_inset
 
-) but must be estimated in a different way.
+), but must be estimated in a different way.
 \end_layout
 
 \begin_layout Standard
@@ -2305,7 +2310,7 @@ noprefix "false"
 \end_inset
 
 .
- The minimization is iterative evaluating the Q function using (
+ The minimization is iterative, evaluating the Q function using (
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:Q-fast-update"
@@ -2315,7 +2320,7 @@ noprefix "false"
 
 \end_inset
 
-) which is an inner product.
+), which is an inner product.
  The stop condition is based on either a number of iterations limit or vanishing
  difference between the Q function values evaluated at last two policies
  
@@ -2614,7 +2619,7 @@ name "sec:Fan-Coil-Unit"
 \begin_layout Standard
 This section introduces the simplified FCU model used for testing the algorithm
  from previous section.
- FCU is a common air conditioning system which is inherently non-linear
+ FCU is a common air conditioning system, which is inherently non-linear
  
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -2676,7 +2681,7 @@ typical
 \noun default
 \color inherit
  and humidity loads.
- That is why model-less control or ML techniques may come into consideration.
+ That is why model-less control or ML techniques may come into account.
  If such controllers could periodically re-optimize their behavior using
  ML techniques, significant amounts of energy could be saved world wide.
 \end_layout
@@ -3134,7 +3139,7 @@ Q-Learning training data consists of
 \begin_inset Formula $\sim10$
 \end_inset
 
- hours) consisting of 
+ hours) divided into 
 \begin_inset Formula $15$
 \end_inset
 
@@ -3194,7 +3199,7 @@ Q function was calculated by the proposed method and optimal control policy
 \end_inset
 
  must excite the process to cover the state-action space.
- The control actions must be partly randomized to get valid a training dataset.
+ The control actions must be partly randomized to get a valid training dataset.
  This is related to the well known problem of exploration-exploitation trade-off.
  Fig.
  (
@@ -3242,7 +3247,7 @@ Q-Learning with GPR and Policy Iteration.
 \end_inset
 
  contours and policies 
-\begin_inset Formula $\pi^{(2)}$
+\begin_inset Formula $\pi^{(1)},\pi^{(2)}$
 \end_inset
 
  and 
@@ -3293,7 +3298,7 @@ This Q learning result makes good sense intuitively.
  gain.
  It does not have any integral action whereas a proportional integral derivative
  (PID) controller would be normally used for similar purpose.
- However, it can be shown that the integral action can be added augmenting
+ However, it can be shown that the integral action can be added by augmenting
  the state space with temperature time difference and considering the time
  difference 
 \begin_inset Formula $u_{k}-u_{k-1}$
@@ -3346,7 +3351,7 @@ noprefix "false"
 
 \end_inset
 
-) starting at the same initial condition 
+), starting at the same initial condition 
 \family roman
 \series medium
 \shape up
@@ -3438,7 +3443,7 @@ reference "fig:Q-Learning-PI-PI"
 \begin_inset Float figure
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \align center
@@ -3483,7 +3488,7 @@ Comparison of PI controllers cumulative losses
 \begin_inset Float figure
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \align center
@@ -3548,7 +3553,7 @@ reference "fig:Q-Learning-PI-PI-noisy"
 \begin_inset Float figure
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \align center
@@ -3615,7 +3620,7 @@ This paper described a practical approach of using GPR based Q-Learning
  This method typically converges rapidly.
  The optimal control law was then fully defined by the minima of a GP.
  This represents a numerical optimization in a low dimensional space of
- controller outputs and is thus numerically tractable.
+ controller outputs and is thus numerically trackable.
  Although not explained in this paper, GP can be globally minimized even
  if it is not convex, see 
 \begin_inset CommandInset citation
@@ -3640,7 +3645,7 @@ literal "false"
  using GPR.
  The approach can be integrated with the GPR sparse form in order to lower
  the dimensionality.
- However, details of this reduction is currently a subject of research.
+ However, details of this reduction are currently a subject of research.
  The approach was verified on a simple linear model against Q function calculate
 d as a solution of Riccati equation, this verification is not part of the
  paper.
@@ -3660,7 +3665,7 @@ d as a solution of Riccati equation, this verification is not part of the
 \begin_inset Formula $L^{*}$
 \end_inset
 
- found by the Q-learning.
+,  found by the Q-learning.
  The best PI controller from the grid was slightly worse than 
 \begin_inset Formula $L^{*}$
 \end_inset
@@ -3699,8 +3704,8 @@ The main pitfalls of the process may be also pointed out.
  The optimization of hyperparameters in connection with the proposed approach
  is our current research topic.
  Although result with only one kernel (SE times quadratic) was presented,
- different kernels were also tried with similar results provided the hyperparame
-ters were chosen reasonably and the kernels were smooth.
+ different kernels were also tried with similar results, the hyperparameters
+ were chosen reasonably and the kernels were smooth.
  The method assumes the process state is measured without error.
  This is not realistic in most control applications.
  The state may be often approximated by measurements and lagged measurements

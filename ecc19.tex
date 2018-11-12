@@ -71,7 +71,7 @@
 }
 
 
-\author{Jan Hauser,$^{1}$ Daniel Pachner$^{2}$ and Vladimír Havlena$^{1}$% <-this % stops a space
+\author{Jan Hauser$^{1}$, Daniel Pachner$^{2}$ and Vladimír Havlena$^{1}$% <-this % stops a space
 \thanks{*This work has been supported by the project 18-26278S sponsored by Grant Agency of the Czech Republic.}% <-this % stops a space
 \thanks{$^{1}$Jan Hauser and Vladimír Havlena are with Department of Control Engineering, 
 Faculty of Electrical Engineering of Czech Technical University in Prague, Technicka 2, 166 27 Praha 6, Czech Republic.
@@ -95,7 +95,7 @@ A simplified nonlinear Fan Coil Unit (FCU) model is used as an example
 for which the fan speed control is designed using the off-policy Q-Learning
 algorithm. Additionally, the algorithm properties are discussed, i.e.
 learning process robustness, GP kernel functions choice. The simulation
-results are compared to a simple PI designed based on a linearized
+results are compared to a simple PI, designed based on a linearized
 model.
 \end{abstract}
 
@@ -109,7 +109,7 @@ design. A different approach would attempt to use the data in the
 real time to improve the control continuously. In this article the
 former offline approach is considered, i.e. the situation when some
 sub-optimal controller was already in use and the data were collected
-and can be used to optimize, or improve, that controller. Many existing
+and can be used to optimize or improve that controller. Many existing
 control design techniques first create a model from data to use it
 for a control design method afterwards, which makes sense if some
 reliable modeling information, e.g. model structure, is available.
@@ -126,7 +126,7 @@ then defines a controller. Q-Learning was developed for Markov Decision
 Process (MDP) with finite number of states and later generalized to
 continuous state spaces \cite{ecc19ref:Hasselt_Reinforcement_learning_in_continuous_action_spaces,ecc19ref:Gaskett_Q_Learning_IC}.
 If the analytical form of the Q function is unknown in continuous
-state spaces, it may be represented by a universal function approximating
+state spaces, it may be represented by an universal function approximating
 method such as Neural Network or Gaussian Process Regression (GPR).
 
 GPR is a non-parametric regression technique \cite{ecc19ref:Rasmussen_Gaussian_Processes}
@@ -136,10 +136,10 @@ and the memory requirement is $\mathcal{O}(n^{2})$ for $n$ data
 points. Various sparse GPR techniques were developed to overcome this
 computational complexity \cite{ecc19ref:Bijl_Online_Sparse_Gaussian,ecc19ref:Candela_A_unifying_view,ecc19ref:Huber_Recursive_GP}.
 One of the conventional GPR sparse method is to use a set of size
-$m$ induction input points which reduces the computational complexity
+$m$ induction input points, which reduce the computational complexity
 to $\mathcal{O}(nm^{2})$ (runtime) and $\mathcal{O}(nm)$ (memory).
 These induction points reduce the whole dataset into a smaller number
-of representing data points which are distributed across the data
+of representing data points, which are distributed across the data
 space to preserve as much information as possible. GP uses various
 covariance (kernel) functions \cite{ecc19ref:Williams_Prediction_with_Gaussian_processes}
 to define the data covariance matrices. The choice of the kernel can
@@ -223,7 +223,7 @@ be defined for training and testing sets values as
 \mathbf{y}\\
 \mathbf{z}
 \end{array}\right]\sim\left[\begin{array}{c}
-f(\mathbf{X})\\
+f(\mathbf{X})+\boldsymbol{\varepsilon}\\
 f(\mathbf{X}_{p})
 \end{array}\right]\sim\\
 \mathcal{N}\left(\left[\begin{array}{c}
@@ -296,7 +296,7 @@ moment when sparse GPR is taken into account \cite{ecc19ref:Bijl_Online_Sparse_G
 \section{Q-LEARNING\label{sec:Q-Learning}}
 
 This section describes the basic principles of Q-Learning algorithm
-\cite{ecc19ref:Sutton_Reinforcement_Learning} which is a model-less
+\cite{ecc19ref:Sutton_Reinforcement_Learning}, which is a model-less
 reinforcement learning approach. Then the policy iteration algorithm
 based on Bellman equation is introduced. 
 
@@ -324,14 +324,14 @@ below mostly with OCT notations and assumptions.
 \subsection{Q Function}
 
 Generally, Q function is a scalar function of a state-input (state-action)
-pair which maps to real values 
+pair, which maps to real values 
 
 \[
 Q:\mathbf{\mathbf{u\times}x}\rightarrow\mathbb{R}.
 \]
 
 It is possible to talk either about Q function $Q^{\pi}(\mathbf{u},\mathbf{x})$
-pertaining to a given policy $\pi$ or the function $Q^{*}(\mathbf{x},\mathbf{u})$
+pertaining to a given policy $\pi$ or the function $Q^{*}(\mathbf{x},\mathbf{u})$,
 which pertains to the optimal policy $\pi^{*}$. $Q$ (and $Q^{*}$)
 describes the expected total discounted loss received by the controller
 starting from $\mathbf{x}$ with a control action $\mathbf{u}$ and
@@ -344,7 +344,7 @@ $Q$ function and the value (cost-to-go) function $V$ used in Dynamic
 Programming. It is also related to Lyapunov function and stability
 theory. $V$ is not used for purpose of this paper. For a policy $\pi$,
 not necessarily optimal, and an instantaneous loss $\ell(\mathbf{u}_{k},\mathbf{x}_{k})$
-at time $k\in\mathbb{N}$, the Q is defined
+at time $k\in\mathbb{N}$, the Q is defined as
 
 \begin{multline}
 Q^{\pi}(\mathbf{u}_{k},\mathbf{x}_{k})=\\
@@ -368,7 +368,7 @@ $\pi^{*}$ is
 
 The Bellman equation (more usually expressed in terms of $V$) provides
 the recursive approach for finding the functions $Q^{\pi}$ and $Q^{*}$.
-It follows directly from (\ref{eq:q-split-sum},\ref{eq:q-function-star}).
+It follows directly from (\ref{eq:q-split-sum}, \ref{eq:q-function-star}).
 For an optimal policy $\pi^{*}$, function $Q^{*}(x_{k},u_{k})$ must
 satisfy
 
@@ -382,7 +382,7 @@ and for general policy $\pi$ analogously by using (\ref{eq:q-split-sum}).
 \subsection{Policy Iteration\label{subsec:Policy-Iteration}}
 
 Policy iteration algorithm calculates Q function from Bellman equation
-(\ref{eq:q-value-iteration}) for a current policy and then improves
+(\ref{eq:q-value-iteration}) for current policy and then improves
 the current policy by seeking for minimum values of $Q^{\pi}$ with
 respect to $\mathbf{u}$ for each $\mathbf{x}$. Such minimizing $\mathbf{u}$
 defines the new policy. This process is repeated until convergence
@@ -392,7 +392,7 @@ to ensure the initial $Q^{\pi}$ is finite.
 \subsection{Q-Learning with Gaussian Process Regression}
 
 Last step in this section is to introduce Q-Learning algorithm with
-GPR. For a finite (number of states and actions) MDP, the Q-Learning
+GPR. For a finite (in number of states and actions) MDP, the Q-Learning
 algorithms may approximate the Q function at every element of the
 state-action space using the observed samples $\mathbf{x}_{k},\mathbf{u}_{k}$,
 which were encountered during interaction with a system. An example
@@ -434,8 +434,8 @@ the concatenation of the losses will be used
 \]
 
 \noindent and let the Q function be a GP with known kernel. The notation
-$\mathbf{f}$ for the vector of unknown function values used in GPR
-context will be preserved
+$f(\mathbf{X}$) for the vector of unknown function values used in
+GPR context will be preserved, but shortened as $\mathbf{f}$
 
 \[
 \mathbf{z}^{\pi}=Q^{\pi}(\mathbf{X}_{p}^{\pi}),\quad\mathbf{f}^{\pi}=Q^{\pi}(\mathbf{X}).
@@ -461,12 +461,12 @@ the conditional means are
 \end{multline}
 
 The expression (\ref{eq:Q-data-update}) may seem useless because
-the Q estimates depend on $\mathbf{z}^{\pi}$ value which we do not
+the Q estimates depend on $\mathbf{z}^{\pi}$ value, which we do not
 know. Recall that Q function is neither measured nor observed. However,
-consider the left hand side equals the true values \textbf{$\mathbf{f}^{\pi}$}
-and $\mathbf{z}^{\pi}$ for $k\rightarrow\infty$ and sufficient excitation
-in the state-action space, and when $\mathbf{m}=\mathbf{f}^{\pi}$
-and $\mathbf{m}_{z}=\mathbf{z}^{\pi}$. The \textbf{$\mathbf{f}^{\pi}$}
+consider the left hand side equals to the true values \textbf{$\mathbf{f}^{\pi}$}
+and $\mathbf{z}^{\pi}$ for $k\rightarrow\infty$, sufficient excitation
+in the state-action space, and when $\mathbf{m}=\mathbf{f}^{\pi}$,
+$\mathbf{m}_{z}=\mathbf{z}^{\pi}$ respectively. The \textbf{$\mathbf{f}^{\pi}$}
 and $\mathbf{z}^{\pi}$ thus represent a fixed point of the following
 iterations (index $\pi$ dropped)
 
@@ -492,7 +492,7 @@ be ill-conditioned. In general, the update (\ref{eq:Q-data-update})
 does not uniformly reduce the uncertainty and the respective mapping
 is not a contraction. One may now use the Kalman filter and GPR analogy
 to understand that the latter happens because some linear combinations
-of the Q function values are not observalbe \cite{ecc19ref:Kwakernaak_linear_optimal_control_systems}
+of the Q function values are not observable \cite{ecc19ref:Kwakernaak_linear_optimal_control_systems}
 and some information from the starting values $\mathbf{m},\mathbf{m}_{z}$
 does not vanish. We propose to regularize this situation by shifting
 the unobservable poles from 1 to some stable real pole $1-\xi$, i.e.
@@ -533,13 +533,13 @@ the query point. The result is
 \mathbf{\hat{\mathit{f}}}_{q}^{\pi}=\mathbf{K}_{qf}^{\pi}\mathbf{K}_{yy}^{-1}\left(\frac{1-\xi}{\xi}\left(\hat{\mathbf{f}}^{\pi}-\gamma\mathbf{\hat{z}}^{\pi}\right)-\frac{1}{\xi}\boldsymbol{\ell}\right).\label{eq:Q-fast-update}
 \end{equation}
 
-\noindent Without proofs we state several statistical properties
+\noindent Without proofs, we state several statistical properties
 of the estimates (\ref{eq:Q-unbiased-estimate}). They are unbiased
 (under GPR assumptions) except of the bias towards zero caused by
 $\xi>0$. However, they are not optimal because $\mathbf{y}-\mathbf{f}$
 are in general not normal, independent and homeoskedastic. Also, it
 should be noted that the uncertainty of this estimate cannot be calculated
-by (\ref{eq:gp-posterior-cov}) but must be estimated in a different
+by (\ref{eq:gp-posterior-cov}), but must be estimated in a different
 way.
 
 The flow of calculations is in Algorithm \ref{alg:Q-learning-with-GP}.
@@ -551,7 +551,7 @@ a linear system of equations (\ref{eq:Q-unbiased-estimate}). All
 available data can be used in this step. This $Q^{\pi^{(i)}}$ is
 then minimized at each state from $\mathbf{X}_{p}^{\pi}$ at (\ref{enu:update-pi})
 to define a new improved policy $\pi^{(i+1)}$. The minimization is
-iterative evaluating the Q function using (\ref{eq:Q-fast-update})
+iterative, evaluating the Q function using (\ref{eq:Q-fast-update}),
 which is an inner product. The stop condition is based on either a
 number of iterations limit or vanishing difference between the Q function
 values evaluated at last two policies $\pi^{(i)}$ and $\pi^{(i-1)}$.
@@ -586,7 +586,7 @@ $1\leq j\leq k$
 
 This section introduces the simplified FCU model used for testing
 the algorithm from previous section. FCU is a common air conditioning
-system which is inherently non-linear \cite{ecc19ref:Arguello_Serrano_Nonlinear_HVAC}.
+system, which is inherently non-linear \cite{ecc19ref:Arguello_Serrano_Nonlinear_HVAC}.
 Usually installed in building interiors, it consists of a speed controllable
 electrical fan, a copper coil flown with heating and/or cooling liquid
 (a heat exchanger), and an air supply. It mixes the recirculated interior
@@ -603,7 +603,7 @@ based optimal controller cannot be supplied by the unit manufacturer
 because the process model involves model of the interior, including
 its volume, thermal capacities, thermal insulation, solar and thermal
 load predictions, typical $\mathrm{CO_{2}}$ and humidity loads. That
-is why model-less control or ML techniques may come into consideration.
+is why model-less control or ML techniques may come into account.
 If such controllers could periodically re-optimize their behavior
 using ML techniques, significant amounts of energy could be saved
 world wide.
@@ -671,7 +671,7 @@ $u_{k}$ was selected as random bounded input.
 \begin{figure}
 \centering{}\includegraphics[width=0.95\columnwidth]{figures/training_data}
 \caption{\label{fig:Q-Learning-training-data}Q-Learning training data consists
-of $2,000$ data points ($\sim10$ hours) consisting of $15$ continuous
+of $2,000$ data points ($\sim10$ hours) divided into $15$ continuous
 time intervals during which the room was heated from a cold condition.
 The room temperature $T_{z_{k}}\sim x_{k}$, supply air flow rate
 $u_{k}$, and also supply air temperature $T_{s}$ calculated from
@@ -682,7 +682,7 @@ policy $\pi^{*}$ was found after several policy iterations (around
 five suffice). Values $\gamma=0.999$ and $\xi=10^{-5}$ were used
 in the algorithm. It is important that $u_{k}^{\pi}$ must excite
 the process to cover the state-action space. The control actions must
-be partly randomized to get valid a training dataset. This is related
+be partly randomized to get a valid training dataset. This is related
 to the well known problem of exploration-exploitation trade-off. Fig.
 (\ref{fig:Q-Learning-with-Gaussian}) shows the trajectory of optimal
 policy as a curve connecting the minima of Q function with respect
@@ -691,8 +691,8 @@ to $u$.
 \begin{figure}
 \centering{}\includegraphics[width=0.95\columnwidth]{figures/q_learning_improved}
 \caption{\label{fig:Q-Learning-with-Gaussian}Q-Learning with GPR and Policy
-Iteration. $Q^{*}$ contours and policies $\pi^{(2)}$ and $\pi^{*}$
-(highlighted) calculated from (\ref{eq:q-function-policy}).}
+Iteration. $Q^{*}$ contours and policies $\pi^{(1)},\pi^{(2)}$ and
+$\pi^{*}$ (highlighted) calculated from (\ref{eq:q-function-policy}).}
 \end{figure}
 This Q learning result makes good sense intuitively. The air exchange
 rate $u_{k}$ equals the heat losses when the room temperature is
@@ -708,7 +708,7 @@ such, the policy resembles a proportional feedback controller with
 variable gain. It does not have any integral action whereas a proportional
 integral derivative (PID) controller would be normally used for similar
 purpose. However, it can be shown that the integral action can be
-added augmenting the state space with temperature time difference
+added by augmenting the state space with temperature time difference
 and considering the time difference $u_{k}-u_{k-1}$ as the control
 action. Recall that the integral action is important in order to reject
 unmeasured slow disturbances.
@@ -722,7 +722,7 @@ An assuredly optimal value of cumulative loss $L^{*}$ is given by
 the optimal policy $\pi^{*}$ from Q learning. A grid of proportional
 and integral PI constants was considered so that it obviously contained
 the optimal PI values (local minimum). All $L$ values were calculated
-using (\ref{eq:loss-calculation}) starting at the same initial condition
+using (\ref{eq:loss-calculation}), starting at the same initial condition
 $\mathrm{10^{o}C}$ over next 1,000 sampling periods considering $T_{sp}=22\unit{\lyxmathsym{\textdegree}C}$,
 so the results are comparable. These values were compared in Fig.
 (\ref{fig:Comparison-of-PI-Q-Learning}). The best PI controller parameters
@@ -772,21 +772,21 @@ iterations were used to optimize the controller. This method typically
 converges rapidly. The optimal control law was then fully defined
 by the minima of a GP. This represents a numerical optimization in
 a low dimensional space of controller outputs and is thus numerically
-tractable. Although not explained in this paper, GP can be globally
+trackable. Although not explained in this paper, GP can be globally
 minimized even if it is not convex, see \cite{ecc19ref:Franey_Branch_and_Bound_Algo}.
 An unbiased Q estimate makes the method insensitive to noise affecting
 the process. Our approach is consistent with the Least-Squares Temporal
 Difference Learning (LSTD) \cite{ecc19ref:Bratke_Linear_Least_Squares_Algo}
 using GPR. The approach can be integrated with the GPR sparse form
 in order to lower the dimensionality. However, details of this reduction
-is currently a subject of research. The approach was verified on a
-simple linear model against Q function calculated as a solution of
-Riccati equation, this verification is not part of the paper. It was
-then tested on a simplified nonlinear one-input one-state FCU simulation
-model and an optimal control policy $\pi^{*}$ was calculated. The
-result makes sense intuitively, the feedback gain is gradually decreasing
-with the control error. A grid of PI controllers were compared in
-terms of cumulative loss $L$ towards $L^{*}$ found by the Q-learning.
+are currently a subject of research. The approach was verified on
+a simple linear model against Q function calculated as a solution
+of Riccati equation, this verification is not part of the paper. It
+was then tested on a simplified nonlinear one-input one-state FCU
+simulation model and an optimal control policy $\pi^{*}$ was calculated.
+The result makes sense intuitively, the feedback gain is gradually
+decreasing with the control error. A grid of PI controllers were compared
+in terms of cumulative loss $L$ towards $L^{*}$,  found by the Q-learning.
 The best PI controller from the grid was slightly worse than $L^{*}$.
 However, such direct controller search is impractical without a simulation
 model because it requires evaluating many controllers from defined
@@ -811,10 +811,10 @@ the same Q function asymptotically with growing dataset. The optimization
 of hyperparameters in connection with the proposed approach is our
 current research topic. Although result with only one kernel (SE times
 quadratic) was presented, different kernels were also tried with similar
-results provided the hyperparameters were chosen reasonably and the
-kernels were smooth. The method assumes the process state is measured
-without error. This is not realistic in most control applications.
-The state may be often approximated by measurements and lagged measurements
+results, the hyperparameters were chosen reasonably and the kernels
+were smooth. The method assumes the process state is measured without
+error. This is not realistic in most control applications. The state
+may be often approximated by measurements and lagged measurements
 and control actions. Although the Q-learning seems to work well if
 the approximation is reasonable, an optimal state approximation is
 currently investigated in terms of dimension versus accuracy trade-off.
