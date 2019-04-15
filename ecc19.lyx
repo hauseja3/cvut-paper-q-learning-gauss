@@ -39,7 +39,7 @@
 \usepackage{amssymb}  % assumes amsmath package installed
 
 \title{\LARGE \bf
- Gaussian Process Based Model-less Control with Q-Learning*
+ Gaussian Process Based Model-free Control with Q-Learning*
 }
 
 
@@ -203,14 +203,14 @@ status collapsed
 \end_layout
 
 \begin_layout Abstract
-The aim of this paper is to demonstrate how Machine Learning (ML) based
- on Gaussian Process Regression (GPR) can be used as a practical control
- design technique.
+The aim of this paper is to demonstrate a new algorithm for Machine Learning
+ (ML) based on Gaussian Process Regression (GPR) and how it can be used
+ as a practical control design technique.
  An optimized control law for a nonlinear process is found directly by training
  the algorithm on noisy data collected from the process when controlled
  by a sub-optimal controller.
  A simplified nonlinear Fan Coil Unit (FCU) model is used as an example
- for which the fan speed control is designed using the off-policy Q-Learning
+ for which the fan speed control is designed using the off-policy Q-learning
  algorithm.
  Additionally, the algorithm properties are discussed, i.e.
  learning process robustness, GP kernel functions choice.
@@ -223,7 +223,7 @@ INTRODUCTION
 \end_layout
 
 \begin_layout Standard
-Model-less control techniques assume that no mathematical model of the controlle
+Model-free control techniques assume that no mathematical model of the controlle
 d process is available and the controller is designed from the measurement
  data.
  One such approach would collect the data in advance during some time window
@@ -245,7 +245,7 @@ d process is available and the controller is designed from the measurement
 \end_layout
 
 \begin_layout Standard
-The Q-Learning is an off-policy machine learning (ML) iterative algorithm
+The Q-learning is an off-policy machine learning (ML) iterative algorithm
  
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -256,7 +256,7 @@ literal "true"
 
 , which approximates certain function satisfying the Bellman equation.
  This Q function then defines a controller.
- Q-Learning was developed for Markov Decision Process (MDP) with finite
+ Q-learning was developed for Markov Decision Process (MDP) with finite
  number of states and later generalized to continuous state spaces 
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -335,13 +335,7 @@ literal "false"
 
 \begin_layout Standard
 The contribution of this paper is the practical and efficient combination
- of Q-Learning and GPR resulting in unbiased estimate of the Q function.
- ML algorithms are normally supposed to process a large dataset (of size
- 
-\begin_inset Formula $\sim10^{5}$
-\end_inset
-
- and more) to yield sufficiently accurate results.
+ of Q-learning and GPR resulting in unbiased estimate of the Q function.
  Often the training data are simulated by a model and the statistical properties
  of the algorithm are thus less important.
  Here a smaller dataset from a process affected by unmeasured disturbances
@@ -379,22 +373,27 @@ For reader's understanding, some essential theory is briefly introduced.
  In Section 
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "sec:gp"
-
-\end_inset
-
-, the GPR algorithm is explained.
- Section 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "sec:Q-Learning"
+reference "sec:BACKGROUND"
 plural "false"
 caps "false"
 noprefix "false"
 
 \end_inset
 
- describes the Q-Learning mechanism and how it connects to GPR.
+, the other papers from this stream are commented, then the GPR algorithm
+ and the Q-learning mechanism are briefly described.
+ Following Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Q-LEARNING-WITH-GPR"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ describes the main contribution and novelty of this paper, the unbiased
+ Q-learning algorithm using GPR.
  In Section 
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -422,10 +421,10 @@ reference "sec:CONCLUSIONS"
 \end_layout
 
 \begin_layout Section
-GAUSSIAN PROCESS
+BACKGROUND
 \begin_inset CommandInset label
 LatexCommand label
-name "sec:gp"
+name "sec:BACKGROUND"
 
 \end_inset
 
@@ -433,12 +432,20 @@ name "sec:gp"
 \end_layout
 
 \begin_layout Standard
-In this section, GPR method is briefly described.
- The GPR technique is then used with Q-Learning algorithm in next section.
+In order to understand presented algorithm properly, the GP and Q-learning
+ principles are presented here as a background material.
+ Also related work is commented here in this section.
 \end_layout
 
 \begin_layout Subsection
-Gaussian Process Regression
+GAUSSIAN PROCESS REGRESSION
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:gp"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -975,7 +982,7 @@ literal "false"
 .
 \end_layout
 
-\begin_layout Section
+\begin_layout Subsection
 Q-LEARNING
 \begin_inset CommandInset label
 LatexCommand label
@@ -987,7 +994,7 @@ name "sec:Q-Learning"
 \end_layout
 
 \begin_layout Standard
-This section describes the basic principles of Q-Learning algorithm 
+This section describes the basic principles of Q-learning algorithm 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "ecc19ref:Sutton_Reinforcement_Learning"
@@ -995,8 +1002,9 @@ literal "true"
 
 \end_inset
 
-, which is a model-less reinforcement learning approach.
- Then the policy iteration algorithm based on Bellman equation is introduced.
+, which is a model-free off-policy reinforcement learning approach.
+ Then the generalized policy iteration algorithm based on Bellman equation
+ is pointed out.
  
 \end_layout
 
@@ -1133,7 +1141,7 @@ s between two closely related fields: Optimal Control Theory (OCT), and
  The ML theory will be discussed below mostly with OCT notations and assumptions.
 \end_layout
 
-\begin_layout Subsection
+\begin_layout Subsubsection
 Q Function
 \end_layout
 
@@ -1437,8 +1445,8 @@ noprefix "false"
 ).
 \end_layout
 
-\begin_layout Subsection
-Policy Iteration
+\begin_layout Subsubsection
+Generalized Policy Iteration
 \begin_inset CommandInset label
 LatexCommand label
 name "subsec:Policy-Iteration"
@@ -1449,7 +1457,15 @@ name "subsec:Policy-Iteration"
 \end_layout
 
 \begin_layout Standard
-Policy iteration algorithm calculates Q function from Bellman equation (
+Generalized Policy iteration (GPI) algorithm 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "ecc19ref:Sutton_Reinforcement_Learning"
+literal "true"
+
+\end_inset
+
+ calculates Q function from Bellman equation (
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:q-value-iteration"
@@ -1492,19 +1508,13 @@ noprefix "false"
 \end_layout
 
 \begin_layout Subsection
-Q-Learning with Gaussian Process Regression
+RELATED WORK
 \end_layout
 
 \begin_layout Standard
-Last step in this section is to introduce Q-Learning algorithm with GPR.
- For a finite (in number of states and actions) MDP, the Q-Learning algorithms
- may approximate the Q function at every element of the state-action space
- using the observed samples 
-\begin_inset Formula $\mathbf{x}_{k},\mathbf{u}_{k}$
-\end_inset
-
-, which were encountered during interaction with a system.
- An example of such approach is the commonly used 
+There are many related papers presented in this article stream.
+ Various of them uses the GP for on-policy learning, an example of such
+ approach is the commonly used 
 \emph on
 state action reward state action
 \emph default
@@ -1517,6 +1527,96 @@ literal "false"
 \end_inset
 
 .
+ For these algorithms the value function is learned for the same policy
+ the samples are collected from.
+ On the other hand, the off-policy learning of value function directly approxima
+tes the optimal value function regardless the policy samples are collected
+ from, still there could be f.e.
+ a requirement for initial policy to be stable.
+ An example of this behaviour is the already presented Q-learning algorithm
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "ecc19ref:Chowdhary_Off_Policy"
+literal "false"
+
+\end_inset
+
+.
+ In this paper, Q-learning is selected in order to find optimal control
+ strategy for a specific system.
+ It is also used in combination with GP, which in our algorithm finds unbiased
+ estimate of the Q function.
+ The common usage of this combination results in biased estimate 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "ecc19ref:Engel_Bayes_Meets_Bellman,ecc19ref:Engel_Reinforcement_Learning_with_GP"
+literal "false"
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+There could be also found articles presenting model-based reinforcement
+ learning algorithms 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "ecc19ref:Jung_GP_RMAXlike_Exploration,ecc19ref:Rasmussen_GP_in_RL"
+literal "false"
+
+\end_inset
+
+ which depends on the model knowledge.
+ In those papers, GP is commonly used not only for estimating the value
+ function (Q function respectively), but also for estimating the model dynamics.
+ It was found non-necessary for purpose of this paper, only input-output
+ data are used in a batch form.
+ Which leads us to the next common problem burdening this area.
+ The difference between batch and online usage of the algorithms.
+ For purpose of this paper, online approach is being investigated.
+\end_layout
+
+\begin_layout Standard
+Last but not least, many of the papers are using some kind of sparsification
+ methods to reduce the complexity of calculations.
+ A commonly used sparsification approach is 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "ecc19ref:Csato_Sparse_Online_GP"
+literal "false"
+
+\end_inset
+
+.
+ This paper does not use sparsification, but considers it as possible way
+ to lower the dimensionality.
+ Presented algorithm enables to not to repeatedly calculate operations which
+ are computationally heavy.
+\end_layout
+
+\begin_layout Section
+Q-LEARNING WITH GPR
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Q-LEARNING-WITH-GPR"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In this section, the unbiased Q-learning algorithm with GPR is introduced.
+ For a finite (in number of states and actions) MDP, the Q-learning algorithms
+ may approximate the Q function at every element of the state-action space
+ using the observed samples 
+\begin_inset Formula $\mathbf{x}_{k},\mathbf{u}_{k}$
+\end_inset
+
+, which were encountered during interaction with a system.
 \end_layout
 
 \begin_layout Standard
@@ -1977,12 +2077,12 @@ noprefix "false"
 \hat{\mathbf{f}}^{\pi}\\
 \mathbf{\hat{z}}^{\pi}
 \end{array}\right]=\left(\left(1-\xi\right)\left[\begin{array}{cc}
-\mathbf{G}^{\pi}, & -\gamma\mathbf{G}^{\pi}\end{array}\right]-\xi\mathbf{I}\right)^{-1}\mathbf{G}^{\pi}\mathbf{\ell},\label{eq:Q-unbiased-estimate}
+\mathbf{G}^{\pi}, & -\gamma\mathbf{G}^{\pi}\end{array}\right]-\xi\mathbf{I}\right)^{-1}\mathbf{G}^{\pi}\boldsymbol{\ell},\label{eq:Q-unbiased-estimate}
 \end{equation}
 
 \end_inset
 
-
+ 
 \end_layout
 
 \begin_layout Standard
@@ -2171,7 +2271,18 @@ noprefix "false"
 \begin_inset Formula $\xi>0$
 \end_inset
 
-.
+, see Fig.
+ (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Biased-vs-Unbiased"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+) TBD.
  However, they are not optimal because 
 \family roman
 \series medium
@@ -2205,6 +2316,36 @@ noprefix "false"
 \end_layout
 
 \begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Biased-vs-Unbiased"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 The flow of calculations is in Algorithm 
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -2213,7 +2354,11 @@ reference "alg:Q-learning-with-GP"
 \end_inset
 
 .
- In the first step, it calculates the matrix inversion 
+ In the first step, it calculates the kernel matrix 
+\begin_inset Formula $\mathbf{K}_{ff}$
+\end_inset
+
+ and matrix inversion 
 \family roman
 \series medium
 \shape up
@@ -2243,12 +2388,16 @@ reference "alg:Q-learning-with-GP"
 \uwave default
 \noun default
 \color inherit
- for later uses as it depends only on the data, not the optimized policy.
- 
-\begin_inset Formula $Q^{\pi^{(i)}}$
+ for later usage as it depends only on the data, not the optimized policy.
+ Then data matrix 
+\begin_inset Formula $\mathbf{X}_{p}^{\pi^{(i)}}$
 \end_inset
 
- estimate is calculated for each policy 
+ and kernel matrix 
+\begin_inset Formula $\mathbf{K}_{zf}^{\pi^{(i)}}$
+\end_inset
+
+ have to be updated according to actual policy 
 \begin_inset Formula $\pi^{(i)}$
 \end_inset
 
@@ -2256,7 +2405,16 @@ reference "alg:Q-learning-with-GP"
 \begin_inset Formula $\pi^{(1)}$
 \end_inset
 
-, solving a linear system of equations (
+.
+ 
+\begin_inset Formula $Q^{\pi^{(i)}}$
+\end_inset
+
+ estimate is also calculated for each policy 
+\begin_inset Formula $\pi^{(i)}$
+\end_inset
+
+ by solving a linear system of equations (
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:Q-unbiased-estimate"
@@ -2268,11 +2426,11 @@ noprefix "false"
 
 ).
  All available data can be used in this step.
- This 
+ This unbiased estimate of 
 \begin_inset Formula $Q^{\pi^{(i)}}$
 \end_inset
 
- is then minimized at each state from 
+ is then minimized at each state 
 \family roman
 \series medium
 \shape up
@@ -2286,7 +2444,11 @@ noprefix "false"
 \noun off
 \color none
 
-\begin_inset Formula $\mathbf{X}_{p}^{\pi}$
+\begin_inset Formula $\mathbf{x}_{j}$
+\end_inset
+
+ using actions 
+\begin_inset Formula $\mathbf{u}_{j}$
 \end_inset
 
 
@@ -2312,11 +2474,41 @@ noprefix "false"
 
 \end_inset
 
-) to define a new improved policy 
+) in order to define a new improved policy 
 \begin_inset Formula $\pi^{(i+1)}$
 \end_inset
 
-.
+, where 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $\mathbf{u}_{j},\mathbf{x}_{j}$
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+ are predefined according to process/system.
  The minimization is iterative, evaluating the Q function using (
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -2383,34 +2575,18 @@ status open
 
 \series bold
 Require: 
-\begin_inset Formula $\kappa([\mathbf{u},\mathbf{x}],[\mathbf{u}',\mathbf{x}']),\epsilon,\gamma,\xi,\mathbf{x}_{j},\mathbf{u}_{j},\boldsymbol{\ell}_{j},\pi^{(1)}$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-
-\family roman
-\series medium
-\shape up
-\size normal
-\emph off
-\bar no
-\strikeout off
-\xout off
-\uuline off
-\uwave off
-\noun off
-\color none
-\begin_inset Formula $1\leq j\leq k$
+\begin_inset Formula $\mathbf{X},\mathbf{X}_{p}^{\pi^{(1)}},\boldsymbol{\ell},\epsilon,\gamma,\xi,\pi^{(1)},\mathbf{x}_{j},\mathbf{u}_{j}$
 \end_inset
 
 
 \end_layout
 
 \begin_layout Enumerate
-calculate kernel and its inversion 
+calculate kernel 
+\begin_inset Formula $\mathbf{K}_{ff}$
+\end_inset
+
+ and kernel inversion 
 \family roman
 \series medium
 \shape up
@@ -2485,7 +2661,11 @@ update
 \noun default
 \color inherit
  and kernel 
-\begin_inset Formula $\mathbf{K}_{zf}^{(i)}$
+\begin_inset Formula $\mathbf{K}_{zf}^{\pi^{(i)}}$
+\end_inset
+
+ according to new 
+\begin_inset Formula $\pi^{(i)}$
 \end_inset
 
 
@@ -2537,10 +2717,29 @@ name "enu:calculate-Q-estimate"
 \end_layout
 
 \begin_layout Enumerate
+improve policy
+\begin_inset Newline newline
+\end_inset
+
+
 \begin_inset Formula $\pi^{(i+1)}(\mathbf{x}_{j})\leftarrow\arg\min_{\mathbf{u}_{j}}Q^{\pi^{(i)}}(\mathbf{u}_{j},\mathbf{x}_{j})$
 \end_inset
 
 
+\begin_inset Newline newline
+\end_inset
+
+using (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:Q-fast-update"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+) 
 \begin_inset CommandInset label
 LatexCommand label
 name "enu:update-pi"
@@ -2592,7 +2791,7 @@ until
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-Q-Learning with GPR 
+Q-learning with GPR 
 \begin_inset CommandInset label
 LatexCommand label
 name "alg:Q-learning-with-GP"
@@ -2688,7 +2887,7 @@ typical
 \noun default
 \color inherit
  and humidity loads.
- That is why model-less control or ML techniques may come into account.
+ That is why model-free control or ML techniques may come into account.
  If such controllers could periodically re-optimize their behavior using
  ML techniques, significant amounts of energy could be saved world wide.
 \end_layout
@@ -2815,7 +3014,7 @@ noindent
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-T_{s}(t)=\frac{u(t)T_{z}(t)+eT_{0}}{u(k)+e},\label{eq:supply-air-temperature}
+T_{s}(t)=\frac{u(t)T_{z}(t)+eT_{0}}{u(t)+e},\label{eq:supply-air-temperature}
 \end{equation}
 
 \end_inset
@@ -2998,8 +3197,7 @@ reference "sec:Fan-Coil-Unit"
 \noun default
 \color inherit
 .
- The policy iteration algorithm was applied in order to find the optimal
- control policy.
+ The GPI algorithm was applied in order to find the optimal control policy.
  Loss function 
 \begin_inset Formula $\ell$
 \end_inset
@@ -3118,7 +3316,7 @@ reference "fig:Q-Learning-training-data"
 \begin_inset Float figure
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \align center
@@ -3138,7 +3336,7 @@ name "fig:Q-Learning-training-data"
 
 \end_inset
 
-Q-Learning training data consists of 
+Q-learning training data consists of 
 \begin_inset Formula $2,000$
 \end_inset
 
@@ -3248,7 +3446,7 @@ name "fig:Q-Learning-with-Gaussian"
 
 \end_inset
 
-Q-Learning with GPR and Policy Iteration.
+Q-learning with GPR and GPI.
  
 \begin_inset Formula $Q^{*}$
 \end_inset
@@ -3317,11 +3515,11 @@ This Q learning result makes good sense intuitively.
 \end_layout
 
 \begin_layout Subsection
-Q-Learning Evaluation
+Q-learning Evaluation
 \end_layout
 
 \begin_layout Standard
-The results from Q-Learning were compared to multiple PI controllers in
+The results from Q-learning were compared to multiple PI controllers in
  terms of the cumulative loss function 
 \begin_inset Formula $L$
 \end_inset
@@ -3515,7 +3713,7 @@ name "fig:Q-Learning-PI-PI"
 
 \end_inset
 
-Comparison of Q-Learning optimal control policy, PI controller designed
+Comparison of Q-learning optimal control policy, PI controller designed
  by cumulative loss comparison and PI controller designed from linearized
  model of FCU.
  The results are presented on nonlinear FCU model.
@@ -3551,7 +3749,7 @@ reference "fig:Q-Learning-PI-PI-noisy"
 \end_inset
 
 ).
- Note that Q-Learning designed controller is robust towards such a noise.
+ Note that Q-learning designed controller is robust towards such a noise.
  It should be noted that the same noise was used to generate the learning
  data for this test, not only when simulating the controller.
 \end_layout
@@ -3580,7 +3778,7 @@ name "fig:Q-Learning-PI-PI-noisy"
 
 \end_inset
 
-Comparison of Q-Learning optimal control policy, PI controller designed
+Comparison of Q-learning optimal control policy, PI controller designed
  by cumulative loss comparison and PI controller designed from linearized
  model of FCU.
  The results are presented on nonlinear FCU model with noisy net heat load/heat
@@ -3613,7 +3811,7 @@ name "sec:CONCLUSIONS"
 \end_layout
 
 \begin_layout Standard
-This paper described a practical approach of using GPR based Q-Learning
+This paper described a practical approach of using unbiased GPR based Q-learning
  algorithm to find a control law for a completely unknown nonlinear process
  based on a historical dataset of a medium size 
 \begin_inset Formula $\sim10^{3}$
@@ -3653,9 +3851,9 @@ literal "false"
  The approach can be integrated with the GPR sparse form in order to lower
  the dimensionality.
  However, details of this reduction are currently a subject of research.
- The approach was verified on a simple linear model against Q function calculate
-d as a solution of Riccati equation, this verification is not part of the
- paper.
+ The approach of unbiased estimation was verified on a simple linear model
+ against Q function calculated as a solution of Riccati equation, this verificat
+ion is not part of the paper in detail.
  It was then tested on a simplified nonlinear one-input one-state FCU simulation
  model and an optimal control policy 
 \begin_inset Formula $\pi^{*}$
@@ -3693,7 +3891,7 @@ reference "sec:RESULTS"
 \end_inset
 
  and the performance of PI designed using linearized FCU was shown to be
- worse than both Q-Learning and the PI found by direct search.
+ worse than both Q-learning and the PI found by direct search.
  Here the problem may be both linearization point and PID tuning rule which
  does not minimize the loss (
 \begin_inset CommandInset ref
@@ -3742,6 +3940,9 @@ The main pitfalls of the process may be also pointed out.
 
 \begin_layout Standard
 Overall, the method gives reasonably consistent results.
+ Also note that theoretical proofs for declared statements regarding the
+ used method are work in progress.
+ 
 \end_layout
 
 \begin_layout Standard

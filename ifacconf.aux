@@ -1,0 +1,109 @@
+\relax 
+\bibstyle{ifacconf}
+\citation{ecc19ref:Sutton_Reinforcement_Learning}
+\citation{ecc19ref:Hasselt_Reinforcement_learning_in_continuous_action_spaces,ecc19ref:Gaskett_Q_Learning_IC}
+\citation{ecc19ref:Rasmussen_Gaussian_Processes}
+\citation{ecc19ref:Williams_Prediction_with_Gaussian_processes}
+\citation{ecc19ref:Bratke_Linear_Least_Squares_Algo}
+\citation{ecc19ref:Young_Recursive_estimation}
+\citation{ecc19ref:Arguello_Serrano_Nonlinear_HVAC}
+\newlabel{footnoteinfo}{{\hbox {$\star $}\relax }{1}}
+\newlabel{First}{{*\relax }{1}}
+\newlabel{Second}{{**\relax }{1}}
+\global\@namedef{n@author@}{3}
+\global\@namedef{n@collab@}{0}
+\@writefile{toc}{\contentsline {section}{\numberline {1}INTRODUCTION}{1}}
+\citation{ecc19ref:Rasmussen_Gaussian_Processes}
+\citation{ecc19ref:Sutton_Reinforcement_Learning}
+\@writefile{toc}{\contentsline {section}{\numberline {2}BACKGROUND}{2}}
+\newlabel{sec:BACKGROUND}{{2}{2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Gaussian Process Regression}{2}}
+\newlabel{sec:gp}{{2.1}{2}}
+\newlabel{eq:covariance-noisy-measurements}{{1}{2}}
+\newlabel{eq:gp-posterior-mean}{{2}{2}}
+\newlabel{eq:gp-posterior-cov}{{3}{2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Q-learning}{2}}
+\newlabel{sec:Q-Learning}{{2.2}{2}}
+\citation{ecc19ref:Sutton_Reinforcement_Learning}
+\citation{ecc19ref:Sutton_Reinforcement_Learning}
+\citation{ecc19ref:Chowdhary_Off_Policy}
+\citation{ecc19ref:Engel_Bayes_Meets_Bellman,ecc19ref:Engel_Reinforcement_Learning_with_GP}
+\citation{ecc19ref:Bratke_Linear_Least_Squares_Algo}
+\citation{ecc19ref:Young_Recursive_estimation}
+\citation{ecc19ref:Fuller_Measurement_error_models}
+\citation{ecc19ref:Jung_GP_RMAXlike_Exploration,ecc19ref:Rasmussen_GP_in_RL}
+\citation{ecc19ref:Csato_Sparse_Online_GP}
+\citation{ecc19ref:Bijl_Online_Sparse_Gaussian}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.2.1}Q Function}{3}}
+\newlabel{eq:q-split-sum}{{4}{3}}
+\newlabel{eq:q-function-star}{{5}{3}}
+\newlabel{eq:q-function-policy}{{6}{3}}
+\newlabel{eq:q-value-iteration}{{7}{3}}
+\newlabel{subsec:Policy-Iteration}{{2.2.2}{3}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2.2.2}Generalized Policy Iteration}{3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Related Work}{3}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Q-LEARNING WITH GPR}{3}}
+\newlabel{sec:Q-LEARNING-WITH-GPR}{{3}{3}}
+\citation{ecc19ref:Young_Recursive_estimation}
+\citation{ecc19ref:Engel_Bayes_Meets_Bellman}
+\citation{ecc19ref:Bratke_Linear_Least_Squares_Algo}
+\citation{ecc19ref:Bratke_Linear_Least_Squares_Algo}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces  Comparison of two parametric estimators of Q function for simple first order process showing the above discussed bias impact. The unbiased parametric regression is consistent with \citep  {ecc19ref:Bratke_Linear_Least_Squares_Algo}. At the top figure, the estimates of five elements of (8\hbox {}) (omitting the constant element $q_{1}$) are compared to the true values found by solving the Riccati equation. Note that couple of elements are overlapping around zero. The bottom figure compares control gains $K$ calculated by minimizing of estimated $Q$ functions over $\mathbf  {u}$ at some specific $x_k$. Results are presented for increasing noise variance of independent variables on sufficiently big set of data ($\sim 10^{4}$).}}{4}}
+\newlabel{fig:Biased-vs-unbiased}{{1}{4}}
+\newlabel{eq:quadratic-q-function}{{8}{4}}
+\newlabel{eq:Q-data-update}{{9}{4}}
+\citation{ecc19ref:Kwakernaak_linear_optimal_control_systems}
+\citation{ecc19ref:Arguello_Serrano_Nonlinear_HVAC}
+\newlabel{eq:GPR-iterations}{{10}{5}}
+\newlabel{eq:Q-unbiased-estimate-regularized}{{11}{5}}
+\newlabel{eq:Q-fast-update}{{12}{5}}
+\newlabel{enu:calculate-kernel-inv}{{1}{5}}
+\newlabel{enu:update-kalman-gain}{{2a}{5}}
+\newlabel{enu:calculate-Q-estimate}{{2b}{5}}
+\newlabel{enu:update-pi}{{2c}{5}}
+\@writefile{lof}{\contentsline {algorithm}{\numberline {1}{\ignorespaces Q-learning with GPR }}{5}}
+\newlabel{alg:Q-learning-with-GP}{{1}{5}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}FAN COIL UNIT}{5}}
+\newlabel{sec:Fan-Coil-Unit}{{4}{5}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Model }{5}}
+\citation{ecc19ref:Kwakernaak_linear_optimal_control_systems}
+\newlabel{eq:supply-air-temperature}{{13}{6}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}RESULTS}{6}}
+\newlabel{sec:RESULTS}{{5}{6}}
+\newlabel{eq:loss-calculation}{{14}{6}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Q-learning training data consists of $2,000$ data points ($\sim 10$ hours) divided into $15$ continuous time intervals during which the room was heated from a cold condition. The room temperature $T_{z_{k}}\sim x_{k}$, supply air flow rate $u_{k}$, and also supply air temperature $T_{s}$ calculated from (13\hbox {}) are shown. }}{6}}
+\newlabel{fig:Q-Learning-training-data}{{2}{6}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Q-learning with GPR and GPI. $Q^{*}$ contours and policies $\pi ^{(1)},\pi ^{(2)}$ and $\pi ^{*}$ (highlighted) calculated from (6\hbox {}).}}{6}}
+\newlabel{fig:Q-Learning-with-Gaussian}{{3}{6}}
+\citation{ecc19ref:Franey_Branch_and_Bound_Algo}
+\citation{ecc19ref:Bratke_Linear_Least_Squares_Algo}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Comparison of PI controllers cumulative losses $L$ with optimal policy cumulative loss $L*$.}}{7}}
+\newlabel{fig:Comparison-of-PI-Q-Learning}{{4}{7}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Q-learning Evaluation}{7}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}CONCLUSIONS}{7}}
+\newlabel{sec:CONCLUSIONS}{{6}{7}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Comparison of Q-learning optimal control policy, PI controller designed by cumulative loss comparison and PI controller designed from linearized model of FCU. The results are presented on nonlinear FCU model.}}{7}}
+\newlabel{fig:Q-Learning-PI-PI}{{5}{7}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Comparison of Q-learning optimal control policy, PI controller designed by cumulative loss comparison and PI controller designed from linearized model of FCU. The results are presented on nonlinear FCU model with noisy net heat load/heat loss $q_{L}$.}}{7}}
+\newlabel{fig:Q-Learning-PI-PI-noisy}{{6}{7}}
+\bibdata{ifacconf.bib}
+\bibcite{ecc19ref:Fuller_Measurement_error_models}{{1}{2019}{{A~Fuller}}{{}}}
+\bibcite{ecc19ref:Arguello_Serrano_Nonlinear_HVAC}{{2}{1999}{{Arguello-Serrano and Velez-Reyes}}{{}}}
+\bibcite{ecc19ref:Bijl_Online_Sparse_Gaussian}{{3}{2015}{{Bijl et~al.}}{{Bijl, van Wingerden, and T.~B.~Sch\IeC {\textasciicircum }n}}}
+\bibcite{ecc19ref:Bratke_Linear_Least_Squares_Algo}{{4}{1996}{{Bradtke and Barto}}{{}}}
+\bibcite{ecc19ref:Chowdhary_Off_Policy}{{5}{2014}{{{Chowdhary} et~al.}}{{{Chowdhary}, {Liu}, {Grande}, {Walsh}, {How}, and {Carin}}}}
+\bibcite{ecc19ref:Csato_Sparse_Online_GP}{{6}{2002}{{Csato and Opper}}{{}}}
+\bibcite{ecc19ref:Engel_Bayes_Meets_Bellman}{{7}{2003}{{Engel et~al.}}{{Engel, Mannor, and Meir}}}
+\bibcite{ecc19ref:Engel_Reinforcement_Learning_with_GP}{{8}{2005}{{Engel et~al.}}{{Engel, Mannor, and Meir}}}
+\bibcite{ecc19ref:Franey_Branch_and_Bound_Algo}{{9}{2011}{{Franey et~al.}}{{Franey, Ranjan, and Chipman}}}
+\bibcite{ecc19ref:Gaskett_Q_Learning_IC}{{10}{1999}{{Gaskett et~al.}}{{Gaskett, Wettergreen, and Zelinsky}}}
+\bibcite{ecc19ref:Jung_GP_RMAXlike_Exploration}{{11}{2010}{{Jung and Stone}}{{}}}
+\bibcite{ecc19ref:Kwakernaak_linear_optimal_control_systems}{{12}{1972}{{Kwakernaak}}{{}}}
+\bibcite{ecc19ref:Rasmussen_Gaussian_Processes}{{13}{2006}{{Rasmussen and Williams}}{{}}}
+\bibcite{ecc19ref:Rasmussen_GP_in_RL}{{14}{2004}{{Rasmussen and Kuss}}{{}}}
+\bibcite{ecc19ref:Sutton_Reinforcement_Learning}{{15}{2018}{{Sutton and Barto}}{{}}}
+\bibcite{ecc19ref:Hasselt_Reinforcement_learning_in_continuous_action_spaces}{{16}{2007}{{van Hasselt and Wiering}}{{}}}
+\bibcite{ecc19ref:Williams_Prediction_with_Gaussian_processes}{{17}{1999}{{Williams}}{{}}}
+\bibcite{ecc19ref:Young_Recursive_estimation}{{18}{1984}{{Young}}{{}}}
+\global\c@lastpage=8
+\global\NAT@numbersfalse
